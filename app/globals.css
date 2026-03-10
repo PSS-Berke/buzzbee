@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #203552;
+
+  /* Brand Primary - Sleep6 Brand Guide */
+  --navy: #203552;
+  --navy-light: #2A63A9;
+  --navy-dark: #1a2a42;
+
+  /* Brand Accent */
+  --gold: #F3A51D;
+  --gold-light: #F7B94D;
+  --orange: #F26821;
+  --gold-dark: #D4792C;
+
+  /* Brand Blues */
+  --sky: #3776BB;
+  --sky-light: #587FC0;
+  --cyan: #5CBBD4;
+  --teal: #3E9EB7;
+
+  /* Brand Reds */
+  --coral: #D0403E;
+  --maroon: #92291D;
+
+  /* Brand Neutrals */
+  --soft-gray: #DAE7EB;
+  --mid-gray: #B1B5C1;
+
+  /* Neutrals */
+  --gray-50: #f7fafc;
+  --gray-100: #edf2f7;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e0;
+  --gray-400: #a0aec0;
+  --gray-500: #718096;
+  --gray-600: #4a5568;
+  --gray-700: #2d3748;
+  --gray-800: #1a202c;
+  --gray-900: #171923;
+
+  /* Semantic */
+  --success: #38a169;
+  --error: #D0403E;
+
+  /* Luxury transitions */
+  --transition-luxury: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-luxury: 0 25px 50px -12px rgba(243, 165, 29, 0.05);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-lato);
+  --font-serif: var(--font-josefin);
+  --font-heading: var(--font-josefin);
+  --font-display: var(--font-playfair);
+
+  /* Brand Primary */
+  --color-navy: var(--navy);
+  --color-navy-light: var(--navy-light);
+  --color-navy-dark: var(--navy-dark);
+
+  /* Brand Accent */
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-orange: var(--orange);
+  --color-gold-dark: var(--gold-dark);
+
+  /* Brand Blues */
+  --color-sky: var(--sky);
+  --color-sky-light: var(--sky-light);
+  --color-cyan: var(--cyan);
+  --color-teal: var(--teal);
+
+  /* Brand Reds */
+  --color-coral: var(--coral);
+  --color-maroon: var(--maroon);
+
+  /* Brand Neutrals */
+  --color-soft-gray: var(--soft-gray);
+  --color-mid-gray: var(--mid-gray);
+
+  /* Semantic */
+  --color-success: var(--success);
+  --color-error: var(--error);
+
+  /* Gray scale */
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  line-height: 1.7;
+}
+
+/* Organic blob shapes */
+.blob-shape {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+
+.blob-shape-alt {
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+}
+
+/* Soft linen texture overlay */
+.linen-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23d4c5b0' fill-opacity='0.15' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* Quilted wave pattern - full page overlay */
+.quilted-wave-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: url('/patterns/quilted-wave.jpg');
+  background-size: 500px;
+  background-repeat: repeat;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Higher opacity on quiz page */
+body:has([data-page="quiz"]) .quilted-wave-overlay {
+  opacity: 0.08;
+}
+
+/* Handwritten style underline */
+.wavy-underline {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 4px;
+}
+
+/* Custom utility classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--sky);
+  outline-offset: 2px;
+}
+
+/* Selection styling */
+::selection {
+  background-color: var(--navy);
+  color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 300ms ease-out;
+}

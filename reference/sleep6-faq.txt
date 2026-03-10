@@ -1,0 +1,130 @@
+"use client";
+
+import { useState } from "react";
+
+const faqs = [
+  {
+    question: "How long will it take to receive my mattress?",
+    answer:
+      "Every Sleep6 mattress is made to order. Typical delivery time is 5–7 business days.",
+  },
+  {
+    question: "Where are Sleep6 mattresses made?",
+    answer:
+      "All Sleep6 mattresses are 100% USA-made. Our mattresses are crafted in Chicago and manufactured in Wisconsin.",
+  },
+  {
+    question: "Do you offer expedited shipping?",
+    answer:
+      "Expedited shipping is already included with every order — at no additional charge to our customers.",
+  },
+  {
+    question: "How is a foam core different than a coil mattress?",
+    answer:
+      "Our foam core offers a tri-support system which works inline with all curves of the human body, providing consistent pressure relief and support that coil mattresses can't match.",
+  },
+  {
+    question: "How long will the mattress last?",
+    answer:
+      "Sleep6 mattresses are built to last well past their 10-year warranty.",
+  },
+  {
+    question: "Can I return the mattress?",
+    answer:
+      "Yes! All Sleep6 mattresses carry a full 100-night trial with risk-free returns.",
+  },
+  {
+    question: "Do I need to flip my mattress?",
+    answer:
+      "You will not need to flip your Sleep6 mattress, but we recommend that you rotate it head-to-foot every 6 months.",
+  },
+  {
+    question: "What type of bed frame do I need for my mattress?",
+    answer:
+      "You can use a standard bed frame, existing box spring, platform, slat bed, or the good ol' floor.",
+  },
+  {
+    question: "How should I decide on a size?",
+    answer:
+      "Size is a personal choice, but we recommend a Queen if you're not sleeping alone.",
+  },
+  {
+    question: "Do you ship internationally?",
+    answer:
+      "Yes, we ship to Canada and Mexico for an additional fee!",
+  },
+  {
+    question: "How do I unbox the mattress?",
+    answer:
+      "Opening your Sleep6 mattress is easy — just unwrap the tape, pull out the mattress, and use the provided opener to cut it free.",
+  },
+  {
+    question: "What do I do with my old mattress?",
+    answer:
+      "We recommend you contact a local charity for donation or recycling.",
+  },
+  {
+    question: "Does my mattress come with a warranty?",
+    answer:
+      "Yes, our mattresses come with a 10-year warranty. Please refer to our warranty page for more details.",
+  },
+  {
+    question: "What certifications should I look for when buying a mattress?",
+    answer:
+      "All mattresses sold in the U.S. must meet the requirements of 16 CFR Parts 1632 and 1633, as regulated by the U.S. Consumer Product Safety Commission. Every Sleep6 mattress meets these flammability standards. Our mattresses also carry CertiPUR-US® certification, meaning the foams do not contain ozone depleters, PBDEs, TDCPP or TCEP flame retardants, mercury, lead, or other heavy metals, formaldehyde, or phthalates. They also meet low VOC emissions for indoor air quality (less than 0.5 parts per million).",
+  },
+];
+
+function FAQItem({ faq, isOpen, onToggle }) {
+  return (
+    <div className="border-b border-gray-200">
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between py-5 px-1 text-left cursor-pointer hover:opacity-70 transition-opacity"
+      >
+        <span className="text-lg font-medium text-gray-900 pr-4">
+          {faq.question}
+        </span>
+        <span className="text-2xl text-gray-400 flex-shrink-0 leading-none">
+          {isOpen ? "−" : "+"}
+        </span>
+      </button>
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? "max-h-96 opacity-100 pb-5" : "max-h-0 opacity-0"
+        }`}
+      >
+        <p className="text-gray-600 leading-relaxed px-1">{faq.answer}</p>
+      </div>
+    </div>
+  );
+}
+
+export default function FAQPage() {
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const handleToggle = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <section className="max-w-3xl mx-auto px-6 py-16">
+      <h1 className="text-4xl font-bold text-center mb-2">
+        Frequently Asked Questions
+      </h1>
+      <p className="text-gray-500 text-center mb-12">
+        Everything you need to know about Sleep6.
+      </p>
+      <div>
+        {faqs.map((faq, i) => (
+          <FAQItem
+            key={i}
+            faq={faq}
+            isOpen={openIndex === i}
+            onToggle={() => handleToggle(i)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
