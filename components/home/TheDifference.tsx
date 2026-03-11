@@ -15,7 +15,7 @@ export default function TheDifference() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4">
-            The Buzzbee Difference
+            The Busby Difference
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
             We eliminated the middleman and went back to the fundamentals.
@@ -31,7 +31,7 @@ export default function TheDifference() {
                 <span className="text-gold-dark font-bold text-xl">6</span>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-navy">Buzzbee</h3>
+                <h3 className="text-xl font-semibold text-navy">Busby</h3>
                 <p className="text-gray-500 text-sm">The better way</p>
               </div>
             </div>

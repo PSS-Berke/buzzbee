@@ -322,22 +322,22 @@ function getResultMessaging(
       headline: 'Simple Comfort, Exceptional Value',
       reason:
         scores.nod > 10
-          ? "You know what you want — quality sleep without overpaying. The Buzzbee Nod delivers exactly that: essential comfort, solid support, and American craftsmanship at an unbeatable price."
-          : "Based on your sleep profile, you don't need the bells and whistles. The Buzzbee Nod gives you everything essential for great sleep — comfort, support, and durability — at our best value.",
+          ? "You know what you want — quality sleep without overpaying. The Busby Nod delivers exactly that: essential comfort, solid support, and American craftsmanship at an unbeatable price."
+          : "Based on your sleep profile, you don't need the bells and whistles. The Busby Nod gives you everything essential for great sleep — comfort, support, and durability — at our best value.",
     },
     slumber: {
       headline: 'Relief and Recovery While You Sleep',
       reason:
         scores.slumber > 12
-          ? "Your body deserves extra care. The Buzzbee Slumber's natural latex and plush foam layers were designed for sleepers like you — contouring to pressure points and helping you wake up refreshed and pain-free."
-          : "The Buzzbee Slumber is your match. Its pressure-relieving comfort layers and motion isolation will help you get the restorative sleep your body needs.",
+          ? "Your body deserves extra care. The Busby Slumber's natural latex and plush foam layers were designed for sleepers like you — contouring to pressure points and helping you wake up refreshed and pain-free."
+          : "The Busby Slumber is your match. Its pressure-relieving comfort layers and motion isolation will help you get the restorative sleep your body needs.",
     },
     dream: {
       headline: 'Cool, Comfortable Sleep Awaits',
       reason:
         scores.dream > 12
-          ? "Temperature regulation is clearly key to your best sleep. The Buzzbee Dream combines Joma® Wool-infused CoolGel quilting with natural latex to actively dissipate heat — you'll notice the difference from night one."
-          : "The Buzzbee Dream is perfect for you. With premium cooling materials and seven precision-engineered layers, it delivers the temperature-regulated, luxurious sleep experience you're looking for.",
+          ? "Temperature regulation is clearly key to your best sleep. The Busby Dream combines Joma® Wool-infused CoolGel quilting with natural latex to actively dissipate heat — you'll notice the difference from night one."
+          : "The Busby Dream is perfect for you. With premium cooling materials and seven precision-engineered layers, it delivers the temperature-regulated, luxurious sleep experience you're looking for.",
     },
   };
 
@@ -349,19 +349,19 @@ export const productDetails: Record<
   { name: string; price: number; tagline: string; features: string[] }
 > = {
   nod: {
-    name: 'Buzzbee Nod',
+    name: 'Busby Nod',
     price: 549,
     tagline: 'Dependable comfort, night after night',
     features: ['5-layer hybrid construction', 'CertiPUR-US certified foams', 'Made in Wisconsin, USA'],
   },
   slumber: {
-    name: 'Buzzbee Slumber',
+    name: 'Busby Slumber',
     price: 999,
     tagline: 'Rich, plush comfort that envelops you',
     features: ['100% natural latex layer', 'Deep pressure relief', 'Made in Wisconsin, USA'],
   },
   dream: {
-    name: 'Buzzbee Dream',
+    name: 'Busby Dream',
     price: 1299,
     tagline: 'Engineered for luxury performance.',
     features: ['Joma® Wool CoolGel quilting', 'Tri-Zone encased coil system', 'Made in Wisconsin, USA'],

@@ -56,7 +56,7 @@ export default function SixComponents() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <span className="inline-block bg-gold/15 text-gold-dark font-semibold px-4 py-1 rounded-full text-sm mb-4">
-            The Buzzbee Philosophy
+            The Busby Philosophy
           </span>
           <h2 className="text-3xl md:text-4xl font-serif text-navy mb-2">
             The 6 Essential Components

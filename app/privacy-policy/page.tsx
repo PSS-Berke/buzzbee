@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 
 export const metadata = {
-  title: "Privacy Policy | Buzzbee",
+  title: "Privacy Policy | Busby",
   description:
-    "Learn how Buzzbee collects, uses, shares, and protects your personal information.",
+    "Learn how Busby collects, uses, shares, and protects your personal information.",
 };
 
 const sections = [

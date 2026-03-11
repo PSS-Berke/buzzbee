@@ -44,7 +44,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       {/* Title Section - Editorial */}
       <div>
         <span className="inline-block text-gold-dark font-medium text-sm mb-3">
-          {product.brand === 'abt' ? 'abt Exclusive' : 'Buzzbee · Online Exclusive'}
+          {product.brand === 'abt' ? 'abt Exclusive' : 'Busby · Online Exclusive'}
         </span>
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-navy mb-3">
           The <span className="font-semibold">{product.name}</span>

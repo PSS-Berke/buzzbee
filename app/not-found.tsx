@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Page Not Found | Buzzbee',
+  title: 'Page Not Found | Busby',
   description: 'The page you were looking for could not be found. Browse our American-made mattress collection.',
 };
 

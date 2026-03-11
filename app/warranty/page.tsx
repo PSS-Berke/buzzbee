@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Ten Year Warranty | Buzzbee',
-  description: 'Ten Year Limited Warranty for Buzzbee mattresses.',
+  title: 'Ten Year Warranty | Busby',
+  description: 'Ten Year Limited Warranty for Busby mattresses.',
 };
 
 export default function WarrantyPage() {

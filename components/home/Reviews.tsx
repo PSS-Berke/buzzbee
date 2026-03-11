@@ -6,11 +6,11 @@ import { Quote } from 'lucide-react';
 const quotes = [
   {
     id: 1,
-    content: 'Buzzbee, the new Chicago-based better sleep company selling high-end mattresses without the hassle and highway-robbery pricing…',
+    content: 'Busby, the new Chicago-based better sleep company selling high-end mattresses without the hassle and highway-robbery pricing…',
   },
   {
     id: 2,
-    content: 'Buzzbee\'s focus on quality will make it stand out in the field…',
+    content: 'Busby\'s focus on quality will make it stand out in the field…',
   },
 ];
 

@@ -10,7 +10,7 @@ const navigation = {
   mattresses: {
     label: 'Mattresses',
     items: [
-      { name: 'Buzzbee', href: '/home-line' },
+      { name: 'Busby', href: '/home-line' },
       { name: 'Shop by Feel', href: '/shop-by-feel' },
       { name: 'Compare Mattresses', href: '/compare' },
     ],
@@ -45,11 +45,12 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/logo.png"
-              alt="Buzzbee - American Made Mattresses"
-              width={180}
-              height={50}
-              className="h-10 w-auto"
+              src="/images/Untitled design (6).svg"
+              alt="Busby - American Made Mattresses"
+              width={128}
+              height={128}
+              unoptimized
+              className="h-32 w-auto"
               priority
             />
           </Link>

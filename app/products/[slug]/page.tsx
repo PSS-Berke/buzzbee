@@ -29,12 +29,12 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
   if (!product) {
     return {
-      title: 'Product Not Found | Buzzbee',
+      title: 'Product Not Found | Busby',
     };
   }
 
   return {
-    title: `${product.name} | American-Made ${product.type} Mattress | Buzzbee`,
+    title: `${product.name} | American-Made ${product.type} Mattress | Busby`,
     description: product.description,
     keywords: [
       product.name,
@@ -47,9 +47,9 @@ export async function generateMetadata({ params }: ProductPageProps) {
       canonical: `/products/${slug}`,
     },
     openGraph: {
-      title: `${product.name} | American-Made ${product.type} Mattress | Buzzbee`,
+      title: `${product.name} | American-Made ${product.type} Mattress | Busby`,
       description: product.description,
-      url: `https://www.buzzbee.com/products/${slug}`,
+      url: `https://www.busby.com/products/${slug}`,
       images: product.images[0]
         ? [{ url: product.images[0], alt: product.name }]
         : [],
@@ -87,9 +87,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    brand: { '@type': 'Brand', name: 'Buzzbee' },
+    brand: { '@type': 'Brand', name: 'Busby' },
     image: product.images,
-    url: `https://www.buzzbee.com/products/${product.slug}`,
+    url: `https://www.busby.com/products/${product.slug}`,
     aggregateRating: product.reviewCount > 0
       ? {
           '@type': 'AggregateRating',
@@ -102,7 +102,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       priceCurrency: 'USD',
       price: product.price,
       availability: 'https://schema.org/InStock',
-      seller: { '@type': 'Organization', name: 'Buzzbee' },
+      seller: { '@type': 'Organization', name: 'Busby' },
     },
   };
 

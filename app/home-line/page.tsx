@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
 
 export const metadata = {
-  title: 'Buzzbee | Online Exclusives',
+  title: 'Busby | Online Exclusives',
   description:
     'Five tiers of premium comfort, available exclusively online. From dependable to absolutely premium — find your perfect level.',
 };
@@ -49,7 +49,7 @@ export default function HomeLinePage() {
             Online Exclusives
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy mb-6">
-            <span className="wavy-underline">Buzzbee</span>
+            <span className="wavy-underline">Busby</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed">
             Four tiers of comfort. One for every sleeper. Available only here.
@@ -228,7 +228,7 @@ export default function HomeLinePage() {
             {/* Section Header */}
             <div className="text-center mb-12">
               <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-                Buzzbee
+                Busby
               </span>
               <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4">
                 The <span className="wavy-underline">Nest</span>

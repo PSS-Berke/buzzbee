@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms & Conditions | Buzzbee',
-  description: 'Terms and Conditions for Buzzbee.',
+  title: 'Terms & Conditions | Busby',
+  description: 'Terms and Conditions for Busby.',
 };
 
 export default function TermsPage() {

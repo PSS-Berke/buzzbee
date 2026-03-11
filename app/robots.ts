@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/cart', '/checkout', '/api/'],
     },
-    sitemap: 'https://www.buzzbee.com/sitemap.xml',
+    sitemap: 'https://www.busby.com/sitemap.xml',
   };
 }

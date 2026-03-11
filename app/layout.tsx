@@ -27,9 +27,9 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Buzzbee | American-Made Mattresses | Premium Sleep",
+  title: "Busby | American-Made Mattresses | Premium Sleep",
   description:
-    "Discover Buzzbee - premium mattresses handcrafted in the USA with 25+ years of expertise. The perfect night's sleep. Free delivery, financing available, up to 20 year warranty.",
+    "Discover Busby - premium mattresses handcrafted in the USA with 25+ years of expertise. The perfect night's sleep. Free delivery, financing available, up to 20 year warranty.",
   keywords: [
     "American made mattress",
     "USA mattress",
@@ -37,29 +37,29 @@ export const metadata: Metadata = {
     "handcrafted mattress",
     "luxury mattress",
   ],
-  metadataBase: new URL("https://www.buzzbee.com"),
+  metadataBase: new URL("https://www.busby.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
-    siteName: "Buzzbee",
-    title: "Buzzbee | American-Made Mattresses | Premium Sleep",
+    siteName: "Busby",
+    title: "Busby | American-Made Mattresses | Premium Sleep",
     description:
       "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
-    url: "https://www.buzzbee.com",
+    url: "https://www.busby.com",
     images: [
       {
         url: "/images/og-image.png",
         width: 1500,
         height: 1200,
-        alt: "Buzzbee - American Made Mattresses",
+        alt: "Busby - American Made Mattresses",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Buzzbee | American-Made Mattresses | Premium Sleep",
+    title: "Busby | American-Made Mattresses | Premium Sleep",
     description:
       "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
     images: ["/images/og-image.png"],
@@ -69,9 +69,9 @@ export const metadata: Metadata = {
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Buzzbee',
-  url: 'https://www.buzzbee.com',
-  logo: 'https://www.buzzbee.com/images/logo.png',
+  name: 'Busby',
+  url: 'https://www.busby.com',
+  logo: 'https://www.busby.com/images/Untitled design (6).svg',
   description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
   telephone: '+18443753376',
   contactPoint: {

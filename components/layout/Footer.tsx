@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Phone, Mail, Facebook, Twitter, Instagram } from 'lucide-react';
 
 const shopLinks = [
-  { name: 'Buzzbee Mattresses', href: '/home-line' },
+  { name: 'Busby Mattresses', href: '/home-line' },
   { name: 'Shop by Feel', href: '/shop-by-feel' },
   { name: 'Compare Mattresses', href: '/compare' },
 ];
@@ -20,17 +20,18 @@ export default function Footer() {
   return (
     <footer className="bg-navy text-white relative z-10">
       {/* Main footer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand block */}
           <div className="md:col-span-2">
-            <Link href="/" className="inline-block mb-4 bg-white rounded-lg px-3 py-2">
+            <Link href="/" className="inline-block mb-4 -mt-10">
               <Image
-                src="/images/logo.png"
-                alt="Buzzbee - American Made Mattresses"
-                width={150}
-                height={42}
-                className="h-8 w-auto"
+                src="/images/Untitled design (6).svg"
+                alt="Busby - American Made Mattresses"
+                width={200}
+                height={200}
+                unoptimized
+                className="h-[200px] w-auto"
               />
             </Link>
             <p className="text-gray-300 text-sm mb-6">
@@ -45,25 +46,25 @@ export default function Footer() {
                 <span>1-844-375-3376</span>
               </a>
               <a
-                href="mailto:wholesale@buzzbee.com"
+                href="mailto:wholesale@busby.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>wholesale@buzzbee.com</span>
+                <span>wholesale@busby.com</span>
               </a>
               <a
-                href="mailto:press@buzzbee.com"
+                href="mailto:press@busby.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>press@buzzbee.com</span>
+                <span>press@busby.com</span>
               </a>
               <a
-                href="mailto:support@buzzbee.com"
+                href="mailto:support@busby.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>support@buzzbee.com</span>
+                <span>support@busby.com</span>
               </a>
             </div>
             <div className="flex items-center gap-4 mt-4">
@@ -98,7 +99,7 @@ export default function Footer() {
           </div>
 
           {/* Shop links */}
-          <div>
+          <div className="pt-16">
             <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Shop</h3>
             <ul className="space-y-2">
               {shopLinks.map((link) => (
@@ -115,7 +116,7 @@ export default function Footer() {
           </div>
 
           {/* Company links */}
-          <div>
+          <div className="pt-16">
             <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Company</h3>
             <ul className="space-y-2">
               {companyLinks.map((link) => (
@@ -162,7 +163,7 @@ export default function Footer() {
       <div className="border-t border-navy-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-sm text-gray-400 text-center md:text-left">
-            &copy; {new Date().getFullYear()} Buzzbee. All rights reserved.
+            &copy; {new Date().getFullYear()} Busby. All rights reserved.
           </p>
         </div>
       </div>

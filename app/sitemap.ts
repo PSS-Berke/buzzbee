@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { getAllProductSlugs } from '@/data/products';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://www.buzzbee.com';
+  const baseUrl = 'https://www.busby.com';
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },

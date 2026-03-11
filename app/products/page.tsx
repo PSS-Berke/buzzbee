@@ -4,9 +4,9 @@ import { ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
 
 export const metadata = {
-  title: 'Buzzbee Mattresses | American-Made Hybrid Mattresses',
+  title: 'Busby Mattresses | American-Made Hybrid Mattresses',
   description:
-    'Shop Buzzbee mattresses — premium American-made hybrids. From the essential Nod to the luxury Dream pillowtop.',
+    'Shop Busby mattresses — premium American-made hybrids. From the essential Nod to the luxury Dream pillowtop.',
 };
 
 // Add key benefits to products
@@ -49,10 +49,10 @@ export default function ProductsPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Buzzbee Collection
+            Busby Collection
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy mb-6">
-            Buzzbee <span className="wavy-underline">Collection</span>
+            Busby <span className="wavy-underline">Collection</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
             Handcrafted in America. Premium hybrid mattresses for every sleeper.

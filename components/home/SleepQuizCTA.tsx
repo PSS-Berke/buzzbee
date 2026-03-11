@@ -77,7 +77,7 @@ export default function SleepQuizCTA() {
 
               <div className="bg-gold/20 border-2 border-gold/30 rounded-2xl p-6 shadow-lg shadow-gold/5 transform rotate-2 -translate-x-2">
                 <p className="text-sm text-gold-dark/70 mb-2">Your Result</p>
-                <p className="font-bold text-navy text-lg mb-2">The Buzzbee Doze</p>
+                <p className="font-bold text-navy text-lg mb-2">The Busby Doze</p>
                 <p className="text-gray-600 text-sm">
                   Based on your answers, this mattress is your perfect match.
                 </p>

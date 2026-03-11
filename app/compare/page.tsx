@@ -4,9 +4,9 @@ import { Star, ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
 
 export const metadata = {
-  title: 'Compare Mattresses | Buzzbee',
+  title: 'Compare Mattresses | Busby',
   description:
-    'Compare all Buzzbee mattresses side by side. Five tiers of online-exclusive comfort — find your perfect level.',
+    'Compare all Busby mattresses side by side. Five tiers of online-exclusive comfort — find your perfect level.',
   alternates: { canonical: '/compare' },
 };
 
@@ -43,7 +43,7 @@ export default function ComparePage() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Buzzbee · Online Exclusive
+            Busby · Online Exclusive
           </span>
           <h1 className="text-3xl md:text-4xl font-serif text-navy mb-4">
             Compare Our <span className="wavy-underline">Collection</span>
