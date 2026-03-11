@@ -24,14 +24,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Brand block */}
           <div className="md:col-span-2">
-            <Link href="/" className="inline-block mb-4 -mt-10">
+            <Link href="/" className="inline-block mb-4">
               <Image
-                src="/images/Untitled design (6).svg"
+                src="/logo-busby-footer.svg"
                 alt="Busby - American Made Mattresses"
                 width={200}
                 height={200}
                 unoptimized
-                className="h-[200px] w-auto"
+                className="h-20 w-auto"
               />
             </Link>
             <p className="text-gray-300 text-sm mb-6">
@@ -46,30 +46,30 @@ export default function Footer() {
                 <span>1-844-375-3376</span>
               </a>
               <a
-                href="mailto:wholesale@busby.com"
+                href="mailto:wholesale@mybusby.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>wholesale@busby.com</span>
+                <span>wholesale@mybusby.com</span>
               </a>
               <a
-                href="mailto:press@busby.com"
+                href="mailto:press@mybusby.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>press@busby.com</span>
+                <span>press@mybusby.com</span>
               </a>
               <a
-                href="mailto:support@busby.com"
+                href="mailto:support@mybusby.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>support@busby.com</span>
+                <span>support@mybusby.com</span>
               </a>
             </div>
             <div className="flex items-center gap-4 mt-4">
               <a
-                href="https://www.facebook.com/Sleep6Mattress"
+                href="https://www.facebook.com/mybusby"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-gold transition-colors"
@@ -87,7 +87,7 @@ export default function Footer() {
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="https://www.instagram.com/Sleep6_/"
+                href="https://www.instagram.com/my_busby"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-300 hover:text-gold transition-colors"

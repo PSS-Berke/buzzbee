@@ -26,7 +26,7 @@ const localBusinessSchema = {
   '@type': 'FurnitureStore',
   name: 'Busby',
   url: 'https://www.busby.com',
-  logo: 'https://www.busby.com/images/Untitled design (6).svg',
+  logo: 'https://www.busby.com/logo-busby-footer.svg',
   telephone: '+18443753376',
   description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
   address: {

@@ -235,7 +235,7 @@ const sections = [
           {[
             "Follow the directions in a marketing email or direct mail communication you receive from us",
             "Call 1-844-375-3376 with your request and current contact information",
-            "Send an email with your request to: info@Sleep6.com",
+            "Send an email with your request to: info@mybusby.com",
           ].map((item) => (
             <li key={item} className="flex items-start gap-3 text-gray-600">
               <span className="flex-shrink-0 w-1.5 h-1.5 bg-gold rounded-full mt-2" />
@@ -419,14 +419,14 @@ export default function PrivacyPolicyPage() {
               </a>
 
               <a
-                href="mailto:support@Sleep6.com"
+                href="mailto:support@mybusby.com"
                 className="bg-white border-2 border-gold/20 rounded-3xl p-6 shadow-lg shadow-gold/5 flex flex-col items-center gap-3 hover:border-gold transition-colors"
               >
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
                   <Mail className="w-5 h-5 text-gold-dark" />
                 </div>
                 <span className="text-sm text-gray-500">Email</span>
-                <span className="text-navy font-semibold">support@Sleep6.com</span>
+                <span className="text-navy font-semibold">support@mybusby.com</span>
               </a>
 
               <div className="bg-white border-2 border-gold/20 rounded-3xl p-6 shadow-lg shadow-gold/5 flex flex-col items-center gap-3">

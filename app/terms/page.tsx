@@ -317,8 +317,8 @@ export default function TermsPage() {
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
             Questions about the Terms of Service should be sent to us at{' '}
-            <a href="mailto:support@Sleep6.com" className="text-navy underline hover:text-gold-dark transition-colors">
-              support@Sleep6.com
+            <a href="mailto:support@mybusby.com" className="text-navy underline hover:text-gold-dark transition-colors">
+              support@mybusby.com
             </a>
           </p>
         </section>

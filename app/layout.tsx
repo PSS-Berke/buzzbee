@@ -77,7 +77,7 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'Busby',
   url: 'https://www.busby.com',
-  logo: 'https://www.busby.com/images/Untitled design (6).svg',
+  logo: 'https://www.busby.com/logo-busby-footer.svg',
   description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
   telephone: '+18443753376',
   contactPoint: {
