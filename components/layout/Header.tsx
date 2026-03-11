@@ -10,7 +10,7 @@ const navigation = {
   mattresses: {
     label: 'Mattresses',
     items: [
-      { name: 'Sleep6', href: '/home-line' },
+      { name: 'Buzzbee', href: '/home-line' },
       { name: 'Shop by Feel', href: '/shop-by-feel' },
       { name: 'Compare Mattresses', href: '/compare' },
     ],

@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
 
 export const metadata = {
-  title: 'Sleep6 | Online Exclusives',
+  title: 'Buzzbee | Online Exclusives',
   description:
     'Five tiers of premium comfort, available exclusively online. From dependable to absolutely premium — find your perfect level.',
 };
@@ -49,10 +49,10 @@ export default function HomeLinePage() {
             Online Exclusives
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy mb-6">
-            <span className="wavy-underline">Sleep6</span>
+            <span className="wavy-underline">Buzzbee</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Five tiers of comfort. One for every sleeper. Available only here.
+            Four tiers of comfort. One for every sleeper. Available only here.
           </p>
 
           {/* Tier ladder — visual teaser */}
@@ -228,7 +228,7 @@ export default function HomeLinePage() {
             {/* Section Header */}
             <div className="text-center mb-12">
               <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-                Sleep6
+                Buzzbee
               </span>
               <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4">
                 The <span className="wavy-underline">Nest</span>
@@ -334,14 +334,14 @@ export default function HomeLinePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-white/60 rounded-3xl px-8 py-10 border border-gold/20">
             <div>
               <p className="text-xs text-gold-dark font-medium uppercase tracking-wider mb-2">Also available</p>
-              <h3 className="text-2xl font-serif text-navy mb-1">Looking for our abt Exclusive line?</h3>
-              <p className="text-gray-500 text-sm">Our full in-store collection, available exclusively through abt.</p>
+              <h3 className="text-2xl font-serif text-navy mb-1">Looking for more to help you sleep?</h3>
+              <p className="text-gray-500 text-sm">Pillows, protectors, and more to complete your sleep setup.</p>
             </div>
             <Link
-              href="/abt-exclusive"
+              href="/accessories"
               className="shrink-0 inline-flex items-center gap-3 bg-navy hover:bg-navy-light text-white font-medium px-7 py-3.5 rounded-full transition-all duration-300 group"
             >
-              Shop abt Exclusive
+              Shop Sleep Accessories
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
           </div>

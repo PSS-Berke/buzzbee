@@ -41,7 +41,7 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
-  brand: 'abt' | 'sleep6-home';
+  brand: 'abt' | 'buzzbee';
   type: string;
   tagline: string;
   description: string;
@@ -64,11 +64,11 @@ export const homeLineProducts: Product[] = [
   {
     id: 'hl-1',
     slug: 'nod',
-    name: 'Sleep6 Nod',
-    brand: 'sleep6-home',
+    name: 'Buzzbee Nod',
+    brand: 'buzzbee',
     type: 'Hybrid',
     tagline: 'Dependable comfort, night after night',
-    description: 'The Sleep6 Nod is a 13½" plush hybrid mattress built for sleepers who want the conforming feel of foam with the responsive support of individually wrapped coils. Five precision-layered components work together — from the CoolGel-infused quilt fill to the Quantum® reinforced perimeter coils — to deliver consistent, roll-off-free comfort from edge to edge.',
+    description: 'The Buzzbee Nod is a 13½" plush hybrid mattress built for sleepers who want the conforming feel of foam with the responsive support of individually wrapped coils. Five precision-layered components work together — from the CoolGel-infused quilt fill to the Quantum® reinforced perimeter coils — to deliver consistent, roll-off-free comfort from edge to edge.',
     price: 549,
     originalPrice: 1098,
     rating: 4.7,
@@ -115,11 +115,11 @@ export const homeLineProducts: Product[] = [
   {
     id: 'hl-2',
     slug: 'doze',
-    name: 'Sleep6 Doze',
-    brand: 'sleep6-home',
+    name: 'Buzzbee Doze',
+    brand: 'buzzbee',
     type: 'Hybrid',
     tagline: 'Plush comfort, built to last.',
-    description: 'The Sleep6 Doze is a 13½" XPlush hybrid mattress engineered for sleepers who want deep, enveloping comfort without sacrificing support. A 2" Serene™ foam comfort layer — double the depth of the Nod — works alongside CoolGel quilting and individually wrapped coils to deliver responsive pressure relief from the very first night.',
+    description: 'The Buzzbee Doze is a 13½" XPlush hybrid mattress engineered for sleepers who want deep, enveloping comfort without sacrificing support. A 2" Serene™ foam comfort layer — double the depth of the Nod — works alongside CoolGel quilting and individually wrapped coils to deliver responsive pressure relief from the very first night.',
     price: 749,
     originalPrice: 1498,
     rating: 4.8,
@@ -168,11 +168,11 @@ export const homeLineProducts: Product[] = [
   {
     id: 'hl-3',
     slug: 'slumber',
-    name: 'Sleep6 Slumber',
-    brand: 'sleep6-home',
+    name: 'Buzzbee Slumber',
+    brand: 'buzzbee',
     type: 'Hybrid',
     tagline: 'Rich, plush comfort that envelops you',
-    description: 'The Sleep6 Slumber is a 15½" plush hybrid mattress built for sleepers who demand the most from every layer. Six precision-engineered components — including 1" of 100% natural latex and 2" of Serene™ plush foam — work together with an individually wrapped coil system to deliver deep, responsive comfort from edge to edge.',
+    description: 'The Buzzbee Slumber is a 15½" plush hybrid mattress built for sleepers who demand the most from every layer. Six precision-engineered components — including 1" of 100% natural latex and 2" of Serene™ plush foam — work together with an individually wrapped coil system to deliver deep, responsive comfort from edge to edge.',
     price: 999,
     originalPrice: 1998,
     rating: 4.8,
@@ -223,11 +223,11 @@ export const homeLineProducts: Product[] = [
   {
     id: 'hl-4',
     slug: 'dream',
-    name: 'Sleep6 Dream',
-    brand: 'sleep6-home',
+    name: 'Buzzbee Dream',
+    brand: 'buzzbee',
     type: 'Hybrid',
     tagline: 'Engineered for luxury performance.',
-    description: 'The Sleep6 Dream is a 15½" XPlush pillowtop hybrid mattress — the most refined mattress in the Sleep6 Home line. Seven precision-engineered layers, including Joma® Wool-infused CoolGel quilting, 1" of natural latex, 2" of Serene™ plush foam, and a Tri-Zone encased coil system, deliver uncompromising plush comfort from surface to foundation.',
+    description: 'The Buzzbee Dream is a 15½" XPlush pillowtop hybrid mattress — the most refined mattress in the Buzzbee Home line. Seven precision-engineered layers, including Joma® Wool-infused CoolGel quilting, 1" of natural latex, 2" of Serene™ plush foam, and a Tri-Zone encased coil system, deliver uncompromising plush comfort from surface to foundation.',
     price: 1299,
     originalPrice: 2598,
     rating: 4.9,
@@ -281,7 +281,7 @@ export const homeLineProducts: Product[] = [
     id: 'hl-crib-1',
     slug: 'nest',
     name: 'Nest',
-    brand: 'sleep6-home',
+    brand: 'buzzbee',
     type: 'Crib Mattress',
     tagline: 'Safe, supportive sleep from day one',
     description: 'The Nest is designed from the ground up for your baby\'s safety and comfort. A firm, flat sleep surface meets infant safety standards while breathable materials keep little ones cool and comfortable through every nap and night.',

@@ -56,15 +56,12 @@ export default function SixComponents() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <span className="inline-block bg-gold/15 text-gold-dark font-semibold px-4 py-1 rounded-full text-sm mb-4">
-            The Sleep6 Philosophy
+            The Buzzbee Philosophy
           </span>
-          <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4">
+          <h2 className="text-3xl md:text-4xl font-serif text-navy mb-2">
             The 6 Essential Components
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            After 25 years in the industry, we identified exactly what makes a perfect mattress.
-            No more, no less.
-          </p>
+          <p className="text-xl text-gray-500 mb-4">to a perfect night&apos;s sleep</p>
           <p className="text-lg font-medium text-navy mt-3">
             Sleep is not a luxury. It&apos;s a foundation.
           </p>

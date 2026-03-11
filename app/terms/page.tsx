@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms & Conditions | Sleep6',
-  description: 'Terms and Conditions for Sleep6, INC.',
+  title: 'Terms & Conditions | Buzzbee',
+  description: 'Terms and Conditions for Buzzbee.',
 };
 
 export default function TermsPage() {

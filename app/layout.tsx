@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { CartProvider } from "@/contexts/CartContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import ScrollToTop from "@/components/layout/ScrollToTop";
+import { Analytics } from "@vercel/analytics/next";
 
 const lato = Lato({
   variable: "--font-lato",
@@ -36,6 +37,50 @@ export const metadata: Metadata = {
     "handcrafted mattress",
     "luxury mattress",
   ],
+  metadataBase: new URL("https://www.buzzbee.com"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Buzzbee",
+    title: "Buzzbee | American-Made Mattresses | Premium Sleep",
+    description:
+      "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
+    url: "https://www.buzzbee.com",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1500,
+        height: 1200,
+        alt: "Buzzbee - American Made Mattresses",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Buzzbee | American-Made Mattresses | Premium Sleep",
+    description:
+      "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
+    images: ["/images/og-image.png"],
+  },
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Buzzbee',
+  url: 'https://www.buzzbee.com',
+  logo: 'https://www.buzzbee.com/images/logo.png',
+  description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
+  telephone: '+18443753376',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+18443753376',
+    contactType: 'customer service',
+    areaServed: 'US',
+    availableLanguage: 'English',
+  },
 };
 
 export default function RootLayout({
@@ -46,6 +91,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${lato.variable} ${josefinSans.variable} ${playfairDisplay.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
         {/* Quilted wave pattern overlay */}
         <div className="quilted-wave-overlay" aria-hidden="true" />
         <CartProvider>
@@ -55,6 +104,7 @@ export default function RootLayout({
           <Footer />
           <CartDrawer />
         </CartProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -4,9 +4,10 @@ import { Star, ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
 
 export const metadata = {
-  title: 'Compare | Sleep6',
+  title: 'Compare Mattresses | Buzzbee',
   description:
-    'Compare all Sleep6 mattresses side by side. Five tiers of online-exclusive comfort — find your perfect level.',
+    'Compare all Buzzbee mattresses side by side. Five tiers of online-exclusive comfort — find your perfect level.',
+  alternates: { canonical: '/compare' },
 };
 
 // Key benefits for each product
@@ -42,7 +43,7 @@ export default function ComparePage() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Sleep6 · Online Exclusive
+            Buzzbee · Online Exclusive
           </span>
           <h1 className="text-3xl md:text-4xl font-serif text-navy mb-4">
             Compare Our <span className="wavy-underline">Collection</span>

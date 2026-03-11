@@ -2,12 +2,12 @@ import type { LucideIcon } from 'lucide-react';
 import { Moon, Activity, Bed, RefreshCw, Thermometer, User, Users, Home } from 'lucide-react';
 import { getProductBySlug } from '@/data/products';
 
-export type RecommendedProduct = 'luna' | 'mystic' | 'fak-cosmos';
+export type RecommendedProduct = 'nod' | 'slumber' | 'dream';
 
 export interface ProductWeights {
-  luna: number;
-  mystic: number;
-  'fak-cosmos': number;
+  nod: number;
+  slumber: number;
+  dream: number;
 }
 
 export interface FirmnessWeight {
@@ -36,9 +36,9 @@ export interface QuizAnswers {
 }
 
 export interface ProductScores {
-  luna: number;
-  mystic: number;
-  'fak-cosmos': number;
+  nod: number;
+  slumber: number;
+  dream: number;
 }
 
 export interface FirmnessScores {
@@ -66,28 +66,28 @@ export const quizQuestions: QuizQuestion[] = [
         id: 'side',
         label: 'Side',
         icon: Moon,
-        weights: { luna: 1, mystic: 2, 'fak-cosmos': 2 },
+        weights: { nod: 1, slumber: 2, dream: 2 },
         firmnessWeight: { soft: 3, medium: 2, firm: 0 },
       },
       {
         id: 'back',
         label: 'Back',
         icon: Activity,
-        weights: { luna: 1, mystic: 1, 'fak-cosmos': 2 },
+        weights: { nod: 1, slumber: 1, dream: 2 },
         firmnessWeight: { soft: 1, medium: 3, firm: 1 },
       },
       {
         id: 'stomach',
         label: 'Stomach',
         icon: Bed,
-        weights: { luna: 2, mystic: 1, 'fak-cosmos': 1 },
+        weights: { nod: 2, slumber: 1, dream: 1 },
         firmnessWeight: { soft: 0, medium: 1, firm: 3 },
       },
       {
         id: 'combination',
         label: 'Combination',
         icon: RefreshCw,
-        weights: { luna: 1, mystic: 1, 'fak-cosmos': 2 },
+        weights: { nod: 1, slumber: 1, dream: 2 },
         firmnessWeight: { soft: 1, medium: 3, firm: 1 },
       },
     ],
@@ -99,25 +99,25 @@ export const quizQuestions: QuizQuestion[] = [
       {
         id: 'lower-back',
         label: 'Lower back pain',
-        weights: { luna: 0, mystic: 3, 'fak-cosmos': 2 },
+        weights: { nod: 0, slumber: 3, dream: 2 },
         firmnessWeight: { soft: 0, medium: 2, firm: 2 },
       },
       {
         id: 'shoulder-hip',
         label: 'Shoulder/hip pressure',
-        weights: { luna: 0, mystic: 4, 'fak-cosmos': 2 },
+        weights: { nod: 0, slumber: 4, dream: 2 },
         firmnessWeight: { soft: 3, medium: 1, firm: 0 },
       },
       {
         id: 'neck',
         label: 'Neck pain',
-        weights: { luna: 1, mystic: 2, 'fak-cosmos': 1 },
+        weights: { nod: 1, slumber: 2, dream: 1 },
         firmnessWeight: { soft: 1, medium: 2, firm: 1 },
       },
       {
         id: 'none',
         label: 'I sleep comfortably',
-        weights: { luna: 2, mystic: 0, 'fak-cosmos': 1 },
+        weights: { nod: 2, slumber: 0, dream: 1 },
         firmnessWeight: { soft: 1, medium: 2, firm: 1 },
       },
     ],
@@ -130,28 +130,28 @@ export const quizQuestions: QuizQuestion[] = [
         id: 'plush',
         label: 'Plush',
         sublabel: 'Sink-in softness',
-        weights: { luna: 0, mystic: 2, 'fak-cosmos': 2 },
+        weights: { nod: 0, slumber: 2, dream: 2 },
         firmnessWeight: { soft: 4, medium: 0, firm: 0 },
       },
       {
         id: 'medium',
         label: 'Medium',
         sublabel: 'Balanced feel',
-        weights: { luna: 1, mystic: 1, 'fak-cosmos': 2 },
+        weights: { nod: 1, slumber: 1, dream: 2 },
         firmnessWeight: { soft: 0, medium: 4, firm: 0 },
       },
       {
         id: 'medium-firm',
         label: 'Medium-Firm',
         sublabel: 'Supportive with cushion',
-        weights: { luna: 2, mystic: 1, 'fak-cosmos': 1 },
+        weights: { nod: 2, slumber: 1, dream: 1 },
         firmnessWeight: { soft: 0, medium: 2, firm: 2 },
       },
       {
         id: 'firm',
         label: 'Firm',
         sublabel: 'Minimal sink',
-        weights: { luna: 3, mystic: 0, 'fak-cosmos': 0 },
+        weights: { nod: 3, slumber: 0, dream: 0 },
         firmnessWeight: { soft: 0, medium: 0, firm: 4 },
       },
     ],
@@ -164,17 +164,17 @@ export const quizQuestions: QuizQuestion[] = [
         id: 'overheat',
         label: 'Yes, I overheat',
         icon: Thermometer,
-        weights: { luna: 0, mystic: 0, 'fak-cosmos': 4 },
+        weights: { nod: 0, slumber: 0, dream: 4 },
       },
       {
         id: 'sometimes',
         label: 'Sometimes',
-        weights: { luna: 1, mystic: 1, 'fak-cosmos': 2 },
+        weights: { nod: 1, slumber: 1, dream: 2 },
       },
       {
         id: 'no',
         label: 'No',
-        weights: { luna: 2, mystic: 2, 'fak-cosmos': 0 },
+        weights: { nod: 2, slumber: 2, dream: 0 },
       },
     ],
   },
@@ -186,19 +186,19 @@ export const quizQuestions: QuizQuestion[] = [
         id: 'just-me',
         label: 'Just me',
         icon: User,
-        weights: { luna: 2, mystic: 1, 'fak-cosmos': 1 },
+        weights: { nod: 2, slumber: 1, dream: 1 },
       },
       {
         id: 'partner',
         label: 'Me + partner',
         icon: Users,
-        weights: { luna: 0, mystic: 3, 'fak-cosmos': 2 },
+        weights: { nod: 0, slumber: 3, dream: 2 },
       },
       {
         id: 'family',
         label: 'Family/pets join',
         icon: Home,
-        weights: { luna: 0, mystic: 2, 'fak-cosmos': 2 },
+        weights: { nod: 0, slumber: 2, dream: 2 },
       },
     ],
   },
@@ -210,24 +210,24 @@ export const quizQuestions: QuizQuestion[] = [
         id: 'memory-foam',
         label: 'Deep contouring',
         sublabel: 'Memory foam feel',
-        weights: { luna: 0, mystic: 4, 'fak-cosmos': 1 },
+        weights: { nod: 0, slumber: 4, dream: 1 },
       },
       {
         id: 'hybrid',
         label: 'Balanced support + bounce',
         sublabel: 'Hybrid feel',
-        weights: { luna: 1, mystic: 1, 'fak-cosmos': 3 },
+        weights: { nod: 1, slumber: 1, dream: 3 },
       },
       {
         id: 'responsive',
         label: 'Responsive + supportive',
         sublabel: 'Traditional foam feel',
-        weights: { luna: 3, mystic: 0, 'fak-cosmos': 1 },
+        weights: { nod: 3, slumber: 0, dream: 1 },
       },
       {
         id: 'not-sure',
         label: 'Not sure',
-        weights: { luna: 1, mystic: 1, 'fak-cosmos': 1 },
+        weights: { nod: 1, slumber: 1, dream: 1 },
       },
     ],
   },
@@ -235,9 +235,9 @@ export const quizQuestions: QuizQuestion[] = [
 
 export function calculateResult(answers: QuizAnswers): QuizResult {
   const scores: ProductScores = {
-    luna: 0,
-    mystic: 0,
-    'fak-cosmos': 0,
+    nod: 0,
+    slumber: 0,
+    dream: 0,
   };
 
   const firmnessScores: FirmnessScores = {
@@ -255,9 +255,9 @@ export function calculateResult(answers: QuizAnswers): QuizResult {
     if (!selectedOption) continue;
 
     // Product scores
-    scores.luna += selectedOption.weights.luna;
-    scores.mystic += selectedOption.weights.mystic;
-    scores['fak-cosmos'] += selectedOption.weights['fak-cosmos'];
+    scores.nod += selectedOption.weights.nod;
+    scores.slumber += selectedOption.weights.slumber;
+    scores.dream += selectedOption.weights.dream;
 
     // Firmness scores (if present)
     if (selectedOption.firmnessWeight) {
@@ -268,17 +268,17 @@ export function calculateResult(answers: QuizAnswers): QuizResult {
   }
 
   // Find the product with the highest score
-  // Tie-breaker favors budget options: Luna > Mystic > FAK Cosmos
-  let recommendedProduct: RecommendedProduct = 'luna';
-  let highestScore = scores.luna;
+  // Tie-breaker favors budget options: Nod > Slumber > Dream
+  let recommendedProduct: RecommendedProduct = 'nod';
+  let highestScore = scores.nod;
 
-  if (scores.mystic > highestScore) {
-    recommendedProduct = 'mystic';
-    highestScore = scores.mystic;
+  if (scores.slumber > highestScore) {
+    recommendedProduct = 'slumber';
+    highestScore = scores.slumber;
   }
 
-  if (scores['fak-cosmos'] > highestScore) {
-    recommendedProduct = 'fak-cosmos';
+  if (scores.dream > highestScore) {
+    recommendedProduct = 'dream';
   }
 
   // Determine recommended firmness
@@ -318,26 +318,26 @@ function getResultMessaging(
   scores: ProductScores
 ): { headline: string; reason: string } {
   const messages: Record<RecommendedProduct, { headline: string; reason: string }> = {
-    luna: {
+    nod: {
       headline: 'Simple Comfort, Exceptional Value',
       reason:
-        scores.luna > 10
-          ? "You know what you want—quality sleep without overpaying. The Luna delivers exactly that: essential comfort, solid support, and American craftsmanship at an unbeatable price."
-          : "Based on your sleep profile, you don't need the bells and whistles. The Luna gives you everything essential for great sleep—comfort, support, and durability—at our best value.",
+        scores.nod > 10
+          ? "You know what you want — quality sleep without overpaying. The Buzzbee Nod delivers exactly that: essential comfort, solid support, and American craftsmanship at an unbeatable price."
+          : "Based on your sleep profile, you don't need the bells and whistles. The Buzzbee Nod gives you everything essential for great sleep — comfort, support, and durability — at our best value.",
     },
-    mystic: {
+    slumber: {
       headline: 'Relief and Recovery While You Sleep',
       reason:
-        scores.mystic > 12
-          ? "Your body deserves extra care. The Mystic's advanced motion-isolating memory foam was designed for sleepers like you—contouring to pressure points and helping you wake up refreshed and pain-free."
-          : "The Mystic is your match. Its pressure-relieving memory foam and motion isolation technology will help you get the restorative sleep your body needs.",
+        scores.slumber > 12
+          ? "Your body deserves extra care. The Buzzbee Slumber's natural latex and plush foam layers were designed for sleepers like you — contouring to pressure points and helping you wake up refreshed and pain-free."
+          : "The Buzzbee Slumber is your match. Its pressure-relieving comfort layers and motion isolation will help you get the restorative sleep your body needs.",
     },
-    'fak-cosmos': {
+    dream: {
       headline: 'Cool, Comfortable Sleep Awaits',
       reason:
-        scores['fak-cosmos'] > 12
-          ? "Temperature regulation is clearly key to your best sleep. The FAK Cosmos combines gel-infused foam with natural latex to actively dissipate heat—you'll notice the difference from night one."
-          : "The FAK Cosmos is perfect for you. With gel cooling technology and premium materials, it delivers the temperature-regulated, luxurious sleep experience you're looking for.",
+        scores.dream > 12
+          ? "Temperature regulation is clearly key to your best sleep. The Buzzbee Dream combines Joma® Wool-infused CoolGel quilting with natural latex to actively dissipate heat — you'll notice the difference from night one."
+          : "The Buzzbee Dream is perfect for you. With premium cooling materials and seven precision-engineered layers, it delivers the temperature-regulated, luxurious sleep experience you're looking for.",
     },
   };
 
@@ -348,22 +348,22 @@ export const productDetails: Record<
   RecommendedProduct,
   { name: string; price: number; tagline: string; features: string[] }
 > = {
-  luna: {
-    name: 'Luna',
-    price: 648,
-    tagline: 'The essentials of comfort and support',
-    features: ['3-layer construction', 'CertiPUR-US certified', 'Made in the USA'],
+  nod: {
+    name: 'Buzzbee Nod',
+    price: 549,
+    tagline: 'Dependable comfort, night after night',
+    features: ['5-layer hybrid construction', 'CertiPUR-US certified foams', 'Made in Wisconsin, USA'],
   },
-  mystic: {
-    name: 'Mystic',
-    price: 848,
-    tagline: 'Balances affordability and comfort',
-    features: ['Motion-isolating core', 'Pressure relief', 'Made in the USA'],
+  slumber: {
+    name: 'Buzzbee Slumber',
+    price: 999,
+    tagline: 'Rich, plush comfort that envelops you',
+    features: ['100% natural latex layer', 'Deep pressure relief', 'Made in Wisconsin, USA'],
   },
-  'fak-cosmos': {
-    name: 'FAK Cosmos',
-    price: 1348,
-    tagline: 'Maximum comfort with premium materials',
-    features: ['Gel-infused cooling', 'Natural latex layer', 'Temperature regulation'],
+  dream: {
+    name: 'Buzzbee Dream',
+    price: 1299,
+    tagline: 'Engineered for luxury performance.',
+    features: ['Joma® Wool CoolGel quilting', 'Tri-Zone encased coil system', 'Made in Wisconsin, USA'],
   },
 };

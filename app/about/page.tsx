@@ -16,8 +16,32 @@ import {
 } from 'lucide-react';
 
 export const metadata = {
-  title: 'About Us | Sleep6',
-  description: 'Learn about Sleep6 - 25+ years of bedding expertise, American-made mattresses built for real comfort without compromise.',
+  title: 'About Us | Buzzbee',
+  description: 'Learn about Buzzbee - 25+ years of bedding expertise, American-made mattresses built for real comfort without compromise.',
+  alternates: { canonical: '/about' },
+};
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FurnitureStore',
+  name: 'Buzzbee',
+  url: 'https://www.buzzbee.com',
+  logo: 'https://www.buzzbee.com/images/logo.png',
+  telephone: '+18443753376',
+  description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '123 Main Street',
+    addressLocality: 'Austin',
+    addressRegion: 'TX',
+    postalCode: '78701',
+    addressCountry: 'US',
+  },
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '10:00', closes: '19:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Sunday'], opens: '12:00', closes: '17:00' },
+  ],
+  priceRange: '$$',
 };
 
 const stats = [
@@ -74,6 +98,11 @@ const doBelieve = [
 
 export default function AboutPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
     <div className="min-h-screen bg-[#faf8f5] linen-texture relative">
       {/* Warm ambient glow */}
       <div
@@ -102,7 +131,7 @@ export default function AboutPage() {
               </h1>
 
               <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                At Sleep6, we believe your mattress should deliver the perfect balance of support,
+                At Buzzbee, we believe your mattress should deliver the perfect balance of support,
                 pressure relief, and durability — comfort without compromise, built to help your
                 body recover, restore, and wake up ready.
               </p>
@@ -117,11 +146,11 @@ export default function AboutPage() {
               {/* Content */}
               <div>
                 <span className="inline-block bg-gold/15 text-gold-dark font-semibold px-4 py-1 rounded-full text-sm mb-6">
-                  About Sleep6
+                  About Buzzbee
                 </span>
 
                 <h2 className="text-3xl md:text-4xl font-serif text-navy mb-6">
-                  We Built Sleep6 Around One Simple Idea
+                  We Built Buzzbee Around One Simple Idea
                 </h2>
 
                 <p className="text-2xl font-light text-gray-500 mb-6 leading-relaxed">
@@ -129,14 +158,14 @@ export default function AboutPage() {
                 </p>
 
                 <p className="text-gray-600 mb-6">
-                  That&apos;s why we created Sleep6 — a mattress company built around one simple idea:
+                  That&apos;s why we created Buzzbee — a mattress company built around one simple idea:
                   comfort without compromise. We design mattresses that deliver the perfect balance
                   of support, pressure relief, and durability — without unnecessary gimmicks or
                   inflated markups.
                 </p>
 
                 <p className="text-gray-600 mb-8">
-                  Every Sleep6 mattress is thoughtfully engineered to help your body recover,
+                  Every Buzzbee mattress is thoughtfully engineered to help your body recover,
                   restore, and wake up ready.
                 </p>
 
@@ -219,11 +248,11 @@ export default function AboutPage() {
                 <h2 className="text-3xl md:text-4xl font-serif text-navy mb-2">
                   Robert Taglianetti
                 </h2>
-                <p className="text-gold-dark font-semibold mb-6">Founder, Sleep6</p>
+                <p className="text-gold-dark font-semibold mb-6">Founder, Buzzbee</p>
 
                 <p className="text-gray-600 mb-6">
                   Robert brings over 25 years of experience in the mattress industry to his role
-                  as founder of Sleep6. Throughout his career, Robert has focused not just on
+                  as founder of Buzzbee. Throughout his career, Robert has focused not just on
                   selling mattresses, but on helping people understand the connection between
                   quality sleep and overall wellness.
                 </p>
@@ -231,7 +260,7 @@ export default function AboutPage() {
                 <p className="text-gray-600 mb-8">
                   He believes that better sleep improves every part of life — from physical
                   recovery to mental clarity. With a hands-on, relationship-driven approach,
-                  Robert has built Sleep6 around personal connection, education, and trust.
+                  Robert has built Buzzbee around personal connection, education, and trust.
                 </p>
 
                 <blockquote className="border-l-4 border-gold pl-6">
@@ -248,7 +277,7 @@ export default function AboutPage() {
                 <div className="aspect-[3/4] rounded-2xl overflow-hidden relative">
                   <Image
                     src="/images/team/tag touching on mattress.jpg"
-                    alt="Robert Taglianetti, Founder of Sleep6"
+                    alt="Robert Taglianetti, Founder of Buzzbee"
                     fill
                     className="object-cover"
                   />
@@ -305,7 +334,7 @@ export default function AboutPage() {
                       &quot;The right mattress should feel incredible on day one — and still feel
                       incredible years later.&quot;
                     </p>
-                    <p className="text-sm text-gold-dark font-semibold">Sleep6</p>
+                    <p className="text-sm text-gold-dark font-semibold">Buzzbee</p>
                   </div>
                 </div>
               </div>
@@ -326,7 +355,7 @@ export default function AboutPage() {
                 Every Product Created with Care
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Every Sleep6 product — from the Nod to the Dream — is made with the same
+                Every Buzzbee product — from the Nod to the Dream — is made with the same
                 commitment to quality, safety, and sleep that holds up over time.
               </p>
             </div>
@@ -362,7 +391,7 @@ export default function AboutPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <span className="inline-block bg-gold/15 text-gold-dark font-semibold px-4 py-1 rounded-full text-sm mb-6">
-                Why Sleep6?
+                Why Buzzbee?
               </span>
               <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4">
                 There Are Dozens of Mattress Brands.
@@ -472,5 +501,6 @@ export default function AboutPage() {
         </section>
       </div>
     </div>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Ten Year Warranty | Sleep6',
-  description: 'Ten Year Limited Warranty for Sleep6 mattresses.',
+  title: 'Ten Year Warranty | Buzzbee',
+  description: 'Ten Year Limited Warranty for Buzzbee mattresses.',
 };
 
 export default function WarrantyPage() {

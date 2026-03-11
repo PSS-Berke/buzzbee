@@ -8,12 +8,12 @@ const faqs = [
   {
     question: "How long will it take to receive my mattress?",
     answer:
-      "Every Sleep6 mattress is made to order. Typical delivery time is 5–7 business days.",
+      "Every Buzzbee mattress is made to order. Typical delivery time is 5–7 business days.",
   },
   {
-    question: "Where are Sleep6 mattresses made?",
+    question: "Where are Buzzbee mattresses made?",
     answer:
-      "All Sleep6 mattresses are 100% USA-made. Our mattresses are crafted in Chicago and manufactured in Wisconsin.",
+      "All Buzzbee mattresses are 100% USA-made. Our mattresses are crafted in Chicago and manufactured in Wisconsin.",
   },
   {
     question: "Do you offer expedited shipping?",
@@ -28,17 +28,17 @@ const faqs = [
   {
     question: "How long will the mattress last?",
     answer:
-      "Sleep6 mattresses are built to last well past their 10-year warranty.",
+      "Buzzbee mattresses are built to last well past their 10-year warranty.",
   },
   {
     question: "Can I return the mattress?",
     answer:
-      "Yes! All Sleep6 mattresses carry a full 100-night trial with risk-free returns.",
+      "Yes! All Buzzbee mattresses carry a full 100-night trial with risk-free returns.",
   },
   {
     question: "Do I need to flip my mattress?",
     answer:
-      "You will not need to flip your Sleep6 mattress, but we recommend that you rotate it head-to-foot every 6 months.",
+      "You will not need to flip your Buzzbee mattress, but we recommend that you rotate it head-to-foot every 6 months.",
   },
   {
     question: "What type of bed frame do I need for my mattress?",
@@ -57,7 +57,7 @@ const faqs = [
   {
     question: "How do I unbox the mattress?",
     answer:
-      "Opening your Sleep6 mattress is easy — just unwrap the tape, pull out the mattress, and use the provided opener to cut it free.",
+      "Opening your Buzzbee mattress is easy — just unwrap the tape, pull out the mattress, and use the provided opener to cut it free.",
   },
   {
     question: "What do I do with my old mattress?",
@@ -73,7 +73,7 @@ const faqs = [
   {
     question: "What certifications should I look for when buying a mattress?",
     answer:
-      "All mattresses sold in the U.S. must meet the requirements of 16 CFR Parts 1632 and 1633, as regulated by the U.S. Consumer Product Safety Commission. Every Sleep6 mattress meets these flammability standards. Our mattresses also carry CertiPUR-US® certification, meaning the foams do not contain ozone depleters, PBDEs, TDCPP or TCEP flame retardants, mercury, lead, or other heavy metals, formaldehyde, or phthalates. They also meet low VOC emissions for indoor air quality (less than 0.5 parts per million).",
+      "All mattresses sold in the U.S. must meet the requirements of 16 CFR Parts 1632 and 1633, as regulated by the U.S. Consumer Product Safety Commission. Every Buzzbee mattress meets these flammability standards. Our mattresses also carry CertiPUR-US® certification, meaning the foams do not contain ozone depleters, PBDEs, TDCPP or TCEP flame retardants, mercury, lead, or other heavy metals, formaldehyde, or phthalates. They also meet low VOC emissions for indoor air quality (less than 0.5 parts per million).",
   },
 ];
 
@@ -163,7 +163,7 @@ export default function FAQPage() {
               </h1>
 
               <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Everything you need to know about Sleep6 mattresses — from
+                Everything you need to know about Buzzbee mattresses — from
                 delivery and materials to returns and care.
               </p>
             </div>

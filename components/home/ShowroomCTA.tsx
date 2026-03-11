@@ -15,7 +15,7 @@ export default function ShowroomCTA() {
                     <MapPin className="w-10 h-10 text-gold" />
                   </div>
                   <p className="text-2xl font-bold mb-2">Visit Our Showroom</p>
-                  <p className="text-gray-300">Experience Sleep6 in person</p>
+                  <p className="text-gray-300">Experience Buzzbee in person</p>
                 </div>
               </div>
             </div>

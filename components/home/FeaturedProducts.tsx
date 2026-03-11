@@ -6,7 +6,7 @@ import { ArrowRight } from 'lucide-react';
 const flagship = {
   id: 'hl-4',
   slug: 'dream',
-  name: 'Sleep6 Dream',
+  name: 'Buzzbee Dream',
   type: 'Hybrid',
   tagline: 'Engineered for luxury performance.',
   heroDescription:
@@ -21,7 +21,7 @@ const supportingProducts = [
   {
     id: 'hl-3',
     slug: 'slumber',
-    name: 'Sleep6 Slumber',
+    name: 'Buzzbee Slumber',
     type: 'Memory Foam',
     tagline: 'Rich, plush comfort that envelops you',
     keyBenefit: 'Deep Pressure Relief',
@@ -31,7 +31,7 @@ const supportingProducts = [
   {
     id: 'hl-2',
     slug: 'doze',
-    name: 'Sleep6 Doze',
+    name: 'Buzzbee Doze',
     type: 'Foam',
     tagline: 'Plush comfort, built to last.',
     keyBenefit: 'Enhanced Comfort',
@@ -41,7 +41,7 @@ const supportingProducts = [
   {
     id: 'hl-1',
     slug: 'nod',
-    name: 'Sleep6 Nod',
+    name: 'Buzzbee Nod',
     type: 'Foam',
     tagline: 'Dependable comfort, night after night',
     keyBenefit: 'Built to Last',
@@ -57,7 +57,7 @@ export default function FeaturedProducts() {
         {/* Editorial Header */}
         <div className="text-center mb-16">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Sleep6 Home Line
+            Buzzbee Home Line
           </span>
           <h2 className="text-4xl md:text-5xl font-serif text-navy mb-6">
             Handcrafted for <span className="wavy-underline">Perfect Sleep</span>
@@ -90,7 +90,7 @@ export default function FeaturedProducts() {
                   Flagship Collection
                 </span>
                 <h3 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
-                  Sleep6 <span className="font-semibold">Dream</span>
+                  Buzzbee <span className="font-semibold">Dream</span>
                 </h3>
                 <p className="text-xl text-gray-500 mb-4">
                   {flagship.tagline}
@@ -120,7 +120,7 @@ export default function FeaturedProducts() {
 
                 {/* CTA */}
                 <div className="inline-flex items-center gap-3 text-gold-dark group-hover:gap-5 transition-all duration-500">
-                  <span className="font-medium">Discover the Sleep6 Dream</span>
+                  <span className="font-medium">Discover the Buzzbee Dream</span>
                   <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-500" />
                 </div>
               </div>
@@ -175,7 +175,7 @@ export default function FeaturedProducts() {
         <div className="text-center">
           <Link href="/home-line" className="inline-flex items-center gap-3 group">
             <span className="text-navy font-medium group-hover:text-gold-dark transition-colors duration-300">
-              Explore the Sleep6 Home Line
+              Explore the Buzzbee Home Line
             </span>
             <span className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gold/30 group-hover:border-gold group-hover:bg-gold transition-all duration-300">
               <ArrowRight className="w-4 h-4 text-gold group-hover:text-white transition-colors duration-300" />

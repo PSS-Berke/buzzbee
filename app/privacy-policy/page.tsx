@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 
 export const metadata = {
-  title: "Privacy Policy | Sleep6",
+  title: "Privacy Policy | Buzzbee",
   description:
-    "Learn how Sleep6 collects, uses, shares, and protects your personal information.",
+    "Learn how Buzzbee collects, uses, shares, and protects your personal information.",
 };
 
 const sections = [

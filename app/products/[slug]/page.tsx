@@ -29,12 +29,12 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
   if (!product) {
     return {
-      title: 'Product Not Found | Sleep6',
+      title: 'Product Not Found | Buzzbee',
     };
   }
 
   return {
-    title: `${product.name} | American-Made ${product.type} Mattress | Sleep6`,
+    title: `${product.name} | American-Made ${product.type} Mattress | Buzzbee`,
     description: product.description,
     keywords: [
       product.name,
@@ -43,6 +43,17 @@ export async function generateMetadata({ params }: ProductPageProps) {
       'USA mattress',
       ...product.bestFor,
     ],
+    alternates: {
+      canonical: `/products/${slug}`,
+    },
+    openGraph: {
+      title: `${product.name} | American-Made ${product.type} Mattress | Buzzbee`,
+      description: product.description,
+      url: `https://www.buzzbee.com/products/${slug}`,
+      images: product.images[0]
+        ? [{ url: product.images[0], alt: product.name }]
+        : [],
+    },
   };
 }
 
@@ -71,7 +82,36 @@ export default async function ProductPage({ params }: ProductPageProps) {
               : 'Essential Comfort',
     }));
 
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description,
+    brand: { '@type': 'Brand', name: 'Buzzbee' },
+    image: product.images,
+    url: `https://www.buzzbee.com/products/${product.slug}`,
+    aggregateRating: product.reviewCount > 0
+      ? {
+          '@type': 'AggregateRating',
+          ratingValue: product.rating,
+          reviewCount: product.reviewCount,
+        }
+      : undefined,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      price: product.price,
+      availability: 'https://schema.org/InStock',
+      seller: { '@type': 'Organization', name: 'Buzzbee' },
+    },
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
     <div className="min-h-screen bg-[#faf8f5] linen-texture relative">
       {/* Warm ambient glow */}
       <div
@@ -213,5 +253,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </section>
 
     </div>
+    </>
   );
 }

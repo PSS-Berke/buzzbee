@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Phone, Mail, Facebook, Twitter, Instagram } from 'lucide-react';
 
 const shopLinks = [
-  { name: 'Sleep6 Home Line', href: '/home-line' },
+  { name: 'Buzzbee Mattresses', href: '/home-line' },
   { name: 'Shop by Feel', href: '/shop-by-feel' },
   { name: 'Compare Mattresses', href: '/compare' },
 ];
@@ -34,7 +34,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-gray-300 text-sm mb-6">
-              Six essential components. One perfect mattress.
+              Better sleep changes everything.
             </p>
             <div className="space-y-3">
               <a
