@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Phone, Mail, Facebook, Twitter, Instagram } from 'lucide-react';
 
 const shopLinks = [
-  { name: 'Busby Mattresses', href: '/home-line' },
+  { name: 'Busby Mattresses', href: '/shop/mattresses' },
   { name: 'Shop by Feel', href: '/shop-by-feel' },
   { name: 'Compare Mattresses', href: '/compare' },
 ];

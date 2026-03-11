@@ -78,7 +78,7 @@ export default function TheDifference() {
             <span className="text-navy font-semibold">No shortcuts. No hype. Just real comfort.</span>
           </p>
           <a
-            href="/home-line"
+            href="/shop/mattresses"
             className="inline-flex items-center gap-2 text-gold-dark hover:text-gold font-semibold transition-colors"
           >
             Learn more about our products

@@ -440,7 +440,7 @@ export default function PrivacyPolicyPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/home-line"
+                href="/shop/mattresses"
                 className="inline-flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105"
               >
                 Shop Mattresses

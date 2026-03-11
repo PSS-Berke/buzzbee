@@ -234,7 +234,7 @@ export default function ShopByFeelPage() {
           <p className="text-gray-500 mb-6">Not sure yet? That&apos;s okay too.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link
-              href="/home-line"
+              href="/shop/mattresses"
               className="inline-flex items-center gap-2 px-6 py-3 bg-navy text-white rounded-full font-medium hover:bg-navy-light transition-colors"
             >
               Browse all mattresses

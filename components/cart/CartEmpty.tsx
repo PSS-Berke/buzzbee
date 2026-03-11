@@ -17,7 +17,7 @@ export default function CartEmpty() {
         Discover our handcrafted mattresses and find your perfect sleep.
       </p>
       <Link
-        href="/home-line"
+        href="/shop/mattresses"
         onClick={closeCartDrawer}
         className="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-medium py-3 px-6 rounded-full transition-all"
       >

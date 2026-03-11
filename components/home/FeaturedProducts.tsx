@@ -173,7 +173,7 @@ export default function FeaturedProducts() {
 
         {/* View All Link */}
         <div className="text-center">
-          <Link href="/home-line" className="inline-flex items-center gap-3 group">
+          <Link href="/shop/mattresses" className="inline-flex items-center gap-3 group">
             <span className="text-navy font-medium group-hover:text-gold-dark transition-colors duration-300">
               Explore the Busby Home Line
             </span>

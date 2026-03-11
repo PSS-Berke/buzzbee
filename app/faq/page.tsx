@@ -206,7 +206,7 @@ export default function FAQPage() {
                 Get in Touch
               </a>
               <Link
-                href="/home-line"
+                href="/shop/mattresses"
                 className="inline-flex items-center justify-center gap-2 bg-white border-2 border-navy/20 hover:border-gold text-navy font-semibold px-8 py-4 rounded-full transition-all duration-300"
               >
                 Shop Mattresses

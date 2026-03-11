@@ -21,7 +21,7 @@ export default function CartPage() {
               Discover our handcrafted mattresses and find your perfect sleep.
             </p>
             <Link
-              href="/home-line"
+              href="/shop/mattresses"
               className="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-medium py-4 px-8 rounded-full transition-all"
             >
               Shop Mattresses
@@ -58,7 +58,7 @@ export default function CartPage() {
           <div className="lg:col-span-2">
             {/* Back link */}
             <Link
-              href="/home-line"
+              href="/shop/mattresses"
               className="inline-flex items-center gap-2 text-gray-500 hover:text-navy transition-colors mb-8"
             >
               <ArrowLeft className="w-4 h-4" />
