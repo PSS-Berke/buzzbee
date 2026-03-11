@@ -66,14 +66,14 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
 
         {/* Zoom hint */}
         {hasImages && (
-          <div className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
             <ZoomIn className="w-4 h-4 text-gold-dark" />
           </div>
         )}
 
-        {/* Navigation - visible on hover */}
+        {/* Navigation - always visible on mobile, visible on hover for desktop */}
         {totalImages > 1 && (
-          <div className="absolute inset-x-0 bottom-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+          <div className="absolute inset-x-0 bottom-0 p-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500">
             <div className="flex justify-between items-center">
               <button
                 onClick={prevImage}

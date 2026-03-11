@@ -57,146 +57,190 @@ export default function ComparePage() {
       {/* Comparison Table */}
       <section className="py-12 relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Scrollable container for mobile */}
-          <div className="overflow-x-auto -mx-4 px-4 pb-4">
-            <div className="min-w-[880px]">
-              {/* Product Headers */}
-              <div className="grid grid-cols-4 gap-4 mb-8">
-                {sortedProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 text-center shadow-sm"
-                  >
-                    {/* Product Image */}
-                    <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
-                      {product.images.length > 0 ? (
-                        <Image
-                          src={product.images[0]}
-                          alt={product.name}
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-contain"
-                        />
-                      ) : (
-                        <span className="text-gray-300 text-sm">Image coming soon</span>
-                      )}
-                    </div>
+
+          {/* Mobile: four product tiles */}
+          <div className="grid grid-cols-2 gap-4 lg:hidden">
+            {sortedProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white/80 rounded-3xl border-2 border-gold/10 shadow-sm overflow-hidden flex flex-col"
+              >
+                {/* Image */}
+                <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center overflow-hidden">
+                  {product.images.length > 0 ? (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      width={200}
+                      height={200}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-gray-300 text-xs">Image coming soon</span>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-4 flex flex-col flex-1 gap-3">
+                  <div>
                     <span className="text-xs text-gold-dark font-medium tracking-wider uppercase">
                       {product.type}
                     </span>
-                    <h3 className="text-xl font-semibold text-navy mt-1">{product.name}</h3>
-                    <p className="text-2xl font-light text-navy mt-3">
+                    <h3 className="text-base font-semibold text-navy mt-0.5">{product.name}</h3>
+                    <p className="text-lg font-light text-navy mt-1">
                       From ${product.price.toLocaleString()}
                     </p>
                   </div>
-                ))}
+
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center gap-1.5 text-gray-500">
+                      <span className="font-medium text-navy">{product.components.length}</span> layers
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-gold rounded-full flex-shrink-0" />
+                      <span className="text-navy text-xs">{keyBenefits[product.slug]}</span>
+                    </div>
+                    <div className="flex items-center gap-1 flex-wrap">
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <Star
+                          key={i}
+                          className={`w-3 h-3 ${i <= Math.floor(product.rating) ? 'text-gold fill-gold' : 'text-gray-200'}`}
+                        />
+                      ))}
+                      <span className="text-xs text-gray-500 ml-1">{product.rating}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1">
+                    {product.bestFor.slice(0, 2).map((tag) => (
+                      <span key={tag} className="px-2 py-0.5 bg-gold/10 text-gold-dark text-xs rounded-full">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <Link
+                    href={`/products/${product.slug}`}
+                    className="mt-auto flex items-center justify-center gap-1 bg-navy hover:bg-navy-light text-white text-sm font-medium py-2.5 px-4 rounded-full transition-all group"
+                  >
+                    View
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
               </div>
+            ))}
+          </div>
 
-              {/* Comparison Rows */}
-              <div className="space-y-4">
-                {/* Construction Row */}
-                <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
-                  <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">
-                    Construction
-                  </h4>
-                  <div className="grid grid-cols-4 gap-4">
-                    {sortedProducts.map((product) => (
-                      <div key={product.id} className="text-center">
-                        <span className="text-3xl font-light text-navy">
-                          {product.components.length}
-                        </span>
-                        <span className="text-gray-500 text-sm block mt-1">Layers</span>
+          {/* Desktop: full comparison table */}
+          <div className="hidden lg:block">
+            <div className="overflow-x-auto">
+              <div className="min-w-[880px]">
+                {/* Product Headers */}
+                <div className="grid grid-cols-4 gap-4 mb-8">
+                  {sortedProducts.map((product) => (
+                    <div
+                      key={product.id}
+                      className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 text-center shadow-sm"
+                    >
+                      <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl mb-4 flex items-center justify-center overflow-hidden">
+                        {product.images.length > 0 ? (
+                          <Image
+                            src={product.images[0]}
+                            alt={product.name}
+                            width={200}
+                            height={200}
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-gray-300 text-sm">Image coming soon</span>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                      <span className="text-xs text-gold-dark font-medium tracking-wider uppercase">
+                        {product.type}
+                      </span>
+                      <h3 className="text-xl font-semibold text-navy mt-1">{product.name}</h3>
+                      <p className="text-2xl font-light text-navy mt-3">
+                        From ${product.price.toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Key Benefit Row */}
-                <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
-                  <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">
-                    Key Benefit
-                  </h4>
-                  <div className="grid grid-cols-4 gap-4">
-                    {sortedProducts.map((product) => (
-                      <div key={product.id} className="flex items-center justify-center gap-2">
-                        <span className="w-2 h-2 bg-gold rounded-full flex-shrink-0" />
-                        <span className="text-navy font-medium text-sm">
-                          {keyBenefits[product.slug]}
-                        </span>
-                      </div>
-                    ))}
+                {/* Comparison Rows */}
+                <div className="space-y-4">
+                  <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
+                    <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">Construction</h4>
+                    <div className="grid grid-cols-4 gap-4">
+                      {sortedProducts.map((product) => (
+                        <div key={product.id} className="text-center">
+                          <span className="text-3xl font-light text-navy">{product.components.length}</span>
+                          <span className="text-gray-500 text-sm block mt-1">Layers</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Best For Row */}
-                <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
-                  <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">
-                    Best For
-                  </h4>
-                  <div className="grid grid-cols-4 gap-4">
-                    {sortedProducts.map((product) => (
-                      <div key={product.id} className="flex flex-wrap gap-2 justify-center">
-                        {product.bestFor.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="px-3 py-1 bg-gold/10 text-gold-dark text-xs rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    ))}
+                  <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
+                    <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">Key Benefit</h4>
+                    <div className="grid grid-cols-4 gap-4">
+                      {sortedProducts.map((product) => (
+                        <div key={product.id} className="flex items-center justify-center gap-2">
+                          <span className="w-2 h-2 bg-gold rounded-full flex-shrink-0" />
+                          <span className="text-navy font-medium text-sm">{keyBenefits[product.slug]}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* Rating Row */}
-                <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
-                  <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">
-                    Customer Rating
-                  </h4>
-                  <div className="grid grid-cols-4 gap-4">
-                    {sortedProducts.map((product) => (
-                      <div key={product.id} className="text-center">
-                        <div className="flex justify-center gap-1 mb-2">
-                          {[1, 2, 3, 4, 5].map((i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${i <= Math.floor(product.rating) ? 'text-gold fill-gold' : 'text-gray-200'}`}
-                            />
+                  <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
+                    <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">Best For</h4>
+                    <div className="grid grid-cols-4 gap-4">
+                      {sortedProducts.map((product) => (
+                        <div key={product.id} className="flex flex-wrap gap-2 justify-center">
+                          {product.bestFor.slice(0, 3).map((tag) => (
+                            <span key={tag} className="px-3 py-1 bg-gold/10 text-gold-dark text-xs rounded-full">{tag}</span>
                           ))}
                         </div>
-                        <span className="text-navy font-medium">{product.rating}</span>
-                        <span className="text-gray-500 text-sm block">
-                          {product.reviewCount.toLocaleString()} reviews
-                        </span>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* CTA Row */}
-                <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
-                  <div className="grid grid-cols-4 gap-4">
-                    {sortedProducts.map((product) => (
-                      <Link
-                        key={product.id}
-                        href={`/products/${product.slug}`}
-                        className="flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-medium py-3 px-4 rounded-full transition-all duration-300 group"
-                      >
-                        View Details
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    ))}
+                  <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
+                    <h4 className="text-sm text-gold-dark font-medium tracking-[0.15em] uppercase mb-6 text-center">Customer Rating</h4>
+                    <div className="grid grid-cols-4 gap-4">
+                      {sortedProducts.map((product) => (
+                        <div key={product.id} className="text-center">
+                          <div className="flex justify-center gap-1 mb-2">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <Star key={i} className={`w-4 h-4 ${i <= Math.floor(product.rating) ? 'text-gold fill-gold' : 'text-gray-200'}`} />
+                            ))}
+                          </div>
+                          <span className="text-navy font-medium">{product.rating}</span>
+                          <span className="text-gray-500 text-sm block">{product.reviewCount.toLocaleString()} reviews</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-white/80 rounded-3xl p-6 border-2 border-gold/10 shadow-sm">
+                    <div className="grid grid-cols-4 gap-4">
+                      {sortedProducts.map((product) => (
+                        <Link
+                          key={product.id}
+                          href={`/products/${product.slug}`}
+                          className="flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-medium py-3 px-4 rounded-full transition-all duration-300 group"
+                        >
+                          View Details
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Scroll hint on mobile */}
-          <p className="text-center text-gray-400 text-sm mt-4 lg:hidden">
-            ← Scroll to see all mattresses →
-          </p>
         </div>
       </section>
 

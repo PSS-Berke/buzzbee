@@ -22,14 +22,14 @@ export default function ProductTabs({ product }: ProductTabsProps) {
   return (
     <div className="mt-20">
       {/* Pill-style tab navigation */}
-      <div className="flex justify-center mb-12">
-        <div className="inline-flex bg-white/60 rounded-full p-1.5 gap-1 border border-gold/10">
+      <div className="flex justify-center mb-12 px-4">
+        <div className="flex w-full sm:w-auto sm:inline-flex bg-white/60 rounded-full p-1.5 gap-1 border border-gold/10">
           {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               className={`
-                px-6 py-3 rounded-full font-medium text-sm transition-all duration-500
+                flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-full font-medium text-sm transition-all duration-500
                 ${activeTab === tab.key
                   ? 'bg-white text-navy shadow-sm border border-gold/20'
                   : 'text-gray-500 hover:text-navy'
@@ -191,7 +191,7 @@ export default function ProductTabs({ product }: ProductTabsProps) {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
                 {
                   icon: Package,

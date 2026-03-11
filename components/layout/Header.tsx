@@ -41,7 +41,7 @@ export default function Header() {
 
       {/* Main nav */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-[96px] sm:h-[120px] lg:h-[168px]">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
@@ -50,7 +50,7 @@ export default function Header() {
               width={128}
               height={128}
               unoptimized
-              className="h-32 w-auto"
+              className="h-[96px] sm:h-[120px] lg:h-[168px] w-auto"
               priority
             />
           </Link>
@@ -172,7 +172,7 @@ export default function Header() {
                 Sleep Quiz
               </Link>
             </div>
-            <div className="pt-4">
+            <div className="pt-4 space-y-3">
               <Link
                 href="/home-line"
                 className="block w-full bg-gold hover:bg-gold-dark text-white font-semibold px-6 py-3 rounded-full text-center transition-colors"
@@ -180,6 +180,14 @@ export default function Header() {
               >
                 Shop Now
               </Link>
+              <a
+                href="tel:18443753376"
+                className="flex items-center justify-center gap-2 text-gray-500 hover:text-navy transition-colors py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Phone className="w-4 h-4" />
+                <span className="text-sm">1-844-375-3376</span>
+              </a>
             </div>
           </div>
         </div>

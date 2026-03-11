@@ -222,7 +222,7 @@ export default function CheckoutPage() {
                       placeholder="Apt 4B"
                     />
                   </div>
-                  <div className="grid grid-cols-6 gap-4">
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
                     <div className="col-span-3">
                       <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
                         City
@@ -254,7 +254,7 @@ export default function CheckoutPage() {
                         placeholder="IL"
                       />
                     </div>
-                    <div className="col-span-2">
+                    <div className="col-span-2 sm:col-span-2">
                       <label htmlFor="zip" className="block text-sm font-medium text-gray-700 mb-2">
                         ZIP Code
                       </label>

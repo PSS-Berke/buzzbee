@@ -53,11 +53,13 @@ export default function Reviews() {
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                index === currentIndex ? 'bg-gold' : 'bg-gray-300'
-              }`}
+              className="w-10 h-10 flex items-center justify-center"
               aria-label={`Go to quote ${index + 1}`}
-            />
+            >
+              <span className={`block w-2 h-2 rounded-full transition-colors ${
+                index === currentIndex ? 'bg-gold' : 'bg-gray-300'
+              }`} />
+            </button>
           ))}
         </div>
       </div>

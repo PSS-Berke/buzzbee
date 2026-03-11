@@ -73,9 +73,9 @@ export default function FeaturedProducts() {
             href={`/products/${flagship.slug}`}
             className="group block relative bg-white border-2 border-gold/30 rounded-3xl overflow-hidden shadow-xl shadow-gold/5 hover:shadow-2xl hover:shadow-gold/10 transition-all duration-500"
           >
-            <div className="grid lg:grid-cols-2 min-h-[500px]">
+            <div className="grid lg:grid-cols-2 lg:min-h-[500px]">
               {/* Image Side */}
-              <div className="relative overflow-hidden min-h-[300px] lg:min-h-0">
+              <div className="relative overflow-hidden min-h-[220px] sm:min-h-[300px] lg:min-h-0">
                 <Image
                   src={flagship.image}
                   alt={flagship.name}

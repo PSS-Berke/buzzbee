@@ -46,7 +46,7 @@ export default function CartDrawer() {
       {/* Drawer panel */}
       <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col animate-slideIn">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gold/10">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gold/10">
           <div>
             <h2 className="text-xl font-serif text-navy">Your Cart</h2>
             <p className="text-sm text-gray-400">
@@ -63,7 +63,7 @@ export default function CartDrawer() {
         </div>
 
         {/* Items */}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {state.items.length === 0 ? (
             <CartEmpty />
           ) : (
@@ -77,7 +77,7 @@ export default function CartDrawer() {
 
         {/* Summary */}
         {state.items.length > 0 && (
-          <div className="border-t border-gold/10 p-6 bg-gray-50/50">
+          <div className="border-t border-gold/10 p-4 sm:p-6 bg-gray-50/50">
             {/* Savings */}
             {savings > 0 && (
               <div className="flex justify-between text-sm mb-3">
