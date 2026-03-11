@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { Phone, Mail, Facebook, Twitter, Instagram } from 'lucide-react';
 
 const shopLinks = [
-  { name: 'ABT Exclusive', href: '/abt-exclusive' },
   { name: 'Sleep6 Home Line', href: '/home-line' },
   { name: 'Shop by Feel', href: '/shop-by-feel' },
   { name: 'Compare Mattresses', href: '/compare' },
@@ -28,7 +27,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-4 bg-white rounded-lg px-3 py-2">
               <Image
                 src="/images/logo.png"
-                alt="Sleep6 - Crafted in Chicago"
+                alt="Buzzbee - American Made Mattresses"
                 width={150}
                 height={42}
                 className="h-8 w-auto"
@@ -46,25 +45,25 @@ export default function Footer() {
                 <span>1-844-375-3376</span>
               </a>
               <a
-                href="mailto:wholesale@sleep6.com"
+                href="mailto:wholesale@buzzbee.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>wholesale@sleep6.com</span>
+                <span>wholesale@buzzbee.com</span>
               </a>
               <a
-                href="mailto:press@sleep6.com"
+                href="mailto:press@buzzbee.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>press@sleep6.com</span>
+                <span>press@buzzbee.com</span>
               </a>
               <a
-                href="mailto:support@Sleep6.com"
+                href="mailto:support@buzzbee.com"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Mail className="w-4 h-4" />
-                <span>support@Sleep6.com</span>
+                <span>support@buzzbee.com</span>
               </a>
             </div>
             <div className="flex items-center gap-4 mt-4">
@@ -163,7 +162,7 @@ export default function Footer() {
       <div className="border-t border-navy-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-sm text-gray-400 text-center md:text-left">
-            &copy; {new Date().getFullYear()} Sleep6. All rights reserved.
+            &copy; {new Date().getFullYear()} Buzzbee. All rights reserved.
           </p>
         </div>
       </div>

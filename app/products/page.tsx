@@ -1,34 +1,33 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { products } from '@/data/products';
+import { homeLineProducts } from '@/data/products';
 
 export const metadata = {
-  title: 'abt Exclusive Mattresses | Sleep6',
+  title: 'Buzzbee Mattresses | American-Made Hybrid Mattresses',
   description:
-    'Sleep6 mattresses available exclusively through abt. American-made comfort — from essential foam to luxury hybrid.',
+    'Shop Buzzbee mattresses — premium American-made hybrids. From the essential Nod to the luxury Dream pillowtop.',
 };
 
-// abt Exclusive products only
-const abtProducts = products.filter((p) => p.brand === 'abt');
-
 // Add key benefits to products
-const productsWithBenefits = abtProducts.map((p) => ({
+const productsWithBenefits = homeLineProducts.map((p) => ({
   ...p,
   keyBenefit:
-    p.slug === 'cosmos-hybrid'
-      ? 'Zero Motion Transfer'
-      : p.slug === 'fak-cosmos'
-        ? 'Temperature Regulation'
-        : p.slug === 'mystic'
-          ? 'Motion Isolation'
-          : 'Essential Comfort',
+    p.slug === 'dream'
+      ? 'Luxury Pillowtop Comfort'
+      : p.slug === 'slumber'
+        ? 'Natural Latex + Coil'
+        : p.slug === 'doze'
+          ? 'XPlush Comfort'
+          : p.slug === 'nod'
+            ? 'Dependable Hybrid'
+            : 'Safe Infant Sleep',
   layers:
-    p.slug === 'cosmos-hybrid' ? 7 : p.slug === 'fak-cosmos' ? 4 : p.slug === 'mystic' ? 3 : 3,
+    p.slug === 'dream' ? 7 : p.slug === 'slumber' ? 6 : p.slug === 'doze' ? 5 : 5,
 }));
 
-const flagship = productsWithBenefits.find((p) => p.slug === 'cosmos-hybrid')!;
-const supportingProducts = productsWithBenefits.filter((p) => p.slug !== 'cosmos-hybrid');
+const flagship = productsWithBenefits.find((p) => p.slug === 'dream')!;
+const supportingProducts = productsWithBenefits.filter((p) => p.slug !== 'dream');
 
 export default function ProductsPage() {
   return (
@@ -50,13 +49,13 @@ export default function ProductsPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            abt Exclusive
+            Buzzbee Collection
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy mb-6">
-            abt <span className="wavy-underline">Exclusive</span> Collection
+            Buzzbee <span className="wavy-underline">Collection</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Handcrafted in America. Available exclusively through our abt partnership.
+            Handcrafted in America. Premium hybrid mattresses for every sleeper.
           </p>
 
           {/* Trust badges */}
@@ -119,10 +118,10 @@ export default function ProductsPage() {
                 {/* Content Side */}
                 <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
                   <span className="text-gold-dark font-medium text-sm mb-4">
-                    Flagship Collection
+                    Our Best
                   </span>
                   <h2 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
-                    Cosmos <span className="font-semibold">Hybrid</span>
+                    Dream <span className="font-semibold">Pillowtop</span>
                   </h2>
                   <p className="text-xl text-gray-500 mb-4">{flagship.tagline}</p>
                   <p className="text-gray-400 leading-relaxed mb-8 max-w-md">{flagship.description}</p>
@@ -148,7 +147,7 @@ export default function ProductsPage() {
 
                   {/* CTA */}
                   <div className="inline-flex items-center gap-3 text-gold-dark group-hover:gap-5 transition-all duration-500">
-                    <span className="font-medium">Discover the Cosmos Hybrid</span>
+                    <span className="font-medium">Discover the Dream</span>
                     <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-500" />
                   </div>
                 </div>

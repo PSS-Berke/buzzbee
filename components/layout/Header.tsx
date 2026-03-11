@@ -11,7 +11,6 @@ const navigation = {
     label: 'Mattresses',
     items: [
       { name: 'Sleep6', href: '/home-line' },
-      { name: 'Abt Exclusive', href: '/abt-exclusive' },
       { name: 'Shop by Feel', href: '/shop-by-feel' },
       { name: 'Compare Mattresses', href: '/compare' },
     ],
@@ -47,7 +46,7 @@ export default function Header() {
           <Link href="/" className="flex items-center">
             <Image
               src="/images/logo.png"
-              alt="Sleep6 - Crafted in Chicago"
+              alt="Buzzbee - American Made Mattresses"
               width={180}
               height={50}
               className="h-10 w-auto"

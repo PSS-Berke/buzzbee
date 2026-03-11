@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { getProductBySlug, getAllProductSlugs, products, homeLineProducts } from '@/data/products';
+import { getProductBySlug, getAllProductSlugs, homeLineProducts } from '@/data/products';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductInfo from '@/components/product/ProductInfo';
 import ProductTabs from '@/components/product/ProductTabs';
@@ -55,7 +55,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   // Get related products from the same line (excluding current product)
-  const productPool = product.brand === 'sleep6-home' ? homeLineProducts : products;
+  const productPool = homeLineProducts;
   const relatedProducts = productPool
     .filter((p) => p.slug !== slug)
     .slice(0, 3)

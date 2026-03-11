@@ -26,9 +26,9 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Sleep6 | American-Made Mattresses | Six Essential Components",
+  title: "Buzzbee | American-Made Mattresses | Premium Sleep",
   description:
-    "Discover Sleep6 - premium mattresses handcrafted in the USA with 25+ years of expertise. Six essential components for the perfect night's sleep. Free delivery, financing available, up to 20 year warranty.",
+    "Discover Buzzbee - premium mattresses handcrafted in the USA with 25+ years of expertise. The perfect night's sleep. Free delivery, financing available, up to 20 year warranty.",
   keywords: [
     "American made mattress",
     "USA mattress",
