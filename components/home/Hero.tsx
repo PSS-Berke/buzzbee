@@ -50,7 +50,7 @@ export default function Hero() {
             <div className="aspect-square bg-white/80 border-2 border-gold/20 rounded-3xl p-8 flex items-center justify-center shadow-xl shadow-gold/5">
               <div className="relative w-full h-full rounded-2xl overflow-hidden">
                 <video
-                  src="/Videos/Untitled design (7).mp4"
+                  src="/Videos/Untitled design (9).mp4"
                   autoPlay
                   muted
                   loop
