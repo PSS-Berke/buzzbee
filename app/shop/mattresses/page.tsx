@@ -339,7 +339,7 @@ export default function MattressesPage() {
               <p className="text-gray-500 text-sm">Pillows, protectors, and more to complete your sleep setup.</p>
             </div>
             <Link
-              href="/accessories"
+              href="/shop/sleep-accessories"
               className="shrink-0 inline-flex items-center gap-3 bg-navy hover:bg-navy-light text-white font-medium px-7 py-3.5 rounded-full transition-all duration-300 group"
             >
               Shop Sleep Accessories

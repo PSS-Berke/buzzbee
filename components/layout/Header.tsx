@@ -8,11 +8,12 @@ import CartIcon from '@/components/cart/CartIcon';
 
 const navigation = {
   mattresses: {
-    label: 'Mattresses',
+    label: 'Shop',
     items: [
-      { name: 'Busby', href: '/shop/mattresses' },
+      { name: 'Mattresses', href: '/shop/mattresses' },
       { name: 'Shop by Feel', href: '/shop-by-feel' },
       { name: 'Compare Mattresses', href: '/compare' },
+      { name: 'Sleep Accessories', href: '/shop/sleep-accessories' },
     ],
   },
 };
@@ -41,7 +42,7 @@ export default function Header() {
 
       {/* Main nav */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-[96px] sm:h-[120px] lg:h-[168px]">
+        <div className="flex justify-between items-center h-16 sm:h-18 lg:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image

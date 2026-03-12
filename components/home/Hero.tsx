@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden pt-8 pb-20 md:py-24">
+    <section className="relative overflow-hidden pt-4 pb-20 md:pt-8 md:pb-24">
       {/* Organic blob shapes */}
       <div className="absolute top-0 right-0 w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
       <div className="absolute bottom-0 left-0 w-[200px] h-[200px] md:w-[400px] md:h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
@@ -17,7 +17,7 @@ export default function Hero() {
               <span>Proudly Made in the USA</span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif leading-tight text-navy">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-navy">
               Built for How You{' '}
               <span className="wavy-underline">Actually Sleep.</span>
             </h1>
@@ -50,7 +50,7 @@ export default function Hero() {
             <div className="aspect-square bg-white/80 border-2 border-gold/20 rounded-3xl p-8 flex items-center justify-center shadow-xl shadow-gold/5">
               <div className="relative w-full h-full rounded-2xl overflow-hidden">
                 <video
-                  src="/Videos/Untitled design (4).mp4"
+                  src="/Videos/Untitled design (7).mp4"
                   autoPlay
                   muted
                   loop

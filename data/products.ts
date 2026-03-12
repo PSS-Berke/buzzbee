@@ -322,7 +322,54 @@ export const homeLineProducts: Product[] = [
   },
 ];
 
-export const allProducts: Product[] = [...homeLineProducts];
+export const accessoryProducts: Product[] = [
+  {
+    id: 'acc-1',
+    slug: 'mattress-encasement',
+    name: 'Busby Mattress Encasement',
+    brand: 'busby',
+    type: 'Mattress Encasement',
+    tagline: 'Total protection. Luxurious feel.',
+    description: 'The Busby Mattress Encasement delivers certified, lab-tested protection against bed bugs, dust mites, mold, and bacteria — wrapped in an impermeable yet breathable waterproof barrier with a luxurious feel. The 360° SecureZZZip® closure ensures complete encasement from every angle, and it\'s fully machine washable for lasting performance.',
+    price: 144,
+    originalPrice: 144,
+    rating: 4.9,
+    reviewCount: 0,
+    images: [
+      '/images/products/MattressEncasement/mattress-encasement.png',
+    ],
+    sizes: [
+      { name: 'Twin', dimensions: '38" x 75"', price: 104, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 114, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 134, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 144, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 154, inStock: true },
+    ],
+    firmness: [],
+    selectedFirmness: '',
+    features: [
+      '360° SecureZZZip® closure',
+      'Guaranteed bed bug protection',
+      'Certified & laboratory tested',
+      'Non-allergenic',
+      'Protects against dust mites, mold & bacteria',
+      'Impermeable yet breathable waterproof barrier',
+      'Machine washable',
+      'Luxurious feel',
+    ],
+    bestFor: ['Allergy sufferers', 'Bed bug protection', 'Waterproof coverage', 'All sleepers'],
+    components: [
+      { name: '360° SecureZZZip®', description: 'Patented full-encasement zipper system that seals every angle of your mattress for complete bed bug protection.', materials: 'Reinforced zipper closure' },
+      { name: 'Waterproof Barrier Fabric', description: 'Impermeable yet breathable fabric that blocks liquids, allergens, dust mites, mold, and bacteria without trapping heat.', materials: 'Breathable waterproof laminate' },
+    ],
+    materials: [
+      { name: 'Waterproof Barrier Fabric', source: 'USA', certification: 'Laboratory Tested', description: 'Breathable, impermeable fabric that protects against liquids and allergens.' },
+      { name: 'SecureZZZip® Closure', source: 'USA', certification: 'Certified', description: 'Patented zipper system for complete 360° encasement.' },
+    ],
+  },
+];
+
+export const allProducts: Product[] = [...homeLineProducts, ...accessoryProducts];
 
 export function getProductBySlug(slug: string): Product | undefined {
   return allProducts.find((p) => p.slug === slug);

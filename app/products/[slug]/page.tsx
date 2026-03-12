@@ -146,7 +146,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {/* FAK Cosmos charity mission */}
       {slug === 'fak-cosmos' && <FAKMission />}
 
-      <LayerSwitcher slug={slug} />
+      {product.firmness.length > 0 && <LayerSwitcher slug={slug} />}
 
       {/* Customer Satisfaction Guarantee */}
       <section className="py-16 bg-[#faf8f5] relative z-10">
@@ -161,7 +161,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <ul className="max-w-md mx-auto space-y-3">
               {[
                 '100% fiberglass-free construction',
-                '10-year warranty',
+                ...(product.firmness.length > 0 ? ['10-year warranty'] : []),
                 'Ships to all 50 states',
               ].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-gray-700">

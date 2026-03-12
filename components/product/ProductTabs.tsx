@@ -117,7 +117,7 @@ export default function ProductTabs({ product }: ProductTabsProps) {
               ))}
             </div>
 
-            <div className="bg-gold/10 rounded-3xl p-8 border-2 border-gold/20">
+            {product.firmness.length > 0 && <div className="bg-gold/10 rounded-3xl p-8 border-2 border-gold/20">
               <h4 className="font-semibold text-navy text-center mb-8">Firmness Scale</h4>
               {(() => {
                 const scale = ['XFirm', 'Firm', 'Medium', 'Plush', 'XPlush'];
@@ -176,7 +176,7 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                   </div>
                 );
               })()}
-            </div>
+            </div>}
           </div>
         )}
 
@@ -187,11 +187,13 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                 Fast Shipping, <span className="font-semibold">Easy Setup</span>
               </h3>
               <p className="text-gray-600 text-lg max-w-xl mx-auto">
-                Your {product.name} ships compressed in a box straight to your door. Just unbox, unroll, and watch it expand to full size in minutes.
+                {product.firmness.length === 0
+                  ? `Your ${product.name} ships fast and arrives ready to use straight out of the box.`
+                  : `Your ${product.name} ships compressed in a box straight to your door. Just unbox, unroll, and watch it expand to full size in minutes.`}
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className={`grid gap-8 ${product.firmness.length > 0 ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3 max-w-3xl mx-auto'}`}>
               {[
                 {
                   icon: Package,
@@ -203,16 +205,16 @@ export default function ProductTabs({ product }: ProductTabsProps) {
                   title: 'Ships in 5-7 Days',
                   desc: 'Compressed and boxed for easy doorstep delivery',
                 },
-                {
+                ...(product.firmness.length > 0 ? [{
                   icon: Home,
                   title: 'Unbox & Expand',
                   desc: 'Unroll in your room and it expands to full size within hours',
-                },
-                {
+                }] : []),
+                ...(product.firmness.length > 0 ? [{
                   icon: Moon,
                   title: '100 Night Guarantee',
                   desc: 'Sleep on it risk-free for 100 nights',
-                },
+                }] : []),
               ].map((step, i) => (
                 <div
                   key={i}
