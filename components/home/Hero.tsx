@@ -5,8 +5,8 @@ export default function Hero() {
   return (
     <section className="relative overflow-hidden pt-4 pb-20 md:pt-8 md:pb-24">
       {/* Organic blob shapes */}
-      <div className="absolute top-0 right-0 w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
-      <div className="absolute bottom-0 left-0 w-[200px] h-[200px] md:w-[400px] md:h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
+      <div className="absolute top-0 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
+      <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -17,7 +17,7 @@ export default function Hero() {
               <span>Proudly Made in the USA</span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-navy">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif leading-tight text-navy">
               Built for How You{' '}
               <span className="wavy-underline">Actually Sleep.</span>
             </h1>
@@ -31,7 +31,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/shop/mattresses"
-                className="inline-flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105"
+                className="inline-flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all hover:scale-105"
               >
                 Shop Mattresses
                 <ArrowRight className="w-5 h-5" />

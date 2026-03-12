@@ -96,7 +96,7 @@ export default function CheckoutPage() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
         {/* Header */}
         <div className="mb-8">
           <Link
@@ -222,8 +222,8 @@ export default function CheckoutPage() {
                       placeholder="Apt 4B"
                     />
                   </div>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-                    <div className="col-span-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
+                    <div className="sm:col-span-3">
                       <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
                         City
                       </label>
@@ -238,7 +238,7 @@ export default function CheckoutPage() {
                         placeholder="Chicago"
                       />
                     </div>
-                    <div className="col-span-1">
+                    <div className="sm:col-span-1">
                       <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
                         State
                       </label>
@@ -254,7 +254,7 @@ export default function CheckoutPage() {
                         placeholder="IL"
                       />
                     </div>
-                    <div className="col-span-2 sm:col-span-2">
+                    <div className="sm:col-span-2">
                       <label htmlFor="zip" className="block text-sm font-medium text-gray-700 mb-2">
                         ZIP Code
                       </label>
@@ -391,15 +391,15 @@ export default function CheckoutPage() {
                 <div className="mt-6 pt-6 border-t border-gold/10">
                   <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
                     <span className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+                      <span className="w-2 h-2 bg-gold rounded-full" />
                       Free Shipping
                     </span>
                     <span className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+                      <span className="w-2 h-2 bg-gold rounded-full" />
                       Secure Checkout
                     </span>
                     <span className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+                      <span className="w-2 h-2 bg-gold rounded-full" />
                       Made in USA
                     </span>
                   </div>

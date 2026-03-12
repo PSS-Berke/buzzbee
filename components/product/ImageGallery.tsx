@@ -113,7 +113,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
 
       {/* Thumbnails - refined styling */}
       {hasImages && totalImages > 1 && (
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 sm:gap-4">
           {images.map((image, index) => (
             <button
               key={index}

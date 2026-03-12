@@ -317,7 +317,7 @@ export default function PrivacyPolicyPage() {
 
       <div className="relative z-10">
         {/* Hero */}
-        <section className="relative overflow-hidden pt-8 pb-12 md:py-20">
+        <section className="relative overflow-hidden pt-4 pb-12 md:pt-10 md:pb-20">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
 
@@ -344,7 +344,7 @@ export default function PrivacyPolicyPage() {
         {/* Intro summary */}
         <section className="pb-6">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
-            <div className="bg-white border-2 border-gold/20 rounded-3xl p-8 shadow-lg shadow-gold/5">
+            <div className="bg-white border-2 border-gold/20 rounded-3xl p-4 md:p-8 shadow-lg shadow-gold/5">
               <p className="text-gray-600 mb-4">
                 This Privacy Policy tells you:
               </p>

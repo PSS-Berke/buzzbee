@@ -21,7 +21,7 @@ export default function Footer() {
     <footer className="bg-navy text-white relative z-10">
       {/* Main footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10">
           {/* Brand block */}
           <div className="md:col-span-2">
             <Link href="/" className="inline-block mb-4">
@@ -99,7 +99,7 @@ export default function Footer() {
           </div>
 
           {/* Shop links */}
-          <div className="pt-16">
+          <div className="pt-0 md:pt-16">
             <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Shop</h3>
             <ul className="space-y-2">
               {shopLinks.map((link) => (
@@ -116,7 +116,7 @@ export default function Footer() {
           </div>
 
           {/* Company links */}
-          <div className="pt-16">
+          <div className="pt-0 md:pt-16">
             <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Company</h3>
             <ul className="space-y-2">
               {companyLinks.map((link) => (

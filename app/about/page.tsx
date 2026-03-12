@@ -114,9 +114,9 @@ export default function AboutPage() {
       />
       <div className="relative z-10">
         {/* Section 1: Hero */}
-        <section className="relative overflow-hidden pt-8 pb-20 md:py-24">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
+        <section className="relative overflow-hidden pt-4 pb-20 md:pt-12 md:pb-24">
+          <div className="absolute top-0 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
 
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto text-center">
@@ -182,7 +182,7 @@ export default function AboutPage() {
                 <div className="space-y-4">
                   <div className="aspect-[4/3] bg-gray-100 rounded-3xl overflow-hidden relative">
                     <Image
-                      src="/images/team/tag city corner.jpg"
+                      src="/images/products/new photos/New photos for site /can-you-change-the-wall-color-to-hex--f3a51d-.png"
                       alt="Factory team"
                       fill
                       className="object-cover"
@@ -196,7 +196,7 @@ export default function AboutPage() {
                 <div className="space-y-4 pt-8">
                   <div className="aspect-square bg-gray-100 rounded-3xl overflow-hidden relative">
                     <Image
-                      src="/images/team/girl with foot on box.png"
+                      src="/images/products/new photos/New photos for site /i-want-you-to-take-this-matress-and-wall-color-but (1).png"
                       alt="Fancy interior"
                       fill
                       className="object-cover"
@@ -276,7 +276,7 @@ export default function AboutPage() {
               <div className="bg-white border-2 border-gold/20 rounded-3xl p-8 shadow-xl shadow-gold/5">
                 <div className="aspect-[3/4] rounded-2xl overflow-hidden relative">
                   <Image
-                    src="/images/team/tag touching on mattress.jpg"
+                    src="/images/team/tag no tag.png"
                     alt="Robert Taglianetti, Founder of Busby"
                     fill
                     className="object-cover"

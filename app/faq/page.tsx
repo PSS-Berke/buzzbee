@@ -93,14 +93,14 @@ function FAQItem({
         className="w-full flex items-center justify-between py-5 px-1 text-left cursor-pointer hover:opacity-80 transition-opacity duration-200"
       >
         <span
-          className={`text-lg font-medium pr-4 transition-colors duration-200 ${
+          className={`text-base sm:text-lg font-medium pr-4 transition-colors duration-200 ${
             isOpen ? "text-navy" : "text-gray-900"
           }`}
         >
           {faq.question}
         </span>
         <span
-          className={`text-2xl flex-shrink-0 leading-none transition-colors duration-200 ${
+          className={`text-xl flex-shrink-0 leading-none transition-colors duration-200 ${
             isOpen ? "text-gold" : "text-gray-400"
           }`}
         >
@@ -146,7 +146,7 @@ export default function FAQPage() {
 
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="relative overflow-hidden pt-8 pb-12 md:py-20">
+        <section className="relative overflow-hidden pt-4 pb-12 md:pt-10 md:pb-20">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
 

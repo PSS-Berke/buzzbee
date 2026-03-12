@@ -44,7 +44,7 @@ export default function CartPage() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pt-10 md:pb-20">
         {/* Header */}
         <div className="text-center mb-12">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
@@ -136,19 +136,19 @@ export default function CartPage() {
               <div className="mt-6 pt-6 border-t border-gold/10">
                 <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
                   <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+                    <span className="w-2 h-2 bg-gold rounded-full" />
                     Free Shipping
                   </span>
                   <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+                    <span className="w-2 h-2 bg-gold rounded-full" />
                     Free Returns
                   </span>
                   <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+                    <span className="w-2 h-2 bg-gold rounded-full" />
                     Secure Checkout
                   </span>
                   <span className="flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+                    <span className="w-2 h-2 bg-gold rounded-full" />
                     Made in USA
                   </span>
                 </div>

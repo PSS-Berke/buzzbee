@@ -123,7 +123,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       />
 
       {/* Main product section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 md:pt-12 md:pb-24 relative z-10">
         <div className="grid lg:grid-cols-[3fr_2fr] gap-12 lg:gap-20">
           {/* Image gallery */}
           <div className="lg:sticky lg:top-24 lg:self-start">

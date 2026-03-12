@@ -117,25 +117,25 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </button>
 
       {/* Trust Badges - Single Elegant Line */}
-      <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-6 px-4 bg-gold/5 rounded-2xl text-sm text-gray-600">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 py-6 px-4 bg-gold/5 rounded-2xl text-sm text-gray-600">
         <a href="/" className="flex items-center gap-2 hover:text-gold-dark transition-colors">
-          <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
           Financing Available
         </a>
         <span className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
           Free Doorstep Delivery
         </span>
         <span className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
           Free Returns
         </span>
         <span className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
           100 Night Guarantee
         </span>
         <span className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
           10 Year Warranty
         </span>
       </div>

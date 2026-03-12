@@ -85,7 +85,7 @@ export default function FeaturedProducts() {
               </div>
 
               {/* Content Side */}
-              <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
+              <div className="flex flex-col justify-center p-6 sm:p-8 md:p-12 lg:p-16">
                 <span className="text-gold-dark font-medium text-sm mb-4">
                   Flagship Collection
                 </span>

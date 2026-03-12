@@ -41,7 +41,7 @@ export default function MattressesPage() {
       />
 
       {/* Hero Header */}
-      <section className="pt-24 pb-16 relative overflow-hidden z-10">
+      <section className="pt-12 pb-16 relative overflow-hidden z-10">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
 
@@ -107,9 +107,9 @@ export default function MattressesPage() {
                 href={`/products/${flagship.slug}`}
                 className="group block relative bg-white border-2 border-gold/30 rounded-3xl overflow-hidden shadow-xl shadow-gold/5 hover:shadow-2xl hover:shadow-gold/10 transition-all duration-500"
               >
-                <div className="grid lg:grid-cols-2 min-h-[500px]">
+                <div className="grid lg:grid-cols-2 lg:min-h-[500px]">
                   {/* Image Side */}
-                  <div className="relative overflow-hidden min-h-[300px] lg:min-h-0">
+                  <div className="relative overflow-hidden min-h-[260px] sm:min-h-[320px] lg:min-h-0">
                     {flagship.images[0] ? (
                       <Image
                         src={flagship.images[0]}

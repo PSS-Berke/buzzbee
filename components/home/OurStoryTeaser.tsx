@@ -19,8 +19,8 @@ export default function OurStoryTeaser() {
             <div className="space-y-4">
               <div className="aspect-[4/3] bg-gray-100 rounded-3xl overflow-hidden relative">
                 <Image
-                  src="/images/team/tag city corner.jpg"
-                  alt="Factory team"
+                  src="/images/team/tag no tag.png"
+                  alt="Robert Taglianetti, Founder"
                   fill
                   className="object-cover"
                 />
@@ -33,8 +33,8 @@ export default function OurStoryTeaser() {
             <div className="space-y-4 pt-8">
               <div className="aspect-square bg-gray-100 rounded-3xl overflow-hidden relative">
                 <Image
-                  src="/images/team/girl with foot on box.png"
-                  alt="Fancy interior"
+                  src="/images/products/new photos/New photos for site /can-you-change-the-wall-color-to-hex--f3a51d-.png"
+                  alt="Bedroom lifestyle"
                   fill
                   className="object-cover"
                 />

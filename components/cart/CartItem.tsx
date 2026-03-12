@@ -63,7 +63,7 @@ export default function CartItem({ item, expanded = false }: CartItemProps) {
       {/* Remove */}
       <button
         onClick={() => removeItem(item.id)}
-        className="flex-shrink-0 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+        className="flex-shrink-0 p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
         aria-label="Remove item"
       >
         <Trash2 className="w-4 h-4" />

@@ -185,7 +185,7 @@ export default function ShopByFeelPage() {
       />
 
       {/* Warm, inviting hero */}
-      <section className="pt-24 pb-20 relative overflow-hidden z-10">
+      <section className="pt-12 pb-20 relative overflow-hidden z-10">
         {/* Organic blob shapes */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-gold/10 blob-shape blur-3xl -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-navy/5 blob-shape-alt blur-3xl translate-y-1/2 -translate-x-1/3" />

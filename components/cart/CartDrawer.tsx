@@ -44,7 +44,7 @@ export default function CartDrawer() {
       />
 
       {/* Drawer panel */}
-      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col animate-slideIn">
+      <div className="absolute right-0 top-0 h-full w-[95vw] max-w-md bg-white shadow-2xl flex flex-col animate-slideIn">
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gold/10">
           <div>
@@ -55,7 +55,7 @@ export default function CartDrawer() {
           </div>
           <button
             onClick={closeCartDrawer}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-3 hover:bg-gray-100 rounded-full transition-colors"
             aria-label="Close cart"
           >
             <X className="w-5 h-5 text-gray-500" />

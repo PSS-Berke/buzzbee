@@ -6,7 +6,7 @@ export const metadata = {
 export default function WarrantyPage() {
   return (
     <div className="min-h-screen bg-[#faf8f5]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
         <h1 className="text-3xl font-bold text-navy mb-10 uppercase tracking-wide">
           Ten Year Warranty
         </h1>
@@ -33,7 +33,7 @@ export default function WarrantyPage() {
           <p className="text-gray-700 leading-relaxed mb-4">
             Sleep6, LLC warrants the Sleep6 mattress in its original packaging box sold to you against certain defects in material or workmanship as described herein for a period of ten years from the date purchased and is used for its intended purpose. The limited warranty will apply to the following defects and will not apply if you use the Sleep6 mattress for use not intended by Sleep6, LLC. The defects that are covered contain the following:
           </p>
-          <ul className="list-disc pl-6 mb-4 space-y-2">
+          <ul className="list-disc pl-4 sm:pl-6 mb-4 space-y-2">
             <li className="text-gray-700 leading-relaxed">
               Any flaw and/or defect in the mattress that results in the foam material splitting apart despite normal sleep usage.
             </li>
@@ -47,7 +47,7 @@ export default function WarrantyPage() {
           <p className="text-gray-700 leading-relaxed mb-4">
             This limited warranty does not apply and will not cover the following:
           </p>
-          <ul className="list-disc pl-6 mb-4 space-y-2">
+          <ul className="list-disc pl-4 sm:pl-6 mb-4 space-y-2">
             <li className="text-gray-700 leading-relaxed">
               Damage or physical abuse done intentionally or negligently to any part of the mattress including but not limited to any stain(s), damages by liquids and foods, rips or tears, burns, cuts, or permanent odors caused by abuse or damage of the mattress.
             </li>

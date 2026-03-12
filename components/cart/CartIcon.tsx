@@ -9,7 +9,7 @@ export default function CartIcon() {
   return (
     <button
       onClick={toggleCartDrawer}
-      className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+      className="relative p-2.5 hover:bg-gray-100 rounded-full transition-colors"
       aria-label={`Shopping cart with ${itemCount} items`}
     >
       <ShoppingBag className="w-6 h-6 text-navy" />
