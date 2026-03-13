@@ -350,19 +350,19 @@ export const productDetails: Record<
 > = {
   nod: {
     name: 'Busby Nod',
-    price: 549,
+    price: 1499,
     tagline: 'Dependable comfort, night after night',
     features: ['5-layer hybrid construction', 'CertiPUR-US certified foams', 'Made in Wisconsin, USA'],
   },
   slumber: {
     name: 'Busby Slumber',
-    price: 999,
+    price: 1699,
     tagline: 'Rich, plush comfort that envelops you',
     features: ['100% natural latex layer', 'Deep pressure relief', 'Made in Wisconsin, USA'],
   },
   dream: {
     name: 'Busby Dream',
-    price: 1299,
+    price: 1999,
     tagline: 'Engineered for luxury performance.',
     features: ['Joma® Wool CoolGel quilting', 'Tri-Zone encased coil system', 'Made in Wisconsin, USA'],
   },

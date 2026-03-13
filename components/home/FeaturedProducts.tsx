@@ -13,7 +13,7 @@ const flagship = {
     'Individually wrapped coils meet advanced foam layers for the kind of performance you expect from a luxury mattress — at a price that doesn\'t require compromise.',
   layers: 6,
   keyBenefit: 'Zero Motion Transfer',
-  price: 1299,
+  price: 1999,
   image: '/images/products/Dream/dream.svg',
 };
 
@@ -25,7 +25,7 @@ const supportingProducts = [
     type: 'Memory Foam',
     tagline: 'Rich, plush comfort that envelops you',
     keyBenefit: 'Deep Pressure Relief',
-    price: 999,
+    price: 1699,
     image: '/images/products/Slumber/slumber.svg',
   },
   {
@@ -35,7 +35,7 @@ const supportingProducts = [
     type: 'Foam',
     tagline: 'Plush comfort, built to last.',
     keyBenefit: 'Enhanced Comfort',
-    price: 749,
+    price: 1299,
     image: '/images/products/Doze/doze.svg',
   },
   {
@@ -45,7 +45,7 @@ const supportingProducts = [
     type: 'Foam',
     tagline: 'Dependable comfort, night after night',
     keyBenefit: 'Built to Last',
-    price: 549,
+    price: 1499,
     image: '/images/products/Nod/nod.svg',
   },
 ];

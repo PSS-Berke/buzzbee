@@ -47,7 +47,7 @@ const localBusinessSchema = {
 const stats = [
   { icon: Users, value: '25+', label: 'Years Experience' },
   { icon: Factory, value: '1', label: 'American Factory' },
-  { icon: Shield, value: '20', label: 'Year Warranty' },
+  { icon: Shield, value: '10', label: 'Year Warranty' },
   { icon: Flag, value: '100%', label: 'USA Materials' },
 ];
 

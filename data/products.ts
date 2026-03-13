@@ -69,8 +69,8 @@ export const homeLineProducts: Product[] = [
     type: 'Hybrid',
     tagline: 'Dependable comfort, night after night',
     description: 'The Busby Nod is a 13½" plush hybrid mattress built for sleepers who want the conforming feel of foam with the responsive support of individually wrapped coils. Five precision-layered components work together — from the CoolGel-infused quilt fill to the Quantum® reinforced perimeter coils — to deliver consistent, roll-off-free comfort from edge to edge.',
-    price: 549,
-    originalPrice: 1098,
+    price: 1499,
+    originalPrice: 2998,
     rating: 4.7,
     reviewCount: 0,
     images: [
@@ -78,11 +78,11 @@ export const homeLineProducts: Product[] = [
       '/images/products/Nod/nod-room.png',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 399, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1199, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 449, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 499, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 549, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 749, inStock: true },    ],
+      { name: 'Full', dimensions: '54" x 75"', price: 1299, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1499, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 1699, inStock: true },    ],
     firmness: [
       { level: 'Medium', description: 'Balanced support and comfort', recommended: ['All sleep positions', 'Couples'] },
       { level: 'Plush', description: 'Soft, enveloping comfort with coil support', recommended: ['Side sleepers', 'Lighter body types'] },
@@ -120,8 +120,8 @@ export const homeLineProducts: Product[] = [
     type: 'Hybrid',
     tagline: 'Plush comfort, built to last.',
     description: 'The Busby Doze is a 13½" XPlush hybrid mattress engineered for sleepers who want deep, enveloping comfort without sacrificing support. A 2" Serene™ foam comfort layer — double the depth of the Nod — works alongside CoolGel quilting and individually wrapped coils to deliver responsive pressure relief from the very first night.',
-    price: 749,
-    originalPrice: 1498,
+    price: 1299,
+    originalPrice: 2598,
     rating: 4.8,
     reviewCount: 0,
     images: [
@@ -129,11 +129,11 @@ export const homeLineProducts: Product[] = [
       '/images/products/Doze/doze-room.png',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 549, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 999, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 599, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 699, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 749, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 999, inStock: true },    ],
+      { name: 'Full', dimensions: '54" x 75"', price: 1099, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1299, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 1499, inStock: true },    ],
     firmness: [
       { level: 'XFirm', description: 'Maximum support', recommended: ['Stomach sleepers', 'Heavier body types'] },
       { level: 'Firm', description: 'Solid support with light cushion', recommended: ['Back sleepers', 'Stomach sleepers'] },
@@ -173,8 +173,8 @@ export const homeLineProducts: Product[] = [
     type: 'Hybrid',
     tagline: 'Rich, plush comfort that envelops you',
     description: 'The Busby Slumber is a 15½" plush hybrid mattress built for sleepers who demand the most from every layer. Six precision-engineered components — including 1" of 100% natural latex and 2" of Serene™ plush foam — work together with an individually wrapped coil system to deliver deep, responsive comfort from edge to edge.',
-    price: 999,
-    originalPrice: 1998,
+    price: 1699,
+    originalPrice: 3398,
     rating: 4.8,
     reviewCount: 0,
     images: [
@@ -182,11 +182,11 @@ export const homeLineProducts: Product[] = [
       '/images/products/Slumber/slumber-room.png',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 749, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1299, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 799, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 899, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 999, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1249, inStock: true },    ],
+      { name: 'Full', dimensions: '54" x 75"', price: 1499, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1699, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 1999, inStock: true },    ],
     firmness: [
       { level: 'XFirm', description: 'Maximum support', recommended: ['Stomach sleepers', 'Heavier body types'] },
       { level: 'Firm', description: 'Solid support with light cushion', recommended: ['Back sleepers', 'Stomach sleepers'] },
@@ -228,8 +228,8 @@ export const homeLineProducts: Product[] = [
     type: 'Hybrid',
     tagline: 'Engineered for luxury performance.',
     description: 'The Busby Dream is a 15½" XPlush pillowtop hybrid mattress — the most refined mattress in the Busby Home line. Seven precision-engineered layers, including Joma® Wool-infused CoolGel quilting, 1" of natural latex, 2" of Serene™ plush foam, and a Tri-Zone encased coil system, deliver uncompromising plush comfort from surface to foundation.',
-    price: 1299,
-    originalPrice: 2598,
+    price: 1999,
+    originalPrice: 3998,
     rating: 4.9,
     reviewCount: 0,
     images: [
@@ -237,11 +237,11 @@ export const homeLineProducts: Product[] = [
       '/images/products/Dream/dream-room.png',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 999, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1599, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 1049, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1199, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1299, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1599, inStock: true },    ],
+      { name: 'Full', dimensions: '54" x 75"', price: 1799, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1999, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2100, inStock: true },    ],
     firmness: [
       { level: 'XFirm', description: 'Maximum support', recommended: ['Stomach sleepers', 'Heavier body types'] },
       { level: 'Firm', description: 'Solid support with light cushion', recommended: ['Back sleepers', 'Stomach sleepers'] },
@@ -285,8 +285,8 @@ export const homeLineProducts: Product[] = [
     type: 'Crib Mattress',
     tagline: 'Safe, supportive sleep from day one',
     description: 'The Nest is designed from the ground up for your baby\'s safety and comfort. A firm, flat sleep surface meets infant safety standards while breathable materials keep little ones cool and comfortable through every nap and night.',
-    price: 179,
-    originalPrice: 358,
+    price: 299,
+    originalPrice: 598,
     rating: 4.9,
     reviewCount: 0,
     images: [
@@ -294,7 +294,7 @@ export const homeLineProducts: Product[] = [
       '/images/products/Nest/MyGreenMattress_Crib_February2024-5 (1).jpg',
     ],
     sizes: [
-      { name: 'Standard Crib', dimensions: '28" x 52"', price: 179, inStock: true },
+      { name: 'Standard Crib', dimensions: '28" x 52"', price: 299, inStock: true },
     ],
     firmness: [
       { level: 'Infant Firm', description: 'AAP-recommended firm surface for safe infant sleep', recommended: ['Newborns', 'Infants'] },
