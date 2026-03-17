@@ -290,8 +290,8 @@ export const homeLineProducts: Product[] = [
     rating: 4.9,
     reviewCount: 0,
     images: [
-      '/images/products/Nest/MyGreenMattress_Crib_February2024-1 (1).jpg',
-      '/images/products/Nest/MyGreenMattress_Crib_February2024-5 (1).jpg',
+      '/images/products/Nest/can-you-change-the-logo-on-the-mattress-to-the-new.png',
+      '/images/products/Nest/can-you-swap-out-this-logo-for-the-one-i-attached-.png',
     ],
     sizes: [
       { name: 'Standard Crib', dimensions: '28" x 52"', price: 299, inStock: true },

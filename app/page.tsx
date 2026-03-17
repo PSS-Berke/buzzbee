@@ -1,5 +1,6 @@
 import Hero from '@/components/home/Hero';
 import TrustBar from '@/components/home/TrustBar';
+import FinancingBanner from '@/components/home/FinancingBanner';
 import TheDifference from '@/components/home/TheDifference';
 import SixComponents from '@/components/home/SixComponents';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
@@ -22,6 +23,7 @@ export default function Home() {
         <Hero />
         <TrustBar />
         <FeaturedProducts />
+        <FinancingBanner />
         <SixComponents />
         <TheDifference />
         <SleepQuizCTA />
