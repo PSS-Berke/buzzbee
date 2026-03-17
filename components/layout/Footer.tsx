@@ -26,7 +26,7 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Link href="/" className="inline-block mb-4">
               <Image
-                src="/logo-busby-footer.svg"
+                src="/4.svg"
                 alt="Busby - American Made Mattresses"
                 width={200}
                 height={200}

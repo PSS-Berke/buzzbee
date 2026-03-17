@@ -46,13 +46,12 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/logo-busby-footer.svg"
+              src="/2.svg"
               alt="Busby - American Made Mattresses"
               width={128}
               height={128}
               unoptimized
               className="h-10 sm:h-12 lg:h-16 w-auto"
-              style={{ filter: 'brightness(0) saturate(100%) invert(14%) sepia(39%) saturate(694%) hue-rotate(183deg) brightness(94%) contrast(96%)' }}
               priority
             />
           </Link>

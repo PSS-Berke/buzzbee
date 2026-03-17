@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
       phone_number_collection: {
         enabled: true,
       },
+      allow_promotion_codes: true,
       success_url: `${origin}/checkout/success`,
       cancel_url: `${origin}/checkout/cancel`,
     });

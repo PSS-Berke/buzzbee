@@ -79,7 +79,6 @@ export const homeLineProducts: Product[] = [
     ],
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1199, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 449, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1299, inStock: true },
       { name: 'Queen', dimensions: '60" x 80"', price: 1499, inStock: true },
       { name: 'King', dimensions: '76" x 80"', price: 1699, inStock: true },    ],
@@ -130,7 +129,6 @@ export const homeLineProducts: Product[] = [
     ],
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 999, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 599, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1099, inStock: true },
       { name: 'Queen', dimensions: '60" x 80"', price: 1299, inStock: true },
       { name: 'King', dimensions: '76" x 80"', price: 1499, inStock: true },    ],
@@ -183,7 +181,6 @@ export const homeLineProducts: Product[] = [
     ],
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1299, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 799, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1499, inStock: true },
       { name: 'Queen', dimensions: '60" x 80"', price: 1699, inStock: true },
       { name: 'King', dimensions: '76" x 80"', price: 1999, inStock: true },    ],
@@ -238,7 +235,6 @@ export const homeLineProducts: Product[] = [
     ],
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1599, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 1049, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1799, inStock: true },
       { name: 'Queen', dimensions: '60" x 80"', price: 1999, inStock: true },
       { name: 'King', dimensions: '76" x 80"', price: 2100, inStock: true },    ],
@@ -340,7 +336,6 @@ export const accessoryProducts: Product[] = [
     ],
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 104, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 114, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 134, inStock: true },
       { name: 'Queen', dimensions: '60" x 80"', price: 144, inStock: true },
       { name: 'King', dimensions: '76" x 80"', price: 154, inStock: true },
