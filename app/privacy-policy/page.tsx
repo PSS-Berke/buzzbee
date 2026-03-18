@@ -234,7 +234,7 @@ const sections = [
         <ul className="space-y-2">
           {[
             "Follow the directions in a marketing email or direct mail communication you receive from us",
-            "Call 1-844-375-3376 with your request and current contact information",
+            "Call (844) 886-1640 with your request and current contact information",
             "Send an email with your request to: info@mybusby.com",
           ].map((item) => (
             <li key={item} className="flex items-start gap-3 text-gray-600">
@@ -408,14 +408,14 @@ export default function PrivacyPolicyPage() {
 
             <div className="grid sm:grid-cols-3 gap-6 mb-10">
               <a
-                href="tel:18443753376"
+                href="tel:18448861640"
                 className="bg-white border-2 border-gold/20 rounded-3xl p-6 shadow-lg shadow-gold/5 flex flex-col items-center gap-3 hover:border-gold transition-colors"
               >
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
                   <Phone className="w-5 h-5 text-gold-dark" />
                 </div>
                 <span className="text-sm text-gray-500">Phone</span>
-                <span className="text-navy font-semibold">1-844-375-3376</span>
+                <span className="text-navy font-semibold">(844) 886-1640</span>
               </a>
 
               <a

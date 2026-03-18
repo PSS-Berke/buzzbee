@@ -59,8 +59,8 @@ export default function ShowroomCTA() {
                   </div>
                   <div>
                     <p className="font-semibold text-navy">Phone</p>
-                    <a href="tel:18443753376" className="text-gold hover:text-gold-dark transition-colors">
-                      1-844-375-3376
+                    <a href="tel:18448861640" className="text-gold hover:text-gold-dark transition-colors">
+                      (844) 886-1640
                     </a>
                   </div>
                 </div>

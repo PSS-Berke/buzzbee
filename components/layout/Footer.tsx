@@ -39,11 +39,11 @@ export default function Footer() {
             </p>
             <div className="space-y-3">
               <a
-                href="tel:18443753376"
+                href="tel:18448861640"
                 className="flex items-center gap-2 text-gray-300 hover:text-gold transition-colors text-sm"
               >
                 <Phone className="w-4 h-4" />
-                <span>1-844-375-3376</span>
+                <span>(844) 886-1640</span>
               </a>
               <a
                 href="mailto:wholesale@mybusby.com"

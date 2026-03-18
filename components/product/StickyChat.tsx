@@ -106,11 +106,11 @@ export default function StickyChat() {
 
             <div className="mt-3 text-center">
               <a
-                href="tel:18443753376"
+                href="tel:18448861640"
                 className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gold-dark"
               >
                 <Phone className="w-4 h-4" />
-                Or call us: 1-844-375-3376
+                Or call us: (844) 886-1640
               </a>
             </div>
           </div>

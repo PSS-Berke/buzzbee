@@ -32,9 +32,9 @@ export default function Header() {
             <span>Proudly Made in the USA</span>
           </div>
           <div className="hidden sm:flex items-center gap-4">
-            <a href="tel:18443753376" className="flex items-center gap-1 hover:text-gold-light transition-colors">
+            <a href="tel:18448861640" className="flex items-center gap-1 hover:text-gold-light transition-colors">
               <Phone className="w-4 h-4" />
-              <span>1-844-375-3376</span>
+              <span>(844) 886-1640</span>
             </a>
           </div>
         </div>
@@ -182,12 +182,12 @@ export default function Header() {
                 Shop Now
               </Link>
               <a
-                href="tel:18443753376"
+                href="tel:18448861640"
                 className="flex items-center justify-center gap-2 text-gray-500 hover:text-navy transition-colors py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Phone className="w-4 h-4" />
-                <span className="text-sm">1-844-375-3376</span>
+                <span className="text-sm">(844) 886-1640</span>
               </a>
             </div>
           </div>
