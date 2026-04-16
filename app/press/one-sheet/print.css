@@ -1,0 +1,100 @@
+/* ── Screen wrapper ── */
+.os-screen-wrapper {
+  background: #e5e7eb;
+  min-height: 100vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.os-toolbar {
+  width: 100%;
+  background: #203552;
+  border-bottom: 1px solid rgba(243, 165, 29, 0.2);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.os-doc-wrap {
+  padding: 32px 16px 48px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── The document itself ── */
+.one-sheet {
+  background: white;
+  width: 8.5in;
+  height: 11in;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--font-lato), system-ui, -apple-system, sans-serif;
+  flex-shrink: 0;
+}
+
+/* ── Print ── */
+@media print {
+  @page {
+    size: letter;
+    margin: 0;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  /* Hide site chrome */
+  header,
+  footer,
+  nav,
+  .quilted-wave-overlay,
+  .os-toolbar {
+    display: none !important;
+  }
+
+  /* Strip wrapper chrome so the document sits flush */
+  .os-screen-wrapper {
+    background: white !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .os-doc-wrap {
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+  }
+
+  /* Force background colors and images to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* The document itself */
+  .one-sheet {
+    box-shadow: none !important;
+    width: 8.5in !important;
+    height: 11in !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+  }
+}

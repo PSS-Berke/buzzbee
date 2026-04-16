@@ -11,6 +11,7 @@ const shopLinks = [
 const companyLinks = [
   { name: 'About Us', href: '/about' },
   { name: 'Sleep Quiz', href: '/quiz' },
+  { name: 'Press', href: '/press' },
   { name: 'Warranty', href: '/warranty' },
   { name: 'Terms & Conditions', href: '/terms' },
   { name: 'Privacy Policy', href: '/privacy-policy' },
