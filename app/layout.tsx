@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { SITE_URL } from "@/lib/site";
 import { Lato, Josefin_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
     "handcrafted mattress",
     "luxury mattress",
   ],
-  metadataBase: new URL("https://www.busby.com"),
+  metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: "/",
   },
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
     title: "Busby | American-Made Mattresses | Premium Sleep",
     description:
       "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
-    url: "https://www.busby.com",
+    url: SITE_URL,
     images: [
       {
         url: "/images/og-image.png",
@@ -76,8 +77,8 @@ const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Busby',
-  url: 'https://www.busby.com',
-  logo: 'https://www.busby.com/logo-busby-footer.svg',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo-busby-footer.svg`,
   description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
   telephone: '+18443753376',
   contactPoint: {

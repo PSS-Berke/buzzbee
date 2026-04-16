@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { getProductBySlug, getAllProductSlugs, homeLineProducts } from '@/data/products';
+import { SITE_URL } from '@/lib/site';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductInfo from '@/components/product/ProductInfo';
 import ProductTabs from '@/components/product/ProductTabs';
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
     openGraph: {
       title: `${product.name} | American-Made ${product.type} Mattress | Busby`,
       description: product.description,
-      url: `https://www.busby.com/products/${slug}`,
+      url: `${SITE_URL}/products/${slug}`,
       images: product.images[0]
         ? [{ url: product.images[0], alt: product.name }]
         : [],
@@ -89,7 +90,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     description: product.description,
     brand: { '@type': 'Brand', name: 'Busby' },
     image: product.images,
-    url: `https://www.busby.com/products/${product.slug}`,
+    url: `${SITE_URL}/products/${product.slug}`,
     aggregateRating: product.reviewCount > 0
       ? {
           '@type': 'AggregateRating',

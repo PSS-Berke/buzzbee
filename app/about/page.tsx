@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SITE_URL } from '@/lib/site';
 import Image from 'next/image';
 import {
   ArrowRight,
@@ -25,8 +26,8 @@ const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'FurnitureStore',
   name: 'Busby',
-  url: 'https://www.busby.com',
-  logo: 'https://www.busby.com/logo-busby-footer.svg',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo-busby-footer.svg`,
   telephone: '+18443753376',
   description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
   address: {

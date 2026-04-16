@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SITE_URL } from '@/lib/site';
 import {
   ArrowRight,
   Mail,
@@ -32,7 +33,7 @@ export const metadata = {
     title: 'Robert Taglianetti – Podcast Press Kit',
     description:
       'Sleep industry expert. 25+ years. Founder of Sleep6 & Busby. Book as a guest.',
-    url: 'https://www.mybusby.com/press',
+    url: `${SITE_URL}/press`,
   },
 };
 
@@ -45,7 +46,7 @@ const personSchema = {
     { '@type': 'Organization', name: 'Sleep6' },
     { '@type': 'Organization', name: 'Busby' },
   ],
-  url: 'https://www.mybusby.com/press',
+  url: `${SITE_URL}/press`,
   sameAs: [
     'https://linkedin.com/in/robert-taglianetti-25499795',
     'https://instagram.com/sleep6_',
