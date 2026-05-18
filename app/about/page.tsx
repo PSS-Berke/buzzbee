@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { SITE_URL } from '@/lib/site';
 import Image from 'next/image';
 import {
   ArrowRight,
@@ -20,29 +19,6 @@ export const metadata = {
   title: 'About Us | Busby',
   description: 'Learn about Busby - 25+ years of bedding expertise, American-made mattresses built for real comfort without compromise.',
   alternates: { canonical: '/about' },
-};
-
-const localBusinessSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FurnitureStore',
-  name: 'Busby',
-  url: SITE_URL,
-  logo: `${SITE_URL}/logo-busby-footer.svg`,
-  telephone: '+18443753376',
-  description: 'Premium American-made mattresses handcrafted with 25+ years of expertise.',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: '123 Main Street',
-    addressLocality: 'Austin',
-    addressRegion: 'TX',
-    postalCode: '78701',
-    addressCountry: 'US',
-  },
-  openingHoursSpecification: [
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], opens: '10:00', closes: '19:00' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Sunday'], opens: '12:00', closes: '17:00' },
-  ],
-  priceRange: '$$',
 };
 
 const stats = [
@@ -99,11 +75,6 @@ const doBelieve = [
 
 export default function AboutPage() {
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-      />
     <div className="min-h-screen bg-[#faf8f5] linen-texture relative">
       {/* Warm ambient glow */}
       <div
@@ -502,6 +473,5 @@ export default function AboutPage() {
         </section>
       </div>
     </div>
-    </>
   );
 }
