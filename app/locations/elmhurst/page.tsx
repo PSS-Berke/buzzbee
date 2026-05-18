@@ -1,0 +1,84 @@
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/site';
+import { elmhurstStore } from '@/data/store';
+import LocationHero from '@/components/locations/LocationHero';
+import WhatToExpect from '@/components/locations/WhatToExpect';
+import SleepGuides from '@/components/locations/SleepGuides';
+import ProductsOnDisplay from '@/components/locations/ProductsOnDisplay';
+import GettingHere from '@/components/locations/GettingHere';
+import LocationFAQ from '@/components/locations/LocationFAQ';
+import StoreViewTracker from '@/components/locations/StoreViewTracker';
+
+export const metadata: Metadata = {
+  title: 'Visit Busby Elmhurst — Chicagoland Showroom',
+  description:
+    'Try every Busby mattress side-by-side at our Elmhurst showroom. Walk-ins welcome. American-made, 100-night trial, 10-year warranty.',
+  alternates: { canonical: '/locations/elmhurst' },
+  openGraph: {
+    title: 'Visit Busby Elmhurst — Chicagoland Showroom',
+    description:
+      'Try every Busby mattress side-by-side at our Elmhurst showroom. Walk-ins welcome.',
+    url: `${SITE_URL}/locations/elmhurst`,
+    type: 'website',
+  },
+};
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FurnitureStore',
+  '@id': `${SITE_URL}/locations/elmhurst`,
+  name: elmhurstStore.name,
+  url: `${SITE_URL}/locations/elmhurst`,
+  image: `${SITE_URL}/images/og-image.png`,
+  telephone: elmhurstStore.phoneE164,
+  email: elmhurstStore.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: elmhurstStore.address.street,
+    addressLocality: elmhurstStore.address.city,
+    addressRegion: elmhurstStore.address.state,
+    postalCode: elmhurstStore.address.zip,
+    addressCountry: 'US',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: elmhurstStore.geo.lat,
+    longitude: elmhurstStore.geo.lng,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ],
+      opens: '00:00',
+      closes: '23:59',
+    },
+  ],
+  areaServed: ['Elmhurst', 'Oak Brook', 'Hinsdale', 'Chicago', 'DuPage County'],
+  priceRange: '$$$',
+};
+
+export default function ElmhurstPage() {
+  return (
+    <div className="min-h-screen bg-[#faf8f5]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
+      <StoreViewTracker slug={elmhurstStore.slug} />
+      <LocationHero />
+      <WhatToExpect />
+      <SleepGuides />
+      <ProductsOnDisplay />
+      <GettingHere />
+      <LocationFAQ />
+    </div>
+  );
+}
