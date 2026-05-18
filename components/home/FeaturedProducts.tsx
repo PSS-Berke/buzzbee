@@ -78,7 +78,7 @@ export default function FeaturedProducts() {
               <div className="relative overflow-hidden min-h-[220px] sm:min-h-[300px] lg:min-h-0">
                 <Image
                   src={flagship.image}
-                  alt={flagship.name}
+                  alt={`${flagship.name} ${flagship.type} mattress — ${flagship.tagline}`}
                   fill
                   className="object-cover"
                 />
@@ -140,7 +140,7 @@ export default function FeaturedProducts() {
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
                   src={product.image}
-                  alt={product.name}
+                  alt={`${product.name} ${product.type} mattress — ${product.tagline}`}
                   fill
                   className="object-cover"
                 />

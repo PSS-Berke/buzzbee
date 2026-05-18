@@ -2,11 +2,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
+import { SITE_URL } from '@/lib/site';
 
 export const metadata = {
   title: 'Busby Mattresses | American-Made Hybrid Mattresses',
   description:
     'Shop Busby mattresses — premium American-made hybrids. From the essential Nod to the luxury Dream pillowtop.',
+  alternates: { canonical: '/products' },
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Mattresses', item: `${SITE_URL}/products` },
+  ],
 };
 
 // Add key benefits to products
@@ -31,6 +42,11 @@ const supportingProducts = productsWithBenefits.filter((p) => p.slug !== 'dream'
 
 export default function ProductsPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
     <div className="min-h-screen bg-[#faf8f5] linen-texture relative">
       {/* Warm ambient glow */}
       <div
@@ -103,7 +119,7 @@ export default function ProductsPage() {
                   {flagship.images[0] ? (
                     <Image
                       src={flagship.images[0]}
-                      alt={flagship.name}
+                      alt={`${flagship.name} ${flagship.type} mattress — ${flagship.tagline}`}
                       fill
                       className="object-cover"
                       priority
@@ -168,7 +184,7 @@ export default function ProductsPage() {
                   {product.images[0] ? (
                     <Image
                       src={product.images[0]}
-                      alt={product.name}
+                      alt={`${product.name} ${product.type} mattress — ${product.tagline}`}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
@@ -244,5 +260,6 @@ export default function ProductsPage() {
         </div>
       </section>
     </div>
+    </>
   );
 }

@@ -107,11 +107,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
     },
   };
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Mattresses', item: `${SITE_URL}/products` },
+      { '@type': 'ListItem', position: 3, name: product.name, item: `${SITE_URL}/products/${product.slug}` },
+    ],
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
     <div className="min-h-screen bg-[#faf8f5] linen-texture relative">
       {/* Warm ambient glow */}
@@ -128,7 +142,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <div className="grid lg:grid-cols-[3fr_2fr] gap-12 lg:gap-20">
           {/* Image gallery */}
           <div className="lg:sticky lg:top-24 lg:self-start">
-            <ImageGallery images={product.images} productName={product.name} />
+            <ImageGallery
+              images={product.images}
+              productName={product.name}
+              productAlt={`${product.name} ${product.type} mattress`}
+            />
           </div>
 
           {/* Product info */}
@@ -203,7 +221,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   {relatedProduct.images[0] ? (
                     <Image
                       src={relatedProduct.images[0]}
-                      alt={relatedProduct.name}
+                      alt={`${relatedProduct.name} ${relatedProduct.type} mattress — ${relatedProduct.tagline}`}
                       fill
                       className="object-cover"
                     />

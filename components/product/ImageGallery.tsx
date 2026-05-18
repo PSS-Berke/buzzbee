@@ -8,9 +8,11 @@ import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 interface ImageGalleryProps {
   images: string[];
   productName: string;
+  productAlt?: string;
 }
 
-export default function ImageGallery({ images, productName }: ImageGalleryProps) {
+export default function ImageGallery({ images, productName, productAlt }: ImageGalleryProps) {
+  const baseAlt = productAlt ?? productName;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const hasImages = images && images.length > 0;
@@ -50,7 +52,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
         {hasImages ? (
           <Image
             src={images[currentIndex]}
-            alt={`${productName} - Image ${currentIndex + 1}`}
+            alt={`${baseAlt} (image ${currentIndex + 1} of ${totalImages})`}
             fill
             className="object-cover"
             priority={currentIndex === 0}
@@ -129,7 +131,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
             >
               <Image
                 src={image}
-                alt={`${productName} thumbnail ${index + 1}`}
+                alt={`${baseAlt} thumbnail ${index + 1}`}
                 fill
                 className="object-cover"
               />
@@ -160,7 +162,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
           >
             <Image
               src={images[currentIndex]}
-              alt={`${productName} - Image ${currentIndex + 1}`}
+              alt={`${baseAlt} (image ${currentIndex + 1} of ${totalImages})`}
               width={1500}
               height={1200}
               className="object-contain w-full h-full max-h-[90vh] rounded-2xl"
