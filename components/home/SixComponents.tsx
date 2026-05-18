@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Layers, Wind, Shield, Zap, Move, Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, Layers, Wind, Shield, Zap, Move, Sparkles } from 'lucide-react';
 
 const components = [
   {
@@ -129,6 +130,22 @@ export default function SixComponents() {
           </div>
         </div>
 
+        <div className="mt-14 flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Link
+            href="/sleep-guide"
+            className="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-semibold px-7 py-3.5 rounded-full transition-all hover:scale-105"
+          >
+            Read the full Busby philosophy
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link
+            href="/quiz"
+            className="inline-flex items-center gap-1.5 text-gold-dark hover:text-gold font-semibold transition-colors"
+          >
+            Or find your match in 90 seconds
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     </section>
   );

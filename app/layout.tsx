@@ -4,6 +4,7 @@ import { Lato, Josefin_Sans, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import { CartProvider } from "@/contexts/CartContext";
 import CartDrawer from "@/components/cart/CartDrawer";
 import ScrollToTop from "@/components/layout/ScrollToTop";
@@ -123,6 +124,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
+          <AnnouncementBar />
           <CartDrawer />
         </CartProvider>
         <Analytics />

@@ -1,6 +1,11 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Phone, Mail, Facebook, Twitter, Instagram, MapPin, Clock, ArrowRight } from 'lucide-react';
+import EmailCaptureForm from '@/components/forms/EmailCaptureForm';
+import { elmhurstStore, formatAddress } from '@/data/store';
 
 const shopLinks = [
   { name: 'Busby Mattresses', href: '/shop/mattresses' },
@@ -18,11 +23,15 @@ const companyLinks = [
 ];
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith('/sleep-guide')) {
+    return null;
+  }
   return (
     <footer className="bg-navy text-white relative z-10">
       {/* Main footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10">
           {/* Brand block */}
           <div className="md:col-span-2">
             <Link href="/" className="inline-block mb-4">
@@ -116,6 +125,34 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Visit Us */}
+          <div className="pt-0 md:pt-16">
+            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Visit Us</h3>
+            <p className="font-semibold text-white text-sm mb-2">{elmhurstStore.shortName}</p>
+            <address className="not-italic text-gray-300 text-sm space-y-2 mb-3">
+              <a
+                href={elmhurstStore.mapsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-2 hover:text-gold transition-colors"
+              >
+                <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <span>{formatAddress(elmhurstStore.address)}</span>
+              </a>
+              <div className="flex items-start gap-2">
+                <Clock className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <span>{elmhurstStore.hours}</span>
+              </div>
+            </address>
+            <Link
+              href="/locations"
+              className="inline-flex items-center gap-1 text-sm text-gold hover:text-gold-dark transition-colors"
+            >
+              Find a Showroom
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
           {/* Company links */}
           <div className="pt-0 md:pt-16">
             <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Company</h3>
@@ -140,22 +177,16 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="font-semibold text-lg">Get Sleep Tips & Exclusive Offers</h3>
-              <p className="text-gray-300 text-sm">Join our newsletter for better sleep and special savings.</p>
+              <h3 className="font-semibold text-lg">Sleep tips, early access, showroom invites.</h3>
+              <p className="text-gray-300 text-sm">About two emails a month. Unsubscribe in one click.</p>
             </div>
-            <form className="flex gap-2 w-full md:w-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 md:w-64 px-4 py-2.5 rounded-full bg-navy-light border border-navy-light text-white placeholder-gray-400 focus:outline-none focus:border-gold"
-              />
-              <button
-                type="submit"
-                className="bg-gold hover:bg-gold-dark text-white font-semibold px-6 py-2.5 rounded-full transition-colors"
-              >
-                Subscribe
-              </button>
-            </form>
+            <EmailCaptureForm
+              source="footer-newsletter"
+              layout="inline"
+              buttonLabel="Subscribe"
+              placeholder="Enter your email"
+              formPosition="footer"
+            />
           </div>
         </div>
       </div>
