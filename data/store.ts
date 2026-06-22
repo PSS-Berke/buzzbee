@@ -58,7 +58,7 @@ export const elmhurstStore: StoreLocation = {
   launchPhase: 'opening-on-date',
   parking: 'Free parking in the lot on site, available anytime.',
   transit: 'Elmhurst Metra (UP-W line) is in downtown Elmhurst, a short drive south of the showroom.',
-  accessibility: 'Call or text us at (844) 886-1640 with any accessibility questions and we’ll walk you through what to expect.',
+  accessibility: 'Call us at (844) 886-1640 with any accessibility questions and we’ll walk you through what to expect.',
   geo: { lat: 41.9091, lng: -87.9670 },
   // TODO: replace with the official `pb=` iframe URL from
   // Google Business Profile → Share → Embed a map. Until then, querying by

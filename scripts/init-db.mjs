@@ -41,6 +41,22 @@ const statements = [
   `create unique index if not exists reservations_date_slot_uniq
      on reservations (preferred_date, time_slot)
      where preferred_date is not null and time_slot is not null`,
+  `create table if not exists rate_limits (
+    bucket     text        primary key,
+    count      int         not null default 1,
+    expires_at timestamptz not null
+  )`,
+  `create index if not exists rate_limits_expires_idx on rate_limits (expires_at)`,
+  `create table if not exists welcomed_emails (
+    email_canonical text        primary key,
+    created_at      timestamptz not null default now()
+  )`,
+  `create table if not exists notification_recipients (
+    id         bigserial   primary key,
+    email      text        not null unique,
+    label      text,
+    created_at timestamptz not null default now()
+  )`,
 ];
 
 for (const stmt of statements) {

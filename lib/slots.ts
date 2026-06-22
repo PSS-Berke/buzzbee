@@ -4,6 +4,11 @@
 const FIRST_HOUR = 10;
 const LAST_HOUR = 19; // exclusive — last slot starts at 18:30, ends at 19:00
 
+// How far ahead a visit can be booked. Bounds the distinct (date, slot) space so
+// a booking flood can't generate unlimited reservations/notifications, and keeps
+// the date picker sane. Enforced server-side; the form mirrors it as a max.
+export const MAX_BOOKING_DAYS_AHEAD = 90;
+
 function buildSlots(): string[] {
   const out: string[] = [];
   for (let h = FIRST_HOUR; h < LAST_HOUR; h++) {

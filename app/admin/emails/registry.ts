@@ -1,5 +1,6 @@
 import 'server-only';
 import {
+  renderAdminReservationEmail,
   renderUserReservationEmail,
   renderUserSleepGuideEmail,
 } from '@/lib/email';
@@ -30,6 +31,14 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     recipient: 'Reservation submitter',
     trigger: 'POST /api/reserve',
     render: () => renderUserReservationEmail(SAMPLE_RESERVATION),
+  },
+  'admin-reservation': {
+    title: 'Internal — new booking notification',
+    description:
+      'Sent to the team on every booking with the visitor’s details. Reply-to is the customer, so a reply reaches them directly.',
+    recipient: 'RESERVATIONS_INBOX_EMAIL (team)',
+    trigger: 'POST /api/reserve (every booking)',
+    render: () => renderAdminReservationEmail(SAMPLE_RESERVATION),
   },
 };
 

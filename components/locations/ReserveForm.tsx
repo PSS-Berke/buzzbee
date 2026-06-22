@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { Send } from 'lucide-react';
-import { ALL_SLOTS, formatSlot } from '@/lib/slots';
+import { ALL_SLOTS, formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
 
 declare global {
   interface Window {
@@ -16,6 +16,13 @@ type Status = 'idle' | 'submitting' | 'success' | 'error';
 
 function todayLocalISO(): string {
   const now = new Date();
+  const tz = now.getTimezoneOffset() * 60_000;
+  return new Date(now.getTime() - tz).toISOString().slice(0, 10);
+}
+
+function localISOPlusDays(days: number): string {
+  const now = new Date();
+  now.setDate(now.getDate() + days);
   const tz = now.getTimezoneOffset() * 60_000;
   return new Date(now.getTime() - tz).toISOString().slice(0, 10);
 }
@@ -196,6 +203,7 @@ export default function ReserveForm() {
             type="date"
             required
             min={todayLocalISO()}
+            max={localISOPlusDays(MAX_BOOKING_DAYS_AHEAD)}
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold focus:outline-none transition-colors"

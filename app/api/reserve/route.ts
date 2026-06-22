@@ -1,11 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isValidEmail } from '@/lib/submissions';
+import { canonicalizeEmail, isValidEmail } from '@/lib/submissions';
 import { elmhurstStore } from '@/data/store';
 import { insertReservation, SlotTakenError } from '@/lib/db';
-import { sendUserReservationEmail } from '@/lib/email';
-import { isValidSlot } from '@/lib/slots';
+import { sendAdminReservationEmail, sendUserReservationEmail } from '@/lib/email';
+import { isValidSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { getClientIp, rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+// Today's date (YYYY-MM-DD) in the showroom's timezone, for past-date rejection.
+function chicagoToday(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Chicago' }).format(new Date());
+}
+
+// Latest bookable date (YYYY-MM-DD), MAX_BOOKING_DAYS_AHEAD past today.
+function latestBookingDate(): string {
+  const [y, m, d] = chicagoToday().split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d + MAX_BOOKING_DAYS_AHEAD));
+  const mm = String(dt.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(dt.getUTCDate()).padStart(2, '0');
+  return `${dt.getUTCFullYear()}-${mm}-${dd}`;
+}
+
+// DATE_RE is structural only — '2026-13-45' passes it. Confirm the value is a
+// real calendar date so a bad date 400s cleanly instead of 500-ing at the insert.
+function isRealDate(s: string): boolean {
+  const [y, m, d] = s.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
+}
 
 interface ReservePayload {
   name?: string;
@@ -50,35 +75,53 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  const { name, email, phone, date, timeSlot, mattresses, notes, source } = payload;
-  const normalizedEmail = email?.trim().toLowerCase() ?? '';
-
-  if (!name || !normalizedEmail || !isValidEmail(normalizedEmail)) {
+  const rl = await rateLimit('reserve', getClientIp(req));
+  if (!rl.allowed) {
     if (isFormPost(req)) {
-      return NextResponse.redirect(
-        new URL('/locations/elmhurst?reserve=error', req.url),
-        303
-      );
+      return NextResponse.redirect(new URL('/locations/elmhurst?reserve=error', req.url), 303);
     }
     return NextResponse.json(
-      { ok: false, error: 'Name and a valid email are required.' },
-      { status: 400 }
+      { ok: false, error: 'Too many requests. Please wait a moment and try again.' },
+      { status: 429, headers: { 'Retry-After': String(rl.resetSec) } }
     );
   }
 
-  if (timeSlot && !isValidSlot(timeSlot)) {
-    return NextResponse.json(
-      { ok: false, error: 'Invalid time slot.' },
-      { status: 400 }
-    );
+  const { name, email, phone, date, timeSlot, mattresses, notes, source } = payload;
+  const normalizedEmail = email?.trim().toLowerCase() ?? '';
+
+  // Invalid input → 400 (JSON) or back to the page with an error flag (no-JS form).
+  const bad = (msg: string) =>
+    isFormPost(req)
+      ? NextResponse.redirect(new URL('/locations/elmhurst?reserve=error', req.url), 303)
+      : NextResponse.json({ ok: false, error: msg }, { status: 400 });
+
+  if (!name || !normalizedEmail || !isValidEmail(normalizedEmail)) {
+    return bad('Name and a valid email are required.');
+  }
+
+  // Date and slot are REQUIRED and validated here. They can't be optional: the
+  // unique index that prevents double-booking is partial (only non-null
+  // date+slot collide), so a null/invalid pair would insert an unconstrained row
+  // on every request — previously an unlimited booking + confirmation-email flood.
+  if (!date || !DATE_RE.test(date) || !isRealDate(date)) {
+    return bad('Please choose a valid date.');
+  }
+  if (date < chicagoToday()) {
+    return bad('Please choose a date that is not in the past.');
+  }
+  if (date > latestBookingDate()) {
+    return bad(`Please choose a date within the next ${MAX_BOOKING_DAYS_AHEAD} days.`);
+  }
+  if (!isValidSlot(timeSlot)) {
+    return bad('Please choose a valid time slot.');
   }
 
   const record = {
     name: name.trim(),
     email: normalizedEmail,
     phone: phone?.trim() || null,
-    preferred_date: date || null,
-    time_slot: timeSlot || null,
+    preferred_date: date,
+    time_slot: timeSlot,
     mattresses: mattresses ?? [],
     notes: notes?.trim() || null,
     source: source || 'reserve-elmhurst',
@@ -107,9 +150,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  await sendUserReservationEmail(record).catch((err) =>
-    console.error('[reserve] user email failed', err)
-  );
+  // Per-recipient cap on the CUSTOMER confirmation, applied only AFTER a
+  // successful booking — so slot-taken/failed retries never burn a real
+  // customer's daily allowance, and the booking is never blocked. Over the cap
+  // the booking is still saved; we just skip the (duplicate-looking) email.
+  // The team notification fires unconditionally (they want every booking).
+  const emailRl = await rateLimit('reserveEmail', canonicalizeEmail(normalizedEmail));
+  if (!emailRl.allowed) {
+    console.warn('[reserve] per-recipient email cap reached; booking saved without confirmation', {
+      email: canonicalizeEmail(normalizedEmail),
+    });
+  }
+
+  // Both sends are independent and non-fatal — run them concurrently so the
+  // booking response waits on the slower one, not the sum.
+  await Promise.all([
+    sendAdminReservationEmail(record).catch((err) =>
+      console.error('[reserve] admin notification failed', err)
+    ),
+    emailRl.allowed
+      ? sendUserReservationEmail(record).catch((err) =>
+          console.error('[reserve] user email failed', err)
+        )
+      : Promise.resolve(),
+  ]);
 
   if (isFormPost(req)) {
     return NextResponse.redirect(new URL('/locations/elmhurst?reserve=ok', req.url), 303);

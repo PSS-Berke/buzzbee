@@ -46,15 +46,13 @@ export default function Header() {
       {/* Top bar */}
       <div className="bg-navy text-white text-sm py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center gap-4">
-          <a
-            href={elmhurstStore.mapsLink}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/appointment"
             className="flex items-center gap-2 hover:text-gold-light transition-colors min-w-0"
           >
             <MapPin className="w-4 h-4 flex-shrink-0" />
             <span className="truncate">{formatAddress(elmhurstStore.address)}</span>
-          </a>
+          </Link>
           <a
             href={`tel:${elmhurstStore.phoneE164}`}
             className="hidden sm:flex items-center gap-1 hover:text-gold-light transition-colors flex-shrink-0"

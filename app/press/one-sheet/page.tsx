@@ -98,7 +98,7 @@ export default function OneSheetPage() {
                   { value: '25+', label: 'Yrs in Industry' },
                   { value: '2', label: 'National Brands' },
                   { value: '100%', label: 'USA-Made' },
-                  { value: 'Apt.', label: 'Retail Partner' },
+                  { value: 'Abt.', label: 'Retail Partner' },
                 ].map((s, i) => (
                   <div key={s.label} style={{ display: 'flex', alignItems: 'center' }}>
                     {i > 0 && <div style={{ width: '1px', height: '28px', backgroundColor: 'rgba(255,255,255,0.15)', margin: '0 16px' }} />}
@@ -153,7 +153,7 @@ export default function OneSheetPage() {
                 {[
                   {
                     title: 'The Business Story',
-                    desc: 'From factory floor to national retail — how Robert built Sleep6 and Busby, scored an Apt. partnership, and kept it all Made in USA.',
+                    desc: 'From factory floor to national retail — how Robert built Sleep6 and Busby, scored an Abt. partnership, and kept it all Made in USA.',
                   },
                   {
                     title: 'Health & Wellness',
@@ -211,7 +211,7 @@ export default function OneSheetPage() {
                   { label: 'Location', value: 'Chicago, IL' },
                   { label: 'Brands', value: 'Sleep6 & Busby' },
                   { label: 'Materials', value: '100% USA-Made' },
-                  { label: 'Retail Partner', value: 'Apt.' },
+                  { label: 'Retail Partner', value: 'Abt.' },
                   { label: 'Warranty', value: '10-Year Guarantee' },
                   { label: 'Interview Format', value: 'Audio & Video' },
                   { label: 'Tech Setup', value: 'Camera-Ready' },

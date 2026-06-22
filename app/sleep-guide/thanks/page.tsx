@@ -36,7 +36,21 @@ export default async function ThanksPage({ searchParams }: SearchParams) {
 
       <main className="flex-1 flex items-center justify-center py-20 px-4">
         <div className="max-w-xl text-center">
-          {error ? (
+          {error === 'rate' ? (
+            <>
+              <h1 className="text-3xl md:text-4xl font-serif text-navy mb-4">
+                You’re going a little fast.
+              </h1>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                We’ve had a few requests from you in a short window. Give it a minute and try again
+                — or email{' '}
+                <a href="mailto:newsletter@mybusby.com" className="text-gold-dark hover:underline">
+                  newsletter@mybusby.com
+                </a>{' '}
+                and we’ll add you manually.
+              </p>
+            </>
+          ) : error ? (
             <>
               <h1 className="text-3xl md:text-4xl font-serif text-navy mb-4">
                 That email didn’t go through.

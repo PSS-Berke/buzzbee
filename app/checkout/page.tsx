@@ -34,11 +34,12 @@ export default function CheckoutPage() {
     setError('');
 
     try {
+      // Send only identifiers — the server resolves the canonical price, name,
+      // and image from data/products.ts so the charge can't be tampered with.
       const items = state.items.map((item) => ({
-        name: `${item.productName} - ${item.size}`,
-        price: item.price,
+        productId: item.productId,
+        size: item.size,
         quantity: item.quantity,
-        image: item.image,
       }));
 
       const res = await fetch('/api/checkout', {

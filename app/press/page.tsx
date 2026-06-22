@@ -81,7 +81,7 @@ const topics = [
   },
   {
     icon: BarChart2,
-    title: 'Apt. Partnership',
+    title: 'Abt. Partnership',
     description: 'The inside story of landing a major retail partnership and what it demands of a small manufacturer.',
   },
   {
@@ -111,7 +111,7 @@ const angles = [
     icon: Briefcase,
     title: 'The Business Story',
     description:
-      'From factory floor to national retail: how Robert built Sleep6 and Busby into a recognized brand, scored an Apt. partnership, and kept it all Made in USA.',
+      'From factory floor to national retail: how Robert built Sleep6 and Busby into a recognized brand, scored an Abt. partnership, and kept it all Made in USA.',
   },
   {
     icon: Heart,
@@ -138,7 +138,7 @@ const sampleQuestions = [
   'Most people spend a third of their life in bed. Why do you think so few take the time to really research their mattress?',
   'Walk us through what actually goes into building a quality mattress — what should consumers be paying attention to that they typically ignore?',
   'You manufacture in the USA at a time when most competitors have gone overseas. How do you make that work economically?',
-  'Tell us about landing the Apt. partnership. What did that process look like for a smaller manufacturer?',
+  'Tell us about landing the Abt. partnership. What did that process look like for a smaller manufacturer?',
   'What are the top three mistakes people make when buying a mattress?',
   'There is a huge price range in the mattress market — from a few hundred dollars to tens of thousands. How should a consumer think about value?',
   'Sleep technology is everywhere now — smart beds, sleep trackers, weighted blankets. How much of it actually moves the needle?',
@@ -150,7 +150,7 @@ const quickFacts = [
   { value: '25+', label: 'Years in the Industry' },
   { value: 'Chicago', label: 'Headquarters & Factory' },
   { value: '100%', label: 'USA-Made Materials' },
-  { value: 'Apt.', label: 'National Retail Partner' },
+  { value: 'Abt.', label: 'National Retail Partner' },
   { value: '2', label: 'Brands: Sleep6 & Busby' },
   { value: '10yr', label: 'Product Warranty' },
 ];
@@ -259,7 +259,7 @@ export default function PressPage() {
                       be accessible, honest, and American-made.
                     </p>
                     <p>
-                      Under Robert&apos;s leadership, Sleep6 secured a partnership with Apt.,
+                      Under Robert&apos;s leadership, Sleep6 secured a partnership with Abt.,
                       bringing factory-direct mattresses to consumers across the country. Every
                       product in both brands is manufactured using 100% USA-sourced materials —
                       a commitment Robert has maintained even as competitors have shifted overseas
@@ -286,7 +286,7 @@ export default function PressPage() {
                     <p className="text-navy font-medium">National brands: Sleep6 & Busby</p>
                   </div>
                   <div className="border-2 border-gold/20 rounded-3xl p-6 bg-[#faf8f5]">
-                    <p className="text-2xl font-bold text-gold-dark mb-1">Apt.</p>
+                    <p className="text-2xl font-bold text-gold-dark mb-1">Abt.</p>
                     <p className="text-navy font-medium">National retail partnership</p>
                   </div>
                   <div className="border-2 border-gold/20 rounded-3xl p-6 bg-[#faf8f5]">

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { isValidEmail } from '@/lib/submissions';
-import { insertSubscribe } from '@/lib/db';
+import { canonicalizeEmail, isValidEmail } from '@/lib/submissions';
+import { claimWelcome, insertSubscribe } from '@/lib/db';
 import { sendUserSleepGuideEmail } from '@/lib/email';
+import { getClientIp, rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
@@ -43,6 +44,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
+  const rl = await rateLimit('subscribe', getClientIp(req));
+  if (!rl.allowed) {
+    if (isFormPost(req)) {
+      return NextResponse.redirect(new URL('/sleep-guide/thanks?error=rate', req.url), 303);
+    }
+    return NextResponse.json(
+      { ok: false, error: 'Too many requests. Please wait a bit and try again.' },
+      { status: 429, headers: { 'Retry-After': String(rl.resetSec) } }
+    );
+  }
+
   const email = payload.email?.trim().toLowerCase() ?? '';
   const source = payload.source ?? 'unknown';
 
@@ -59,16 +71,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let duplicate = false;
+  let shouldWelcome = false;
   try {
-    const result = await insertSubscribe({
+    await insertSubscribe({
       email,
       source,
       utm_source: payload.utm_source ?? null,
       utm_medium: payload.utm_medium ?? null,
       utm_campaign: payload.utm_campaign ?? null,
     });
-    duplicate = result.duplicate;
+    // Atomically claim the once-ever welcome for this inbox (canonical form, so
+    // source rotation and gmail aliases can't re-trigger it). Race-proof: only
+    // the first caller for a brand-new address gets `true`.
+    shouldWelcome = await claimWelcome(canonicalizeEmail(email));
   } catch (err) {
     console.error('[subscribe] db insert failed', err);
     if (isFormPost(req)) {
@@ -83,9 +98,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // On a duplicate signup we skip the user-facing confirmation (don't spam returning visitors).
-  // Failures are logged but don't fail the request.
-  if (!duplicate) {
+  // Welcome email fires at most once per inbox, ever. Failures are logged, not fatal.
+  if (shouldWelcome) {
     await sendUserSleepGuideEmail(email).catch((err) =>
       console.error('[subscribe] user email failed', err)
     );

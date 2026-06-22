@@ -3,6 +3,8 @@ import { Resend } from 'resend';
 import { env } from './env';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot } from './slots';
+import { listNotificationRecipients } from './db';
+import { isValidEmail } from './submissions';
 
 let _resend: Resend | null = null;
 
@@ -685,6 +687,141 @@ export async function sendUserReservationEmail(payload: ReservationPayload): Pro
     from: env.EMAIL_FROM,
     to: payload.email,
     replyTo: env.RESERVATIONS_INBOX_EMAIL,
+    subject,
+    html,
+    text,
+  });
+}
+
+// Recipients for the internal booking notification. Prefer the DB-managed list
+// (editable at /admin/notifications); fall back to the RESERVATIONS_INBOX_EMAIL
+// env var (comma-separated) whenever the list is empty or unreadable, so alerts
+// never silently stop.
+async function reservationRecipients(): Promise<string[]> {
+  // Validate on every branch: Resend rejects the WHOLE `to` batch if any single
+  // address is malformed, so one typo (in the env value or a hand-inserted row)
+  // would silently kill alerts to everyone. Drop bad addresses instead.
+  try {
+    const rows = await listNotificationRecipients();
+    const emails = rows.map((r) => r.email.trim()).filter(isValidEmail);
+    if (emails.length > 0) return emails;
+  } catch (err) {
+    console.error('[email] could not load notification recipients; using env fallback', err);
+  }
+  return env.RESERVATIONS_INBOX_EMAIL.split(',')
+    .map((s) => s.trim())
+    .filter(isValidEmail);
+}
+
+export function renderAdminReservationEmail(payload: ReservationPayload): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  const store = elmhurstStore;
+  const date = formatPreferredDate(payload.preferred_date);
+  const slotPretty = payload.time_slot ? formatSlot(payload.time_slot) : null;
+  const whenText = date
+    ? `${date.full}${slotPretty ? ` at ${slotPretty}` : ''}`
+    : (slotPretty ?? 'No date specified');
+
+  const subject = `New booking — ${payload.name}${date ? `, ${date.full}` : ''}${
+    slotPretty ? ` at ${slotPretty}` : ''
+  }`;
+
+  const rows: Array<[string, string]> = [
+    ['When', escapeHtml(whenText)],
+    ['Name', escapeHtml(payload.name)],
+    [
+      'Email',
+      `<a href="mailto:${escapeHtml(payload.email)}" style="color:#203552;">${escapeHtml(payload.email)}</a>`,
+    ],
+  ];
+  if (payload.phone) {
+    rows.push([
+      'Phone',
+      `<a href="tel:${escapeHtml(payload.phone)}" style="color:#203552;">${escapeHtml(payload.phone)}</a>`,
+    ]);
+  }
+  if (payload.mattresses.length) {
+    rows.push(['Mattresses', escapeHtml(payload.mattresses.join(', '))]);
+  }
+  if (payload.notes) {
+    rows.push(['Notes', escapeHtml(payload.notes)]);
+  }
+  rows.push(['Location', escapeHtml(store.name)]);
+  rows.push(['Source', escapeHtml(payload.source)]);
+
+  const rowsHtml = rows
+    .map(
+      ([label, value]) => `
+            <tr>
+              <td style="padding:9px 18px 9px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;color:#8a8174;white-space:nowrap;vertical-align:top;">${label}</td>
+              <td style="padding:9px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;color:#203552;">${value}</td>
+            </tr>`
+    )
+    .join('');
+
+  const html = `<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /></head>
+<body style="margin:0;padding:0;background:#f4f4f5;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f5;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width:560px;max-width:560px;background:#ffffff;border:1px solid #e6dccd;border-radius:12px;">
+          <tr>
+            <td style="padding:24px 28px 0 28px;">
+              <div style="font-family:Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:0.26em;font-size:12px;color:#8a8174;">BUSBY · INTERNAL</div>
+              <h1 style="margin:10px 0 0 0;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:24px;color:#203552;">New showroom booking</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:18px 28px 4px 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${rowsHtml}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 28px 24px 28px;margin-top:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.6;color:#8a8174;border-top:1px solid #eee;">
+              Reply to this email to reach ${escapeHtml(payload.name)} directly.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  const text = [
+    'New showroom booking',
+    '',
+    `When:       ${whenText}`,
+    `Name:       ${payload.name}`,
+    `Email:      ${payload.email}`,
+    payload.phone ? `Phone:      ${payload.phone}` : '',
+    payload.mattresses.length ? `Mattresses: ${payload.mattresses.join(', ')}` : '',
+    payload.notes ? `Notes:      ${payload.notes}` : '',
+    `Location:   ${store.name}`,
+    `Source:     ${payload.source}`,
+    '',
+    `Reply to this email to reach ${payload.name} directly.`,
+  ]
+    .filter((l) => l !== '')
+    .join('\n');
+
+  return { subject, html, text };
+}
+
+export async function sendAdminReservationEmail(payload: ReservationPayload): Promise<void> {
+  const to = await reservationRecipients();
+  if (to.length === 0) return;
+  const { subject, html, text } = renderAdminReservationEmail(payload);
+  await client().emails.send({
+    from: env.EMAIL_FROM,
+    to,
+    replyTo: payload.email,
     subject,
     html,
     text,

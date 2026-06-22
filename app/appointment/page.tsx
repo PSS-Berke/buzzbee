@@ -1,6 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CalendarCheck, Clock, MapPin, Phone, DoorOpen, ArrowRight, CheckCircle } from 'lucide-react';
+import {
+  CalendarCheck,
+  Clock,
+  MapPin,
+  Phone,
+  DoorOpen,
+  ArrowRight,
+  CheckCircle,
+  ExternalLink,
+} from 'lucide-react';
 import { SITE_URL } from '@/lib/site';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import ReserveForm from '@/components/locations/ReserveForm';
@@ -45,7 +54,7 @@ export default function AppointmentPage() {
       <section className="relative bg-navy text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gold/10 blur-3xl rounded-full -translate-y-1/3 translate-x-1/4" aria-hidden="true" />
 
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 md:pt-24 md:pb-16">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 md:pt-24 md:pb-16">
           <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold mb-6">
             <CalendarCheck className="w-4 h-4" />
             <span>Sleep Consultation</span>
@@ -61,29 +70,40 @@ export default function AppointmentPage() {
         </div>
       </section>
 
-      {/* Form + benefits */}
+      {/* Booking form + map — side by side */}
       <section className="py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-          {/* Benefits / store info */}
-          <div className="space-y-8 lg:sticky lg:top-32">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-serif text-navy mb-5">
-                What a consultation gets you
-              </h2>
-              <ul className="space-y-4">
-                {benefits.map((b) => (
-                  <li key={b.title} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-navy">{b.title}</p>
-                      <p className="text-gray-600 text-sm leading-relaxed">{b.body}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+          {/* Left half: pick a time */}
+          <div>
+            <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">Pick a time</h2>
+            <p className="text-gray-600 mb-5 leading-relaxed">
+              Choose a date and slot — we&rsquo;ll have a Sleep Guide waiting and send a
+              confirmation to your inbox.
+            </p>
+            <ReserveForm />
+          </div>
+
+          {/* Right half: where to find us */}
+          <div className="lg:sticky lg:top-28">
+            <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">Where to find us</h2>
+            <p className="text-gray-600 mb-5 leading-relaxed">
+              {elmhurstStore.name} — free on-site parking, easy to reach from Chicagoland.
+            </p>
+
+            <div className="aspect-[4/3] rounded-2xl overflow-hidden border-2 border-gold/15 shadow-sm bg-gray-100">
+              <iframe
+                src={elmhurstStore.mapsEmbedSrc}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title={`Map of ${elmhurstStore.name}`}
+                allowFullScreen
+              />
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border-2 border-gold/15 shadow-sm space-y-4">
+            <div className="mt-6 bg-white rounded-2xl p-6 border-2 border-gold/15 shadow-sm space-y-4">
               <p className="font-semibold text-navy">{elmhurstStore.name}</p>
               <div className="space-y-3 text-sm">
                 <a
@@ -107,18 +127,43 @@ export default function AppointmentPage() {
                   <span>{elmhurstStore.phone}</span>
                 </a>
               </div>
+              <a
+                href={elmhurstStore.mapsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-dark hover:text-gold transition-colors"
+              >
+                Get directions
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Form */}
-          <div>
-            <ReserveForm />
+      {/* What a consultation gets you */}
+      <section className="py-16 bg-white border-t border-gold/10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-serif text-navy mb-8 text-center">
+            What a consultation gets you
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {benefits.map((b) => (
+              <div
+                key={b.title}
+                className="bg-[#faf8f5] rounded-2xl p-6 border-2 border-gold/15"
+              >
+                <CheckCircle className="w-6 h-6 text-gold mb-3" />
+                <p className="font-semibold text-navy mb-1.5">{b.title}</p>
+                <p className="text-gray-600 text-sm leading-relaxed">{b.body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Walk-in alternative */}
-      <section className="py-16 bg-white border-t border-gold/10">
+      <section className="py-16 border-t border-gold/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 bg-navy/5 rounded-full px-4 py-2 text-sm text-navy mb-5">
             <DoorOpen className="w-4 h-4 text-gold-dark" />

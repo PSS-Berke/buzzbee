@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { listReservations, listSubscribes } from '@/lib/db';
 import { formatSlot } from '@/lib/slots';
 
@@ -50,12 +51,18 @@ export default async function AdminPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <a
+            <Link
               href="/admin/emails"
               className="px-4 py-2 bg-white border border-gray-200 text-navy rounded-full text-sm font-medium hover:bg-gray-50"
             >
               Email previews
-            </a>
+            </Link>
+            <Link
+              href="/admin/notifications"
+              className="px-4 py-2 bg-white border border-gray-200 text-navy rounded-full text-sm font-medium hover:bg-gray-50"
+            >
+              Notification recipients
+            </Link>
             <a
               href="/api/admin/export?type=subscribes"
               className="px-4 py-2 bg-navy text-white rounded-full text-sm font-medium hover:bg-navy/90"

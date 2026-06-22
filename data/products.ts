@@ -370,6 +370,50 @@ export function getProductBySlug(slug: string): Product | undefined {
   return allProducts.find((p) => p.slug === slug);
 }
 
+export function getProductById(id: string): Product | undefined {
+  return allProducts.find((p) => p.id === id);
+}
+
+export interface ResolvedLineItem {
+  name: string;
+  price: number;
+  originalPrice: number;
+  image: string;
+  quantity: number;
+}
+
+/**
+ * Resolve a client-supplied cart line to its canonical, server-trusted values.
+ * The client may only choose WHAT to buy (productId + size + quantity); the
+ * price, name, and image always come from this data file — never from the
+ * request body. Returns null for unknown products/sizes so the caller can reject.
+ */
+export function resolveLineItem(input: {
+  productId: string;
+  size: string;
+  quantity: number;
+}): ResolvedLineItem | null {
+  const product = getProductById(input.productId);
+  if (!product) return null;
+
+  const size = product.sizes.find((s) => s.name === input.size);
+  // Products always carry sizes; if the requested size is unknown, reject
+  // rather than silently falling back to a different price.
+  if (!size) return null;
+  if (!size.inStock) return null;
+
+  const quantity = Math.floor(input.quantity);
+  if (!Number.isFinite(quantity) || quantity < 1 || quantity > 20) return null;
+
+  return {
+    name: `${product.name} - ${size.name}`,
+    price: size.price,
+    originalPrice: product.originalPrice,
+    image: product.images[0] ?? '',
+    quantity,
+  };
+}
+
 export function getAllProductSlugs(): string[] {
   return allProducts.map((p) => p.slug);
 }
