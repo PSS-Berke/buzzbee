@@ -4,7 +4,7 @@ import StudioSpecCard from './StudioSpecCard';
 // One-line spec descriptor per Studio build (parallel to keyBenefits on compare).
 const studioSpecLines: Record<string, string> = {
   'studio-10': 'A three-layer foam build, from cooling gel comfort to a high-density core. The clean, accessible entry — everything you need, nothing you don’t.',
-  'studio-14': 'A balanced foam build with a motion-isolating core, so you and your partner sleep undisturbed.',
+  'studio-12': 'A balanced foam build with a motion-isolating core, so you and your partner sleep undisturbed.',
   'studio-hybrid': 'Seven layers of premium foam over a pocketed-coil core — balanced, medium feel with zero motion transfer.',
   'studio-hybrid-firm':
     'The same pocketed-coil build as the Studio Hybrid, with a firmer comfort top for a flatter, more supportive surface.',

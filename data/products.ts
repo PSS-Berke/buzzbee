@@ -354,7 +354,7 @@ export const homeLineProducts: Product[] = [
   },
   // ── Studio line ────────────────────────────────────────────────────────────
   // Imported from the abt Exclusive catalog per Berke's mapping:
-  //   Studio 10 ← Luna · Studio 14 ← Mystic.
+  //   Studio 10 ← Luna · Studio 12 ← Mystic.
   //   Studio Hybrid + Studio Hybrid Firm are the SAME Cosmos Hybrid pocketed-coil
   //   build sold as a paired SKU (Medium vs a firmer comfort top).
   //   Photos are the legacy abt product images (swap for Studio photography later).
@@ -368,19 +368,19 @@ export const homeLineProducts: Product[] = [
     tagline: 'The essentials of comfort and support',
     description:
       'Studio 10 delivers essential comfort at an accessible price point. With 3 carefully designed foam layers — gel-infused comfort, cooling memory foam, and a high-density support core — this mattress provides the foundation for quality sleep without unnecessary complexity.',
-    price: 898,
-    originalPrice: 1296,
+    price: 1348,
+    originalPrice: 1696,
     rating: 0,
     reviewCount: 0,
     images: [
       '/images/products/studio/studio-10.webp',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 748, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 798, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 698, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 898, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1048, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 848, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 898, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1148, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1348, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 1598, inStock: true },
     ],
     firmness: [
       { level: 'Soft', description: 'Plush, pressure-relieving comfort', recommended: ['Side sleepers', 'Lighter body types'] },
@@ -410,27 +410,27 @@ export const homeLineProducts: Product[] = [
   },
   {
     id: 'hl-studio-2',
-    slug: 'studio-14',
-    name: 'Studio 14',
+    slug: 'studio-12',
+    name: 'Studio 12',
     brand: 'busby',
     line: 'studio',
     type: 'Foam',
     tagline: 'Balances affordability and comfort',
     description:
-      'Studio 14 strikes the perfect balance between value and performance. Its 3-layer design with a motion-isolating core ensures undisturbed sleep for you and your partner.',
-    price: 1348,
-    originalPrice: 1696,
+      'Studio 12 strikes the perfect balance between value and performance. Its 3-layer design with a motion-isolating core ensures undisturbed sleep for you and your partner.',
+    price: 2148,
+    originalPrice: 2696,
     rating: 0,
     reviewCount: 0,
     images: [
-      '/images/products/studio/studio-14.webp',
+      '/images/products/studio/studio-12.webp',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 848, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 898, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1148, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1348, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1598, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1348, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 1548, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1748, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 2148, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2448, inStock: true },
     ],
     firmness: [
       { level: 'Soft', description: 'Plush comfort with motion isolation', recommended: ['Side sleepers', 'Lighter body types'] },

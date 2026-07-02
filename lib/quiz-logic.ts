@@ -6,7 +6,7 @@ export type ArtisanProduct = 'nod' | 'slumber' | 'dream';
 export type RecommendedProduct =
   | ArtisanProduct
   | 'studio-10'
-  | 'studio-14'
+  | 'studio-12'
   | 'studio-hybrid'
   | 'studio-hybrid-firm';
 
@@ -333,7 +333,7 @@ export function calculateResult(answers: QuizAnswers): QuizResult {
   if (answers['collection'] === 'studio') {
     const studioCounterpart: Record<ArtisanProduct, RecommendedProduct> = {
       nod: 'studio-10',
-      slumber: 'studio-14',
+      slumber: 'studio-12',
       dream: recommendedFirmness === 'Firm' ? 'studio-hybrid-firm' : 'studio-hybrid',
     };
     recommendedProduct = studioCounterpart[artisanWinner];
@@ -394,10 +394,10 @@ function getResultMessaging(
       reason:
         "You want quality sleep without the extras — and you like the Studio approach. The Studio 10's three-layer foam build delivers essential comfort and honest support at our most accessible price.",
     },
-    'studio-14': {
+    'studio-12': {
       headline: 'Undisturbed Sleep by Design',
       reason:
-        "The Studio 14 is your match. Its motion-isolating core and contouring comfort layer absorb pressure and movement, so you get the restorative, undisturbed sleep your body needs — at a Studio price.",
+        "The Studio 12 is your match. Its motion-isolating core and contouring comfort layer absorb pressure and movement, so you get the restorative, undisturbed sleep your body needs — at a Studio price.",
     },
     'studio-hybrid': {
       headline: 'Balanced Hybrid Comfort',
@@ -438,13 +438,13 @@ export const productDetails: Record<
   },
   'studio-10': {
     name: 'Studio 10',
-    price: 898,
+    price: 1348,
     tagline: 'The essentials of comfort and support',
     features: ['3-layer foam construction', 'CertiPUR-US certified foams', 'Made in the USA'],
   },
-  'studio-14': {
-    name: 'Studio 14',
-    price: 1348,
+  'studio-12': {
+    name: 'Studio 12',
+    price: 2148,
     tagline: 'Balances affordability and comfort',
     features: ['Motion-isolating core', '100% fiber glass free', 'Made in the USA'],
   },

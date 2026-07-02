@@ -13,7 +13,7 @@ const keyBenefits: Record<string, string> = {
   slumber: 'Rich, Plush Experience',
   dream: 'Engineered for Luxury Performance.',
   'studio-10': 'Essential Comfort',
-  'studio-14': 'Motion Isolation',
+  'studio-12': 'Motion Isolation',
   'studio-hybrid': 'Balanced Hybrid Feel',
   'studio-hybrid-firm': 'Same Build, Firmer Feel',
 };
