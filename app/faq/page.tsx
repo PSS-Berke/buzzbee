@@ -3,120 +3,62 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
-
-const faqs = [
-  {
-    question: "How long will it take to receive my mattress?",
-    answer:
-      "Every Busby mattress is made to order. Typical delivery time is 5–7 business days.",
-  },
-  {
-    question: "Where are Busby mattresses made?",
-    answer:
-      "All Busby mattresses are 100% USA-made. Our mattresses are crafted in Chicago and manufactured in Wisconsin.",
-  },
-  {
-    question: "Do you offer expedited shipping?",
-    answer:
-      "Expedited shipping is already included with every order — at no additional charge to our customers.",
-  },
-  {
-    question: "How is a foam core different than a coil mattress?",
-    answer:
-      "Our foam core offers a tri-support system which works inline with all curves of the human body, providing consistent pressure relief and support that coil mattresses can't match.",
-  },
-  {
-    question: "How long will the mattress last?",
-    answer:
-      "Busby mattresses are built to last well past their 10-year warranty.",
-  },
-  {
-    question: "Can I return the mattress?",
-    answer:
-      "Yes! All Busby mattresses carry a full 100-night trial with risk-free returns.",
-  },
-  {
-    question: "Do I need to flip my mattress?",
-    answer:
-      "You will not need to flip your Busby mattress, but we recommend that you rotate it head-to-foot every 6 months.",
-  },
-  {
-    question: "What type of bed frame do I need for my mattress?",
-    answer:
-      "You can use a standard bed frame, existing box spring, platform, slat bed, or the good ol' floor.",
-  },
-  {
-    question: "How should I decide on a size?",
-    answer:
-      "Size is a personal choice, but we recommend a Queen if you're not sleeping alone.",
-  },
-  {
-    question: "Do you ship internationally?",
-    answer: "Yes, we ship to Canada and Mexico for an additional fee!",
-  },
-  {
-    question: "How do I unbox the mattress?",
-    answer:
-      "Opening your Busby mattress is easy — just unwrap the tape, pull out the mattress, and use the provided opener to cut it free.",
-  },
-  {
-    question: "What do I do with my old mattress?",
-    answer:
-      "We recommend you contact a local charity for donation or recycling.",
-  },
-  {
-    question: "Does my mattress come with a warranty?",
-    answer:
-      "Yes, our mattresses come with a 10-year warranty. Please refer to our warranty page for more details.",
-    link: { text: "View warranty details", href: "/warranty" },
-  },
-  {
-    question: "What certifications should I look for when buying a mattress?",
-    answer:
-      "All mattresses sold in the U.S. must meet the requirements of 16 CFR Parts 1632 and 1633, as regulated by the U.S. Consumer Product Safety Commission. Every Busby mattress meets these flammability standards. Our mattresses also carry CertiPUR-US® certification, meaning the foams do not contain ozone depleters, PBDEs, TDCPP or TCEP flame retardants, mercury, lead, or other heavy metals, formaldehyde, or phthalates. They also meet low VOC emissions for indoor air quality (less than 0.5 parts per million).",
-  },
-];
+import { faqs, type FAQ } from "@/data/faqs";
 
 function FAQItem({
   faq,
+  index,
   isOpen,
   onToggle,
 }: {
-  faq: { question: string; answer: string; link?: { text: string; href: string } };
+  faq: FAQ;
+  index: number;
   isOpen: boolean;
   onToggle: () => void;
 }) {
+  const buttonId = `faq-button-${index}`;
+  const panelId = `faq-panel-${index}`;
+
   return (
     <div className="border-b border-gray-200/60">
-      <button
-        onClick={onToggle}
-        className="w-full flex items-center justify-between py-5 px-1 text-left cursor-pointer hover:opacity-80 transition-opacity duration-200"
-      >
-        <span
-          className={`text-base sm:text-lg font-medium pr-4 transition-colors duration-200 ${
-            isOpen ? "text-navy" : "text-gray-900"
-          }`}
+      <h2>
+        <button
+          type="button"
+          id={buttonId}
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          aria-controls={panelId}
+          className="w-full flex items-center justify-between py-5 px-1 text-left cursor-pointer hover:opacity-80 transition-opacity duration-200"
         >
-          {faq.question}
-        </span>
-        <span
-          className={`text-xl flex-shrink-0 leading-none transition-colors duration-200 ${
-            isOpen ? "text-gold" : "text-gray-400"
-          }`}
-        >
-          {isOpen ? "−" : "+"}
-        </span>
-      </button>
+          <span
+            className={`text-base sm:text-lg font-medium pr-4 transition-colors duration-200 ${
+              isOpen ? "text-navy" : "text-gray-900"
+            }`}
+          >
+            {faq.question}
+          </span>
+          <span
+            aria-hidden="true"
+            className={`text-xl flex-shrink-0 leading-none transition-colors duration-200 ${
+              isOpen ? "text-gold-dark" : "text-gray-600"
+            }`}
+          >
+            {isOpen ? "−" : "+"}
+          </span>
+        </button>
+      </h2>
       <div
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? "max-h-96 opacity-100 pb-5" : "max-h-0 opacity-0"
-        }`}
+        id={panelId}
+        role="region"
+        aria-labelledby={buttonId}
+        hidden={!isOpen}
+        className="pb-5"
       >
         <p className="text-gray-600 leading-relaxed px-1">{faq.answer}</p>
         {faq.link && (
           <Link
             href={faq.link.href}
-            className="inline-flex items-center gap-1 mt-3 px-1 text-sm font-medium text-gold-dark hover:text-navy transition-colors duration-200"
+            className="inline-flex items-center gap-1 mt-3 px-1 text-sm font-medium text-gold-dark underline hover:text-navy transition-colors duration-200"
           >
             {faq.link.text} <ArrowRight size={14} />
           </Link>
@@ -177,6 +119,7 @@ export default function FAQPage() {
               <FAQItem
                 key={i}
                 faq={faq}
+                index={i}
                 isOpen={openIndex === i}
                 onToggle={() => handleToggle(i)}
               />
@@ -199,11 +142,11 @@ export default function FAQPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="tel:+1-800-000-0000"
+                href="tel:+18448861640"
                 className="inline-flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105"
               >
                 <Phone className="w-5 h-5" />
-                Get in Touch
+                Call us: (844) 886-1640
               </a>
               <Link
                 href="/shop/mattresses"

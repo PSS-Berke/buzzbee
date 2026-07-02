@@ -99,12 +99,12 @@ export default function ShopByFeelPage() {
     onClick: () => void
   ) => {
     const Icon = category.icon;
+    const panelId = `feel-panel-${category.slug}`;
     return (
-      <button
+      <div
         key={category.slug}
-        onClick={onClick}
         className={`
-          text-left rounded-3xl p-6 md:p-8 border-2 transition-all duration-300 w-full
+          rounded-3xl p-6 md:p-8 border-2 transition-all duration-300
           ${isActive
             ? 'bg-white border-gold shadow-xl shadow-gold/10 scale-[1.02]'
             : 'bg-white/80 border-transparent hover:border-gold/30 hover:shadow-md'
@@ -119,22 +119,26 @@ export default function ShopByFeelPage() {
             `}
           >
             <Icon
-              className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'text-gold-dark' : 'text-gray-400'}`}
+              className={`w-6 h-6 transition-colors duration-300 ${isActive ? 'text-gold-dark' : 'text-gray-600'}`}
               strokeWidth={1.5}
             />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between">
-              <h3
-                className={`text-lg font-medium transition-colors duration-300 ${isActive ? 'text-navy' : 'text-gray-700'}`}
+            <h3>
+              <button
+                type="button"
+                onClick={onClick}
+                aria-expanded={isActive}
+                aria-controls={panelId}
+                className={`flex w-full items-center justify-between gap-2 text-left text-lg font-medium transition-colors duration-300 ${isActive ? 'text-navy' : 'text-gray-700'}`}
               >
                 {category.name}
-              </h3>
-              <ChevronDown
-                className={`w-5 h-5 transition-all duration-300 ${isActive ? 'text-gold rotate-180' : 'text-gray-300'}`}
-              />
-            </div>
-            <p className={`text-sm mt-1 leading-relaxed ${isActive ? 'text-gray-600' : 'text-gray-400'}`}>
+                <ChevronDown
+                  className={`w-5 h-5 flex-shrink-0 transition-all duration-300 ${isActive ? 'text-gold-dark rotate-180' : 'text-gray-600'}`}
+                />
+              </button>
+            </h3>
+            <p className={`text-sm mt-1 leading-relaxed ${isActive ? 'text-gray-600' : 'text-gray-600'}`}>
               {category.description}
             </p>
           </div>
@@ -142,7 +146,7 @@ export default function ShopByFeelPage() {
 
         {/* Expanded content */}
         {isActive && (
-          <div className="mt-6 pt-6 border-t border-gold/20 animate-in fade-in slide-in-from-top-2 duration-300">
+          <div id={panelId} className="mt-6 pt-6 border-t border-gold/20">
             <p className="text-gray-600 text-sm leading-relaxed mb-5">{category.tip}</p>
             <p className="text-gold-dark text-sm font-medium mb-3">
               We think you&apos;ll love...
@@ -159,18 +163,18 @@ export default function ShopByFeelPage() {
                   >
                     <div>
                       <span className="text-navy font-medium">{product.name}</span>
-                      <span className="text-gray-400 text-sm ml-2">
+                      <span className="text-gray-600 text-sm ml-2">
                         From ${product.price.toLocaleString()}
                       </span>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 text-gold-dark group-hover:translate-x-1 transition-transform" />
                   </Link>
                 );
               })}
             </div>
           </div>
         )}
-      </button>
+      </div>
     );
   };
 
@@ -203,7 +207,7 @@ export default function ShopByFeelPage() {
         <div className="mb-16">
           <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">How do you like to drift off?</h2>
-            <p className="text-gray-500">Pick the one that sounds most like you.</p>
+            <p className="text-gray-600">Pick the one that sounds most like you.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-5">
             {sleepPositions.map((category) =>
@@ -218,7 +222,7 @@ export default function ShopByFeelPage() {
         <div className="mb-16">
           <div className="mb-8">
             <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">Anything keeping you up at night?</h2>
-            <p className="text-gray-500">These are totally optional, but they help us help you.</p>
+            <p className="text-gray-600">These are totally optional, but they help us help you.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-5">
             {sleepConcerns.map((category) =>
@@ -231,7 +235,7 @@ export default function ShopByFeelPage() {
 
         {/* Bottom section */}
         <div className="text-center pt-8">
-          <p className="text-gray-500 mb-6">Not sure yet? That&apos;s okay too.</p>
+          <p className="text-gray-600 mb-6">Not sure yet? That&apos;s okay too.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link
               href="/shop/mattresses"
@@ -242,7 +246,7 @@ export default function ShopByFeelPage() {
             </Link>
             <Link
               href="/quiz"
-              className="inline-flex items-center gap-2 text-gray-500 hover:text-gold transition-colors"
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-navy transition-colors"
             >
               Or take our full sleep quiz
               <ArrowRight className="w-4 h-4" />

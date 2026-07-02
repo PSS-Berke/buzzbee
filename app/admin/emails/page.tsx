@@ -18,7 +18,7 @@ export default function EmailPreviewsIndexPage() {
         <header className="mb-8 flex items-baseline justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-3xl font-serif text-navy">Email previews</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-600 mt-1">
               Rendered with sample data. The actual sends use real payloads.
             </p>
           </div>
@@ -38,7 +38,7 @@ export default function EmailPreviewsIndexPage() {
                   <th className="px-4 py-3 font-semibold text-navy">Template</th>
                   <th className="px-4 py-3 font-semibold text-navy">Recipient</th>
                   <th className="px-4 py-3 font-semibold text-navy">Trigger</th>
-                  <th className="px-4 py-3 font-semibold text-navy w-32"></th>
+                  <th className="px-4 py-3 font-semibold text-navy w-32"><span className="sr-only">Actions</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -46,12 +46,12 @@ export default function EmailPreviewsIndexPage() {
                   <tr key={key} className="border-b border-gray-100 last:border-0 align-top">
                     <td className="px-4 py-3">
                       <div className="font-medium text-navy">{meta.title}</div>
-                      <div className="text-xs text-gray-500 mt-1 max-w-md">
+                      <div className="text-xs text-gray-600 mt-1 max-w-md">
                         {meta.description}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-gray-600">{meta.recipient}</td>
-                    <td className="px-4 py-3 text-gray-500 text-xs">{meta.trigger}</td>
+                    <td className="px-4 py-3 text-gray-600 text-xs">{meta.trigger}</td>
                     <td className="px-4 py-3 text-right">
                       <Link
                         href={`/admin/emails/${key}`}

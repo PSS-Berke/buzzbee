@@ -17,7 +17,7 @@ export default function CartPage() {
               <ShoppingBag className="w-12 h-12 text-gold-dark" />
             </div>
             <h1 className="text-3xl font-serif text-navy mb-4">Your cart is empty</h1>
-            <p className="text-gray-500 mb-8">
+            <p className="text-gray-600 mb-8">
               Discover our handcrafted mattresses and find your perfect sleep.
             </p>
             <Link
@@ -59,7 +59,7 @@ export default function CartPage() {
             {/* Back link */}
             <Link
               href="/shop/mattresses"
-              className="inline-flex items-center gap-2 text-gray-500 hover:text-navy transition-colors mb-8"
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-navy transition-colors mb-8"
             >
               <ArrowLeft className="w-4 h-4" />
               Continue Shopping
@@ -73,7 +73,7 @@ export default function CartPage() {
                 </h2>
                 <button
                   onClick={clearCart}
-                  className="text-sm text-gray-400 hover:text-red-500 transition-colors"
+                  className="px-2 py-1.5 -my-1.5 text-sm text-gray-600 hover:text-red-500 transition-colors"
                 >
                   Clear Cart
                 </button>
@@ -95,19 +95,19 @@ export default function CartPage() {
               {/* Subtotal */}
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Subtotal</span>
+                  <span className="text-gray-600">Subtotal</span>
                   <span className="text-navy">${subtotal.toLocaleString()}</span>
                 </div>
                 {savings > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-500">You Save</span>
+                    <span className="text-gray-600">You Save</span>
                     <span className="text-gold-dark font-medium">
                       -${savings.toLocaleString()}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Shipping</span>
+                  <span className="text-gray-600">Shipping</span>
                   <span className="text-gold-dark font-medium">FREE</span>
                 </div>
               </div>
@@ -134,7 +134,7 @@ export default function CartPage() {
 
               {/* Trust badges */}
               <div className="mt-6 pt-6 border-t border-gold/10">
-                <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
+                <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-600">
                   <span className="flex items-center gap-1">
                     <span className="w-2 h-2 bg-gold rounded-full" />
                     Free Shipping

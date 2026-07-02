@@ -28,7 +28,7 @@ export default function CheckoutSuccessPage() {
           </div>
           <h1 className="text-4xl font-serif text-navy mb-4">Thank You!</h1>
           <p className="text-lg text-gray-600 mb-2">Your order has been placed successfully.</p>
-          <p className="text-gray-500 mb-10">
+          <p className="text-gray-600 mb-10">
             A confirmation email will be sent to you shortly. If you have any questions, feel free to reach out to us.
           </p>
           <Link

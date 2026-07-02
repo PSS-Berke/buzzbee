@@ -125,7 +125,7 @@ export default function AboutPage() {
                   We Built Busby Around One Simple Idea
                 </h2>
 
-                <p className="text-2xl font-light text-gray-500 mb-6 leading-relaxed">
+                <p className="text-2xl font-light text-gray-600 mb-6 leading-relaxed">
                   Your energy. Your health. Your focus. Your mood. Your life.
                 </p>
 
@@ -155,7 +155,7 @@ export default function AboutPage() {
                   <div className="aspect-[4/3] bg-gray-100 rounded-3xl overflow-hidden relative">
                     <Image
                       src="/images/products/new photos/New photos for site /can-you-change-the-wall-color-to-hex--f3a51d-.png"
-                      alt="Factory team"
+                      alt="Busby mattress in a warm gold-toned bedroom"
                       fill
                       className="object-cover"
                     />
@@ -169,7 +169,7 @@ export default function AboutPage() {
                   <div className="aspect-square bg-gray-100 rounded-3xl overflow-hidden relative">
                     <Image
                       src="/images/products/new photos/New photos for site /i-want-you-to-take-this-matress-and-wall-color-but (1).png"
-                      alt="Fancy interior"
+                      alt="Styled bedroom featuring a Busby mattress with layered bedding"
                       fill
                       className="object-cover"
                     />
@@ -240,7 +240,7 @@ export default function AboutPage() {
                     &quot;My mission is simple: help every customer sleep better and wake up
                     stronger.&quot;
                   </p>
-                  <footer className="mt-2 text-sm text-gray-500">— Robert Taglianetti</footer>
+                  <footer className="mt-2 text-sm text-gray-600">— Robert Taglianetti</footer>
                 </blockquote>
               </div>
 
@@ -271,11 +271,9 @@ export default function AboutPage() {
                   Our Philosophy
                 </span>
 
-                <h2 className="text-3xl md:text-4xl font-serif text-navy mb-3">
-                  Sleep Is Not a Luxury.
-                </h2>
                 <h2 className="text-3xl md:text-4xl font-serif text-navy mb-6">
-                  It&apos;s a Foundation.
+                  <span className="block mb-3">Sleep Is Not a Luxury.</span>
+                  <span className="block">It&apos;s a Foundation.</span>
                 </h2>
 
                 <p className="text-xl text-gray-600 mb-8">
@@ -327,7 +325,7 @@ export default function AboutPage() {
                 Every Product Created with Care
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Every Busby product — from the Nod to the Dream — is made with the same
+                Every Busby product — from the Artisan hybrids to the new Studio line — is made with the same
                 commitment to quality, safety, and sleep that holds up over time.
               </p>
             </div>
@@ -349,7 +347,7 @@ export default function AboutPage() {
             <div className="text-center">
               <Link
                 href="/shop/mattresses"
-                className="inline-flex items-center gap-2 text-gold-dark hover:text-gold font-semibold transition-colors"
+                className="inline-flex items-center gap-2 text-gold-dark hover:text-navy font-semibold transition-colors"
               >
                 Explore our mattresses
                 <ArrowRight className="w-5 h-5" />
@@ -376,12 +374,12 @@ export default function AboutPage() {
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {/* Don't believe */}
               <div className="bg-white border-2 border-gray-200 rounded-3xl p-8">
-                <h3 className="text-lg font-semibold text-gray-500 mb-6">We don&apos;t believe in</h3>
+                <h3 className="text-lg font-semibold text-gray-600 mb-6">We don&apos;t believe in</h3>
                 <ul className="space-y-4">
                   {dontBelieve.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3 text-gray-500">
+                    <li key={index} className="flex items-start gap-3 text-gray-600">
                       <div className="flex-shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mt-0.5">
-                        <X className="w-4 h-4 text-gray-400" />
+                        <X className="w-4 h-4 text-gray-600" />
                       </div>
                       <span>{item}</span>
                     </li>

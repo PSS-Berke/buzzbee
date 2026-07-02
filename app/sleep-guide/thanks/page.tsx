@@ -44,7 +44,7 @@ export default async function ThanksPage({ searchParams }: SearchParams) {
               <p className="text-gray-600 mb-8 leading-relaxed">
                 We’ve had a few requests from you in a short window. Give it a minute and try again
                 — or email{' '}
-                <a href="mailto:newsletter@mybusby.com" className="text-gold-dark hover:underline">
+                <a href="mailto:newsletter@mybusby.com" className="text-gold-dark underline">
                   newsletter@mybusby.com
                 </a>{' '}
                 and we’ll add you manually.
@@ -57,14 +57,14 @@ export default async function ThanksPage({ searchParams }: SearchParams) {
               </h1>
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Looks like the address got mistyped, or our system hiccuped. Try once more, or email{' '}
-                <a href="mailto:newsletter@mybusby.com" className="text-gold-dark hover:underline">
+                <a href="mailto:newsletter@mybusby.com" className="text-gold-dark underline">
                   newsletter@mybusby.com
                 </a>{' '}
                 and we’ll add you manually.
               </p>
               <Link
                 href="/sleep-guide"
-                className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-7 py-3.5 rounded-full transition-colors"
+                className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-7 py-3.5 rounded-full transition-colors"
               >
                 Try again
                 <ArrowRight className="w-4 h-4" />
@@ -79,7 +79,7 @@ export default async function ThanksPage({ searchParams }: SearchParams) {
               <p className="text-gray-600 mb-8 leading-relaxed">
                 Your Sleep Guide is on its way. (Subject line: <em>Your Busby Sleep Guide.</em>) If
                 you don’t see it in 5 minutes, peek in spam or{' '}
-                <a href="mailto:support@mybusby.com" className="text-gold-dark hover:underline">
+                <a href="mailto:support@mybusby.com" className="text-gold-dark underline">
                   support@mybusby.com
                 </a>{' '}
                 will sort it out.
@@ -89,7 +89,7 @@ export default async function ThanksPage({ searchParams }: SearchParams) {
               </p>
               <Link
                 href="/quiz"
-                className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-7 py-3.5 rounded-full transition-colors"
+                className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-7 py-3.5 rounded-full transition-colors"
               >
                 Take the Sleep Quiz
                 <ArrowRight className="w-4 h-4" />

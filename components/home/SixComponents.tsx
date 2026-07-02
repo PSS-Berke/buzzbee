@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Layers, Wind, Shield, Zap, Move, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronDown, Layers, Wind, Shield, Zap, Move, Sparkles } from 'lucide-react';
 
 const components = [
   {
@@ -62,7 +62,7 @@ export default function SixComponents() {
           <h2 className="text-3xl md:text-4xl font-serif text-navy mb-2">
             The 6 Essential Components
           </h2>
-          <p className="text-xl text-gray-500 mb-4">to a perfect night&apos;s sleep</p>
+          <p className="text-xl text-gray-600 mb-4">to a perfect night&apos;s sleep</p>
           <p className="text-lg font-medium text-navy mt-3">
             Sleep is not a luxury. It&apos;s a foundation.
           </p>
@@ -75,23 +75,26 @@ export default function SixComponents() {
               {/* Mattress layer visualization */}
               <div className="w-full max-w-sm">
                 {components.map((component, index) => (
-                  <div
+                  <button
                     key={component.id}
-                    className={`relative h-12 rounded-lg transition-all duration-300 cursor-pointer ${
+                    type="button"
+                    onClick={() => setActiveComponent(component.id)}
+                    aria-expanded={activeComponent === component.id}
+                    aria-controls={`component-detail-${component.id}`}
+                    className={`relative block w-full h-12 rounded-lg transition-all duration-300 cursor-pointer ${
                       activeComponent === component.id
-                        ? 'bg-gold scale-105 shadow-lg z-10'
-                        : 'bg-navy/70 hover:bg-navy/90'
+                        ? 'bg-gold scale-105 shadow-lg z-10 ring-2 ring-navy ring-offset-2'
+                        : 'bg-navy/80 hover:bg-navy/90'
                     }`}
                     style={{ marginTop: index === 0 ? 0 : '-4px' }}
-                    onClick={() => setActiveComponent(component.id)}
                   >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <component.icon className={`w-5 h-5 ${activeComponent === component.id ? 'text-white' : 'text-white/70'}`} />
-                      <span className={`ml-2 text-sm font-medium ${activeComponent === component.id ? 'text-white' : 'text-white/70'}`}>
+                    <span className="absolute inset-0 flex items-center justify-center">
+                      <component.icon className={`w-5 h-5 ${activeComponent === component.id ? 'text-navy' : 'text-white/90'}`} />
+                      <span className={`ml-2 text-sm font-medium ${activeComponent === component.id ? 'text-navy' : 'text-white/90'}`}>
                         {component.title}
                       </span>
-                    </div>
-                  </div>
+                    </span>
+                  </button>
                 ))}
               </div>
             </div>
@@ -102,26 +105,44 @@ export default function SixComponents() {
             {components.map((component) => (
               <div
                 key={component.id}
-                className={`p-6 rounded-2xl cursor-pointer transition-all duration-300 ${
+                className={`p-6 rounded-2xl transition-all duration-300 ${
                   activeComponent === component.id
                     ? 'bg-white shadow-lg shadow-gold/10 border-2 border-gold/30'
                     : 'bg-white/50 border-2 border-transparent hover:border-gold/20'
                 }`}
-                onClick={() => setActiveComponent(component.id)}
               >
                 <div className="flex items-start gap-4">
                   <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
                     activeComponent === component.id ? 'bg-gold/20' : 'bg-gray-100'
                   }`}>
-                    <component.icon className={`w-6 h-6 ${activeComponent === component.id ? 'text-gold-dark' : 'text-gray-400'}`} />
+                    <component.icon className={`w-6 h-6 ${activeComponent === component.id ? 'text-gold-dark' : 'text-gray-600'}`} />
                   </div>
-                  <div>
-                    <h3 className={`font-semibold mb-1 ${activeComponent === component.id ? 'text-navy' : 'text-gray-600'}`}>
-                      {component.id}. {component.title}
+                  <div className="flex-1 min-w-0">
+                    <h3 className="mb-1">
+                      <button
+                        type="button"
+                        onClick={() => setActiveComponent(component.id)}
+                        aria-expanded={activeComponent === component.id}
+                        aria-controls={`component-detail-${component.id}`}
+                        className={`flex w-full items-center justify-between gap-2 text-left font-semibold ${
+                          activeComponent === component.id ? 'text-navy' : 'text-gray-600'
+                        }`}
+                      >
+                        <span>
+                          {component.id}. {component.title}
+                        </span>
+                        <ChevronDown
+                          className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${
+                            activeComponent === component.id ? 'rotate-180 text-gold-dark' : 'text-gray-600'
+                          }`}
+                        />
+                      </button>
                     </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">{component.description}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed">{component.description}</p>
                     {activeComponent === component.id && (
-                      <p className="text-gray-400 text-sm mt-2 italic">{component.detail}</p>
+                      <p id={`component-detail-${component.id}`} className="text-gray-600 text-sm mt-2 italic">
+                        {component.detail}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -140,7 +161,7 @@ export default function SixComponents() {
           </Link>
           <Link
             href="/quiz"
-            className="inline-flex items-center gap-1.5 text-gold-dark hover:text-gold font-semibold transition-colors"
+            className="inline-flex items-center gap-1.5 text-gold-dark hover:text-navy font-semibold transition-colors"
           >
             Or find your match in 90 seconds
             <ArrowRight className="w-4 h-4" />

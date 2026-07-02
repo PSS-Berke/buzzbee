@@ -49,9 +49,10 @@ export default function GettingHere() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={handleDirections}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-dark hover:text-gold transition-colors"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-dark hover:text-navy transition-colors"
                   >
                     Get directions
+                    <span className="sr-only"> (opens Google Maps in a new tab)</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>

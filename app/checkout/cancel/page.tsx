@@ -19,8 +19,8 @@ export default function CheckoutCancelPage() {
             <ShoppingBag className="w-12 h-12 text-gold-dark" />
           </div>
           <h1 className="text-4xl font-serif text-navy mb-4">Order Cancelled</h1>
-          <p className="text-gray-500 mb-2">Your order was not completed.</p>
-          <p className="text-gray-400 mb-10">No charges were made to your account.</p>
+          <p className="text-gray-600 mb-2">Your order was not completed.</p>
+          <p className="text-gray-600 mb-10">No charges were made to your account.</p>
           <Link
             href="/cart"
             className="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-medium py-4 px-8 rounded-full transition-all group"

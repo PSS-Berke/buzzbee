@@ -1,7 +1,7 @@
 'use client';
 
-import { FormEvent, useEffect, useState } from 'react';
-import { Send } from 'lucide-react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { Check, Send } from 'lucide-react';
 import { ALL_SLOTS, formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
 
 declare global {
@@ -63,20 +63,46 @@ export default function ReserveForm() {
   };
 
   useEffect(() => {
+    // Refetch availability and clear the chosen slot whenever the date changes
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAvailability(date);
     setSlot('');
   }, [date]);
 
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string }>({});
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Announce the booking confirmation by focusing its heading
+  useEffect(() => {
+    if (status === 'success') successHeadingRef.current?.focus();
+  }, [status]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const name = data.get('name')?.toString().trim() || '';
+    const email = data.get('email')?.toString().trim() || '';
+    const errors: { name?: string; email?: string } = {};
+    if (!name) errors.name = 'Please enter your name.';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = 'Please enter a valid email address.';
+    }
+    setFieldErrors(errors);
+    if (errors.name || errors.email) {
+      (errors.name ? nameInputRef : emailInputRef).current?.focus();
+      return;
+    }
+
     setStatus('submitting');
     setErrorMsg('');
 
-    const form = e.currentTarget;
-    const data = new FormData(form);
     const payload = {
-      name: data.get('name')?.toString() || '',
-      email: data.get('email')?.toString() || '',
+      name,
+      email,
       phone: data.get('phone')?.toString() || '',
       date,
       timeSlot: slot,
@@ -102,7 +128,10 @@ export default function ReserveForm() {
         }
         setStatus('error');
         setErrorMsg(
-          json.error || 'Something went wrong on our end. Try once more, or email showroom@mybusby.com.'
+          res.status === 409 || json.code === 'slot_taken'
+            ? 'That time was just taken by someone else — your selection was cleared, please pick another slot.'
+            : json.error ||
+                'Something went wrong on our end. Try once more, or email showroom@mybusby.com.'
         );
         return;
       }
@@ -119,11 +148,13 @@ export default function ReserveForm() {
 
   if (status === 'success') {
     return (
-      <div className="bg-white rounded-2xl p-8 border-2 border-gold/30 shadow-sm text-center">
+      <div role="status" className="bg-white rounded-2xl p-8 border-2 border-gold/30 shadow-sm text-center">
         <div className="w-14 h-14 mx-auto mb-4 bg-gold/15 rounded-full flex items-center justify-center">
           <Send className="w-7 h-7 text-gold-dark" />
         </div>
-        <h3 className="text-2xl font-serif text-navy mb-3">We’ll see you soon.</h3>
+        <h3 ref={successHeadingRef} tabIndex={-1} className="text-2xl font-serif text-navy mb-3">
+          We’ll see you soon.
+        </h3>
         <p className="text-gray-600 leading-relaxed">
           {confirmedDate ? (
             <>
@@ -163,37 +194,53 @@ export default function ReserveForm() {
         <label className="block">
           <span className="block text-sm font-medium text-navy mb-1.5">Name</span>
           <input
+            ref={nameInputRef}
             name="name"
             type="text"
             required
             autoComplete="name"
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold focus:outline-none transition-colors"
+            aria-invalid={fieldErrors.name ? true : undefined}
+            aria-describedby={fieldErrors.name ? 'reserve-name-error' : undefined}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
+          {fieldErrors.name && (
+            <p id="reserve-name-error" className="mt-1.5 text-sm text-red-600">
+              {fieldErrors.name}
+            </p>
+          )}
         </label>
         <label className="block">
           <span className="block text-sm font-medium text-navy mb-1.5">Email</span>
           <input
+            ref={emailInputRef}
             name="email"
             type="email"
             required
             inputMode="email"
             autoComplete="email"
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold focus:outline-none transition-colors"
+            aria-invalid={fieldErrors.email ? true : undefined}
+            aria-describedby={fieldErrors.email ? 'reserve-email-error' : undefined}
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
+          {fieldErrors.email && (
+            <p id="reserve-email-error" className="mt-1.5 text-sm text-red-600">
+              {fieldErrors.email}
+            </p>
+          )}
         </label>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <label className="block">
           <span className="block text-sm font-medium text-navy mb-1.5">
-            Phone <span className="text-gray-400 font-normal">(optional)</span>
+            Phone <span className="text-gray-600 font-normal">(optional)</span>
           </span>
           <input
             name="phone"
             type="tel"
             inputMode="tel"
             autoComplete="tel"
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold focus:outline-none transition-colors"
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
         </label>
         <label className="block">
@@ -206,7 +253,7 @@ export default function ReserveForm() {
             max={localISOPlusDays(MAX_BOOKING_DAYS_AHEAD)}
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold focus:outline-none transition-colors"
+            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
         </label>
       </div>
@@ -214,10 +261,10 @@ export default function ReserveForm() {
       <fieldset>
         <legend className="block text-sm font-medium text-navy mb-2">Pick a time</legend>
         {!date && (
-          <p className="text-sm text-gray-500">Choose a date above to see available times.</p>
+          <p className="text-sm text-gray-600">Choose a date above to see available times.</p>
         )}
         {date && availabilityState === 'loading' && (
-          <p className="text-sm text-gray-500">Loading times…</p>
+          <p className="text-sm text-gray-600">Loading times…</p>
         )}
         {date && availabilityState === 'error' && (
           <p className="text-sm text-red-600">
@@ -259,11 +306,13 @@ export default function ReserveForm() {
         </legend>
         <div className="flex flex-wrap gap-2">
           {mattressOptions.map((m) => (
-            <label key={m} className="cursor-pointer">
+            <label
+              key={m}
+              className="inline-flex cursor-pointer items-center gap-1.5 px-4 py-2 rounded-full border-2 border-gray-200 text-sm text-gray-700 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold has-[:checked]:text-navy has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-navy has-[:focus-visible]:ring-offset-2"
+            >
               <input type="checkbox" name="mattresses" value={m} className="peer sr-only" />
-              <span className="inline-block px-4 py-2 rounded-full border-2 border-gray-200 text-sm text-gray-700 peer-checked:bg-gold peer-checked:text-white peer-checked:border-gold transition-colors">
-                {m}
-              </span>
+              <Check className="hidden w-4 h-4 peer-checked:inline-block" aria-hidden="true" />
+              {m}
             </label>
           ))}
         </div>
@@ -271,13 +320,13 @@ export default function ReserveForm() {
 
       <label className="block">
         <span className="block text-sm font-medium text-navy mb-1.5">
-          Anything we should know? <span className="text-gray-400 font-normal">(optional)</span>
+          Anything we should know? <span className="text-gray-600 font-normal">(optional)</span>
         </span>
         <textarea
           name="notes"
           rows={3}
           placeholder="e.g., side sleeper with shoulder pain"
-          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold focus:outline-none transition-colors resize-none"
+          className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors resize-none"
         />
       </label>
 
@@ -293,7 +342,7 @@ export default function ReserveForm() {
       <button
         type="submit"
         disabled={!canSubmit}
-        className="w-full bg-gold hover:bg-gold-dark disabled:bg-gold/60 disabled:cursor-not-allowed text-white font-semibold px-8 py-4 rounded-full transition-colors"
+        className="w-full bg-gold hover:bg-gold-light disabled:bg-gold/60 disabled:cursor-not-allowed text-navy font-semibold px-8 py-4 rounded-full transition-colors"
       >
         {status === 'submitting' ? 'Sending…' : !date ? 'Pick a date first' : !slot ? 'Pick a time' : 'Reserve my visit'}
       </button>

@@ -64,7 +64,7 @@ export default function SleepGuides() {
         <div className="text-center">
           <Link
             href="/appointment"
-            className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-7 py-3.5 rounded-full transition-colors"
+            className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-7 py-3.5 rounded-full transition-colors"
           >
             Book a Sleep Consultation
             <ArrowRight className="w-4 h-4" />

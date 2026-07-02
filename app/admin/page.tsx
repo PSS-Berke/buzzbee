@@ -46,7 +46,7 @@ export default async function AdminPage() {
         <header className="mb-8 flex items-baseline justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-3xl font-serif text-navy">Admin</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-600 mt-1">
               Latest 200 of each. Use CSV export for the full history.
             </p>
           </div>
@@ -71,7 +71,7 @@ export default async function AdminPage() {
             </a>
             <a
               href="/api/admin/export?type=reservations"
-              className="px-4 py-2 bg-gold text-white rounded-full text-sm font-medium hover:bg-gold-dark"
+              className="px-4 py-2 bg-gold text-navy rounded-full text-sm font-medium hover:bg-gold-light"
             >
               Export reservations (CSV)
             </a>
@@ -80,9 +80,14 @@ export default async function AdminPage() {
 
         <section className="mb-12">
           <h2 className="text-xl font-serif text-navy mb-3">
-            Subscribes <span className="text-gray-400 text-base">({subs.length})</span>
+            Subscribes <span className="text-gray-600 text-base">({subs.length})</span>
           </h2>
-          <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label="Subscribes table"
+            className="bg-white rounded-xl border border-gray-200 overflow-x-auto"
+          >
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200 text-left">
                 <tr>
@@ -95,7 +100,7 @@ export default async function AdminPage() {
               <tbody>
                 {subs.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
+                    <td colSpan={4} className="px-4 py-8 text-center text-gray-600">
                       No signups yet.
                     </td>
                   </tr>
@@ -107,7 +112,7 @@ export default async function AdminPage() {
                     </td>
                     <td className="px-4 py-2.5 font-medium text-navy">{s.email}</td>
                     <td className="px-4 py-2.5 text-gray-600">{s.source}</td>
-                    <td className="px-4 py-2.5 text-gray-500 text-xs">
+                    <td className="px-4 py-2.5 text-gray-600 text-xs">
                       {[s.utm_source, s.utm_medium, s.utm_campaign].filter(Boolean).join(' · ') ||
                         '—'}
                     </td>
@@ -120,9 +125,14 @@ export default async function AdminPage() {
 
         <section>
           <h2 className="text-xl font-serif text-navy mb-3">
-            Reservations <span className="text-gray-400 text-base">({reservs.length})</span>
+            Reservations <span className="text-gray-600 text-base">({reservs.length})</span>
           </h2>
-          <div className="bg-white rounded-xl border border-gray-200 overflow-x-auto">
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label="Reservations table"
+            className="bg-white rounded-xl border border-gray-200 overflow-x-auto"
+          >
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200 text-left">
                 <tr>
@@ -137,7 +147,7 @@ export default async function AdminPage() {
               <tbody>
                 {reservs.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-gray-400">
+                    <td colSpan={6} className="px-4 py-8 text-center text-gray-600">
                       No reservations yet.
                     </td>
                   </tr>
@@ -147,21 +157,21 @@ export default async function AdminPage() {
                     <td className="px-4 py-2.5 text-navy whitespace-nowrap">
                       <div className="font-medium">{fmtVisitDate(r.preferred_date)}</div>
                       {r.time_slot && (
-                        <div className="text-xs text-gray-500 mt-0.5">{formatSlot(r.time_slot)}</div>
+                        <div className="text-xs text-gray-600 mt-0.5">{formatSlot(r.time_slot)}</div>
                       )}
                     </td>
                     <td className="px-4 py-2.5 font-medium text-navy">{r.name}</td>
                     <td className="px-4 py-2.5 text-gray-600">
                       <div>{r.email}</div>
-                      {r.phone && <div className="text-xs text-gray-400">{r.phone}</div>}
+                      {r.phone && <div className="text-xs text-gray-600">{r.phone}</div>}
                     </td>
                     <td className="px-4 py-2.5 text-gray-600">
                       {r.mattresses.length ? r.mattresses.join(', ') : '—'}
                     </td>
-                    <td className="px-4 py-2.5 text-gray-500 text-xs max-w-xs">
+                    <td className="px-4 py-2.5 text-gray-600 text-xs max-w-xs">
                       {r.notes || '—'}
                     </td>
-                    <td className="px-4 py-2.5 text-gray-400 text-xs whitespace-nowrap">
+                    <td className="px-4 py-2.5 text-gray-600 text-xs whitespace-nowrap">
                       {fmtDate(r.created_at)}
                     </td>
                   </tr>

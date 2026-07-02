@@ -4,9 +4,9 @@ import { ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
 
 export const metadata = {
-  title: 'Busby | Online Exclusives',
+  title: 'The Artisan Collection | Busby',
   description:
-    'Five tiers of premium comfort, available exclusively online. From dependable to absolutely premium — find your perfect level.',
+    'Four tiers of premium comfort. From dependable to absolutely premium — find your perfect level.',
 };
 
 const tierDescriptions: Record<string, string> = {
@@ -16,7 +16,7 @@ const tierDescriptions: Record<string, string> = {
   dream: 'Engineered for luxury performance.',
 };
 
-const adultProducts = homeLineProducts.filter((p) => p.type !== 'Crib Mattress');
+const adultProducts = homeLineProducts.filter((p) => p.line === 'artisan' && p.type !== 'Crib Mattress');
 const cribProducts = homeLineProducts.filter((p) => p.type === 'Crib Mattress');
 
 const productsWithTiers = adultProducts.map((p) => ({
@@ -46,31 +46,27 @@ export default function HomeLinePage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Online Exclusives
+            Handcrafted in America
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy mb-6">
-            <span className="wavy-underline">Busby</span>
+            The <span className="wavy-underline">Artisan</span> Collection
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed">
-            Four tiers of comfort. One for every sleeper. Available only here.
+            Four tiers of comfort. One for every sleeper.
           </p>
 
           {/* Tier ladder — visual teaser */}
           <div className="flex flex-wrap justify-center gap-2 mb-10 text-sm">
             {['Nod', 'Doze', 'Slumber', 'Dream'].map((tier, i, arr) => (
               <span key={tier} className="flex items-center gap-2">
-                <span className="text-gray-500">{tier}</span>
-                {i < arr.length - 1 && <span className="text-gold/40">›</span>}
+                <span className="text-gray-600">{tier}</span>
+                {i < arr.length - 1 && <span aria-hidden="true" className="text-gold/40">›</span>}
               </span>
             ))}
           </div>
 
           {/* Trust badges */}
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-500">
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-gold rounded-full" />
-              Online Exclusive
-            </span>
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-600">
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 bg-gold rounded-full" />
               Free Delivery
@@ -112,14 +108,14 @@ export default function HomeLinePage() {
                     {flagship.images[0] ? (
                       <Image
                         src={flagship.images[0]}
-                        alt={flagship.name}
+                        alt=""
                         fill
                         className="object-cover"
                         priority
                       />
                     ) : (
                       <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">Image Coming Soon</span>
+                        <span className="text-gray-600 text-sm">Image Coming Soon</span>
                       </div>
                     )}
                   </div>
@@ -132,8 +128,8 @@ export default function HomeLinePage() {
                     <h2 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
                       {flagship.name}
                     </h2>
-                    <p className="text-xl text-gray-500 mb-4 italic">{flagship.tierDescription}</p>
-                    <p className="text-gray-400 leading-relaxed mb-8 max-w-md">
+                    <p className="text-xl text-gray-600 mb-4 italic">{flagship.tierDescription}</p>
+                    <p className="text-gray-600 leading-relaxed mb-8 max-w-md">
                       {flagship.description}
                     </p>
 
@@ -145,15 +141,12 @@ export default function HomeLinePage() {
                       <span className="px-4 py-2 bg-gold/10 text-gold-dark rounded-full text-sm">
                         {flagship.features[0]}
                       </span>
-                      <span className="px-4 py-2 bg-gold/10 text-gold-dark rounded-full text-sm">
-                        Online Exclusive
-                      </span>
                     </div>
 
                     {/* Price */}
                     <div className="flex items-center gap-4 mb-8">
                       <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}</span>
-                      <span className="text-gray-400 text-sm">Queen</span>
+                      <span className="text-gray-600 text-sm">Queen</span>
                     </div>
 
                     {/* CTA */}
@@ -170,6 +163,7 @@ export default function HomeLinePage() {
           {/* Supporting Tiers */}
           {supportingProducts.length > 0 && (
             <div className="grid sm:grid-cols-3 gap-6">
+              <h2 className="sr-only">More Artisan mattresses</h2>
               {supportingProducts.map((product) => (
                 <Link
                   key={product.id}
@@ -181,13 +175,13 @@ export default function HomeLinePage() {
                     {product.images[0] ? (
                       <Image
                         src={product.images[0]}
-                        alt={product.name}
+                        alt=""
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (
                       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-                        <span className="text-gray-300 text-sm">Image Coming Soon</span>
+                        <span className="text-gray-600 text-sm">Image Coming Soon</span>
                       </div>
                     )}
                   </div>
@@ -200,11 +194,11 @@ export default function HomeLinePage() {
                   </div>
 
                   {/* Content overlay — gradient fade at bottom */}
-                  <div className="absolute bottom-0 inset-x-0 z-10 p-6 bg-gradient-to-t from-navy/80 via-navy/40 to-transparent">
+                  <div className="absolute bottom-0 inset-x-0 z-10 p-6 bg-gradient-to-t from-navy/95 via-navy/75 to-transparent">
                     <h3 className="text-xl font-semibold text-white mb-1 group-hover:text-gold transition-colors duration-300">
                       {product.name}
                     </h3>
-                    <p className="text-gold-dark text-xs font-medium italic mb-2">{product.tierDescription}</p>
+                    <p className="text-gold-light text-xs font-medium italic mb-2">{product.tierDescription}</p>
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-medium text-white">
                         From ${product.price.toLocaleString()}
@@ -233,7 +227,7 @@ export default function HomeLinePage() {
               <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4">
                 The <span className="wavy-underline">Nest</span>
               </h2>
-              <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
+              <p className="text-gray-600 max-w-xl mx-auto leading-relaxed">
                 Safe, supportive sleep designed for the littlest sleepers in your home.
               </p>
             </div>
@@ -252,13 +246,13 @@ export default function HomeLinePage() {
                       {product.images[0] ? (
                         <Image
                           src={product.images[0]}
-                          alt={product.name}
+                          alt=""
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
                         <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                          <span className="text-gray-400 text-sm">Image Coming Soon</span>
+                          <span className="text-gray-600 text-sm">Image Coming Soon</span>
                         </div>
                       )}
                     </div>
@@ -271,14 +265,14 @@ export default function HomeLinePage() {
                       <h3 className="text-2xl font-serif text-navy mb-2">
                         The <span className="font-semibold">{product.name}</span>
                       </h3>
-                      <p className="text-gray-500 text-sm mb-5 leading-relaxed">
+                      <p className="text-gray-600 text-sm mb-5 leading-relaxed">
                         {product.tagline}
                       </p>
 
                       {/* Key features */}
                       <ul className="space-y-1.5 mb-6">
                         {product.features.slice(0, 3).map((f) => (
-                          <li key={f} className="flex items-center gap-2 text-sm text-gray-500">
+                          <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
                             <span className="w-1.5 h-1.5 bg-gold rounded-full shrink-0" />
                             {f}
                           </li>
@@ -310,13 +304,13 @@ export default function HomeLinePage() {
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Not Sure Which Level?
+            Find Your Match
           </span>
           <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4">
-            Find Your <span className="wavy-underline">Perfect Tier</span>
+            Find Your <span className="wavy-underline">Perfect Mattress</span>
           </h2>
           <p className="text-gray-600 mb-10 max-w-xl mx-auto leading-relaxed">
-            Answer a few questions and we&apos;ll match you to the right level of comfort for your sleep style.
+            Answer a few questions and we&apos;ll match you to the right mattress for your sleep style.
           </p>
           <Link
             href="/quiz"
@@ -335,10 +329,10 @@ export default function HomeLinePage() {
             <div>
               <p className="text-xs text-gold-dark font-medium uppercase tracking-wider mb-2">Also available</p>
               <h3 className="text-2xl font-serif text-navy mb-1">Looking for more to help you sleep?</h3>
-              <p className="text-gray-500 text-sm">Pillows, protectors, and more to complete your sleep setup.</p>
+              <p className="text-gray-600 text-sm">Pillows, protectors, and more to complete your sleep setup.</p>
             </div>
             <Link
-              href="/accessories"
+              href="/shop/sleep-accessories"
               className="shrink-0 inline-flex items-center gap-3 bg-navy hover:bg-navy-light text-white font-medium px-7 py-3.5 rounded-full transition-all duration-300 group"
             >
               Shop Sleep Accessories

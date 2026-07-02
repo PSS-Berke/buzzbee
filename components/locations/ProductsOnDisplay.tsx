@@ -63,7 +63,7 @@ export default function ProductsOnDisplay() {
                   className="object-contain p-4"
                   sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                 />
-                <div className="absolute top-3 left-3 inline-flex items-center gap-1 bg-gold/95 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <div className="absolute top-3 left-3 inline-flex items-center gap-1 bg-gold/95 text-navy text-xs font-semibold px-3 py-1 rounded-full">
                   <CheckCircle className="w-3 h-3" />
                   Try in store
                 </div>
@@ -71,7 +71,7 @@ export default function ProductsOnDisplay() {
               <div className="p-5">
                 <p className="text-xs uppercase tracking-wide text-gold-dark mb-1">{m.type}</p>
                 <p className="text-lg font-semibold text-navy mb-1">{m.name}</p>
-                <p className="text-sm text-gray-500 mb-3">{m.keyBenefit}</p>
+                <p className="text-sm text-gray-600 mb-3">{m.keyBenefit}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-navy">From ${m.price}</span>
                   <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1 transition-transform" />

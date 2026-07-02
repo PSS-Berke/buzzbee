@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useReducer, useEffect, useRef, useState, ReactNode } from 'react';
 
 // Types
 export interface CartItem {
@@ -131,6 +131,16 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 // Provider
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [announcement, setAnnouncement] = useState('');
+  const announceTimeout = useRef<number | undefined>(undefined);
+
+  // Screen-reader announcements for cart mutations (WCAG 4.1.3).
+  // Clear first so repeating the same message is re-announced.
+  const announce = (message: string) => {
+    window.clearTimeout(announceTimeout.current);
+    setAnnouncement('');
+    announceTimeout.current = window.setTimeout(() => setAnnouncement(message), 50);
+  };
 
   // Hydrate from localStorage on mount
   useEffect(() => {
@@ -152,15 +162,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   // Actions
   const addItem = (item: Omit<CartItem, 'id'>) => {
+    const id = generateCartItemId(item.productId, item.size);
+    const exists = state.items.some((i) => i.id === id);
     dispatch({ type: 'ADD_ITEM', payload: item });
+    announce(
+      exists
+        ? `${item.productName}, ${item.size}, is already in your cart`
+        : `Added ${item.productName}, ${item.size}, to cart`
+    );
   };
 
   const removeItem = (itemId: string) => {
+    const item = state.items.find((i) => i.id === itemId);
     dispatch({ type: 'REMOVE_ITEM', payload: itemId });
+    announce(
+      item
+        ? `Removed ${item.productName}, ${item.size}, from cart`
+        : 'Item removed from cart'
+    );
   };
 
   const clearCart = () => {
     dispatch({ type: 'CLEAR_CART' });
+    announce('Cart cleared');
   };
 
   const toggleCartDrawer = () => {
@@ -196,7 +220,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     savings,
   };
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+      {/* data-live-region: excluded from the cart drawer's inert effect */}
+      <div role="status" aria-live="polite" className="sr-only" data-live-region>
+        {announcement}
+      </div>
+    </CartContext.Provider>
+  );
 }
 
 // Hook

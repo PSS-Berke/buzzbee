@@ -9,7 +9,7 @@ const tiles = [
   {
     icon: Layers,
     title: 'Every mattress, side by side',
-    body: 'All four Busby models in one room — Dream, Slumber, Nod, Doze. Try them in any order, as many times as you want.',
+    body: 'Every Busby model in one room. Try them in any order, as many times as you want.',
   },
   {
     icon: MonitorSmartphone,

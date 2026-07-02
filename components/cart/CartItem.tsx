@@ -16,7 +16,12 @@ export default function CartItem({ item, expanded = false }: CartItemProps) {
   return (
     <div className={`flex gap-4 ${expanded ? 'py-6' : 'py-4'} border-b border-gold/10`}>
       {/* Image */}
-      <Link href={`/products/${item.productSlug}`} className="flex-shrink-0">
+      <Link
+        href={`/products/${item.productSlug}`}
+        tabIndex={-1}
+        aria-hidden="true"
+        className="flex-shrink-0"
+      >
         <div
           className={`${expanded ? 'w-28 h-28' : 'w-20 h-20'} rounded-2xl overflow-hidden bg-gray-100`}
         >
@@ -29,7 +34,7 @@ export default function CartItem({ item, expanded = false }: CartItemProps) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">
+            <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs">
               No image
             </div>
           )}
@@ -44,18 +49,22 @@ export default function CartItem({ item, expanded = false }: CartItemProps) {
         >
           {item.productName}
         </Link>
-        <p className="text-sm text-gray-400 mt-0.5">
+        <p className="text-sm text-gray-600 mt-0.5">
           {item.size}
         </p>
-        <p className="text-xs text-gray-300 mt-0.5">{item.productType}</p>
+        <p className="text-xs text-gray-600 mt-0.5">{item.productType}</p>
 
         {/* Price */}
         <div className="flex items-baseline gap-2 mt-2">
-          <span className="text-navy font-medium">${item.price.toLocaleString()}</span>
+          <span className="text-navy font-medium">
+            {item.originalPrice > item.price && <span className="sr-only">Sale price: </span>}
+            ${item.price.toLocaleString()}
+          </span>
           {item.originalPrice > item.price && (
-            <span className="text-gray-400 line-through text-sm">
+            <s className="text-gray-600 line-through text-sm">
+              <span className="sr-only">Original price: </span>
               ${item.originalPrice.toLocaleString()}
-            </span>
+            </s>
           )}
         </div>
       </div>
@@ -63,8 +72,8 @@ export default function CartItem({ item, expanded = false }: CartItemProps) {
       {/* Remove */}
       <button
         onClick={() => removeItem(item.id)}
-        className="flex-shrink-0 p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-        aria-label="Remove item"
+        className="flex-shrink-0 p-3 text-gray-600 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+        aria-label={`Remove ${item.productName} (${item.size}) from cart`}
       >
         <Trash2 className="w-4 h-4" />
       </button>

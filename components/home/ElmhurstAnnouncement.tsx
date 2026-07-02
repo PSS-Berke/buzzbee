@@ -27,8 +27,9 @@ export default function ElmhurstAnnouncement() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gold/10">
           <div className="grid lg:grid-cols-2">
-            {/* Map — embedded Google listing for the Elmhurst showroom */}
-            <div className="relative aspect-[4/3] lg:aspect-auto bg-white">
+            {/* Map — embedded Google listing for the Elmhurst showroom.
+                Rendered after the content in tab order (visual position kept via lg:order). */}
+            <div className="relative aspect-[4/3] lg:aspect-auto bg-white lg:order-2">
               <iframe
                 src={elmhurstStore.mapsEmbedSrc}
                 width="100%"
@@ -44,15 +45,16 @@ export default function ElmhurstAnnouncement() {
                 href={elmhurstStore.mapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 bg-white text-navy text-xs font-semibold px-3 py-2 rounded-full shadow-lg hover:bg-gold hover:text-white transition-colors"
+                className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 bg-white text-navy text-xs font-semibold px-3 py-2 rounded-full shadow-lg hover:bg-gold hover:text-navy transition-colors"
               >
                 <MapPin className="w-3.5 h-3.5" />
                 Open in Maps
+                <span className="sr-only"> (opens Google Maps in a new tab)</span>
               </a>
             </div>
 
             {/* Content */}
-            <div className="p-8 lg:p-12">
+            <div className="p-8 lg:p-12 lg:order-1">
               <span className="inline-block text-xs font-semibold tracking-widest text-gold-dark mb-3">
                 {eyebrowByPhase[elmhurstStore.launchPhase]}
               </span>
@@ -79,6 +81,7 @@ export default function ElmhurstAnnouncement() {
                       className="text-gray-600 hover:text-gold-dark transition-colors"
                     >
                       {formatAddress(elmhurstStore.address)}
+                      <span className="sr-only"> (opens Google Maps in a new tab)</span>
                     </a>
                   </div>
                 </div>
@@ -101,7 +104,7 @@ export default function ElmhurstAnnouncement() {
                     <p className="font-semibold text-navy">Phone</p>
                     <a
                       href={`tel:${elmhurstStore.phoneE164}`}
-                      className="text-gold hover:text-gold-dark transition-colors"
+                      className="text-gold-dark hover:text-navy transition-colors"
                     >
                       {elmhurstStore.phone}
                     </a>
@@ -113,7 +116,7 @@ export default function ElmhurstAnnouncement() {
                 <Link
                   href={`/locations/${elmhurstStore.slug}`}
                   onClick={() => handleCta('visit')}
-                  className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-7 py-3.5 rounded-full transition-colors"
+                  className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-7 py-3.5 rounded-full transition-colors"
                 >
                   Visit the Showroom
                   <ArrowRight className="w-4 h-4" />

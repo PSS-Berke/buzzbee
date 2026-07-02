@@ -32,6 +32,7 @@ function LayerVisualization({
     <div className="relative flex flex-col items-center justify-center p-8 lg:p-12 h-full">
       {/* Ghost layer number watermark */}
       <div
+        aria-hidden="true"
         className="absolute top-4 left-4 font-serif select-none pointer-events-none leading-none"
         style={{
           fontSize: 'clamp(100px, 15vw, 180px)',
@@ -117,7 +118,7 @@ function LayerVisualization({
           </div>
           <div
             className="mt-2 font-sans text-xs tracking-widest uppercase"
-            style={{ color: 'rgba(255,255,255,0.45)' }}
+            style={{ color: 'rgba(255,255,255,0.7)' }}
           >
             {layer.statLabel}
           </div>
@@ -138,7 +139,7 @@ function ContentInner({ layer }: { layer: MattressLayer }) {
         </span>
         <span
           className="font-sans text-xs tracking-[0.3em] uppercase"
-          style={{ color: 'rgba(255,255,255,0.4)' }}
+          style={{ color: 'rgba(255,255,255,0.7)' }}
         >
           Layer {layer.number}
         </span>
@@ -154,7 +155,7 @@ function ContentInner({ layer }: { layer: MattressLayer }) {
         </h2>
         <p
           className="font-sans text-xs tracking-widest uppercase"
-          style={{ color: 'rgba(255,255,255,0.4)' }}
+          style={{ color: 'rgba(255,255,255,0.7)' }}
         >
           {layer.subtitle}
         </p>
@@ -173,7 +174,7 @@ function ContentInner({ layer }: { layer: MattressLayer }) {
       {/* Body copy */}
       <p
         className="font-sans text-base lg:text-lg leading-relaxed max-w-md"
-        style={{ color: 'rgba(255,255,255,0.65)' }}
+        style={{ color: 'rgba(255,255,255,0.75)' }}
       >
         {layer.body}
       </p>
@@ -245,6 +246,7 @@ function ProgressDots({
               key={layer.id}
               onClick={() => onDotClick(idx)}
               aria-label={`Jump to layer ${idx + 1}: ${layer.title}`}
+              aria-current={isActive ? 'true' : undefined}
               className="flex items-center justify-center"
               style={{ width: '24px', height: '24px' }}
             >
@@ -255,7 +257,7 @@ function ProgressDots({
                   borderRadius: '50%',
                   backgroundColor: isActive
                     ? layers[activeIndex].accentColor
-                    : 'rgba(255,255,255,0.3)',
+                    : 'rgba(255,255,255,0.5)',
                   transition: 'all 500ms cubic-bezier(0.4,0,0.2,1)',
                 }}
               />
@@ -275,12 +277,14 @@ function ProgressDots({
             key={layer.id}
             onClick={() => onDotClick(idx)}
             aria-label={`Jump to layer ${idx + 1}: ${layer.title}`}
-            className="group flex items-center gap-3 justify-end"
+            aria-current={isActive ? 'true' : undefined}
+            className="group flex items-center gap-3 justify-end py-1"
+            style={{ minHeight: '24px' }}
           >
             <span
               className="font-sans text-xs whitespace-nowrap"
               style={{
-                color: 'rgba(255,255,255,0.55)',
+                color: 'rgba(255,255,255,0.7)',
                 opacity: isActive ? 1 : 0,
                 transform: isActive ? 'translateX(0)' : 'translateX(8px)',
                 transition: 'opacity 300ms, transform 300ms',
@@ -296,7 +300,7 @@ function ProgressDots({
                 borderRadius: '50%',
                 backgroundColor: isActive
                   ? layers[activeIndex].accentColor
-                  : 'rgba(255,255,255,0.3)',
+                  : 'rgba(255,255,255,0.5)',
                 transition: 'all 500ms cubic-bezier(0.4,0,0.2,1)',
                 flexShrink: 0,
               }}
@@ -333,7 +337,7 @@ function SectionHeader({
       </span>
       <p
         className="font-sans text-sm"
-        style={{ color: 'rgba(255,255,255,0.35)' }}
+        style={{ color: 'rgba(255,255,255,0.7)' }}
       >
         {sectionSubtitle ?? 'Scroll to dig deeper'}
       </p>
@@ -393,7 +397,8 @@ export default function LayerSwitcher({ slug }: { slug?: string }) {
     const totalScrollable = sectionRef.current.offsetHeight - window.innerHeight;
     const target = sectionTop + (index / (layers.length - 1)) * totalScrollable;
 
-    window.scrollTo({ top: target, behavior: 'smooth' });
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: target, behavior: reduceMotion ? 'instant' : 'smooth' });
     setTimeout(() => {
       isScrollingRef.current = false;
     }, 1000);

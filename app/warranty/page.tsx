@@ -1,6 +1,7 @@
 export const metadata = {
   title: 'Ten Year Warranty | Busby',
   description: 'Ten Year Limited Warranty for Busby mattresses.',
+  alternates: { canonical: '/warranty' },
 };
 
 export default function WarrantyPage() {
@@ -74,7 +75,7 @@ export default function WarrantyPage() {
             C. CONSUMERS OBLIGATION and DUTIES
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            In the event you are claiming a defect to receive this limited warranty, you must return the mattress or mattress cover to Sleep6. LLC and provide Sleep6, LLC with a receipt of purchase which includes the original purchase date of your mattress along with a statement to Sleep6, LLC that describes the defect. Sleep6, LLC will bear the return shipping costs if costs apply to your return. The mattress or mattress cover must be shipped to ___________________________________. Sleep6 LLC will repair or replace the mattress back to you within 60 days of receiving your original mattress and you will be responsible for any costs associated with the repaired or replaced mattress. The repaired or replaced mattress does not renew the ten-year warranty, but will continue to apply from the date the mattress was originally purchased.
+            In the event you are claiming a defect to receive this limited warranty, you must return the mattress or mattress cover to Sleep6. LLC and provide Sleep6, LLC with a receipt of purchase which includes the original purchase date of your mattress along with a statement to Sleep6, LLC that describes the defect. Sleep6, LLC will bear the return shipping costs if costs apply to your return. The mattress or mattress cover must be shipped to the address provided by our support team at support@mybusby.com. Sleep6 LLC will repair or replace the mattress back to you within 60 days of receiving your original mattress and you will be responsible for any costs associated with the repaired or replaced mattress. The repaired or replaced mattress does not renew the ten-year warranty, but will continue to apply from the date the mattress was originally purchased.
           </p>
         </section>
 

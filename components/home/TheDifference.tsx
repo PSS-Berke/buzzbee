@@ -32,7 +32,7 @@ export default function TheDifference() {
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-navy">Busby</h3>
-                <p className="text-gray-500 text-sm">The better way</p>
+                <p className="text-gray-600 text-sm">The better way</p>
               </div>
             </div>
             <ul className="space-y-4">
@@ -51,18 +51,18 @@ export default function TheDifference() {
           <div className="bg-white/50 border border-gray-200 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                <span className="text-gray-400 font-bold text-xl">?</span>
+                <span className="text-gray-600 font-bold text-xl">?</span>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-500">Traditional Retailers</h3>
-                <p className="text-gray-400 text-sm">The old way</p>
+                <h3 className="text-xl font-semibold text-gray-600">Traditional Retailers</h3>
+                <p className="text-gray-600 text-sm">The old way</p>
               </div>
             </div>
             <ul className="space-y-4">
               {comparisons.map((item, index) => (
-                <li key={index} className="flex items-start gap-3 text-gray-500">
+                <li key={index} className="flex items-start gap-3 text-gray-600">
                   <div className="flex-shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mt-0.5">
-                    <X className="w-4 h-4 text-gray-400" />
+                    <X className="w-4 h-4 text-gray-600" />
                   </div>
                   <span>{item.theirs}</span>
                 </li>
@@ -79,10 +79,10 @@ export default function TheDifference() {
           </p>
           <a
             href="/shop/mattresses"
-            className="inline-flex items-center gap-2 text-gold-dark hover:text-gold font-semibold transition-colors"
+            className="inline-flex items-center gap-2 text-gold-dark hover:text-navy font-semibold transition-colors"
           >
             Learn more about our products
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </a>

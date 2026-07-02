@@ -3,6 +3,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Terms & Conditions | Busby',
   description: 'Terms and Conditions for Busby.',
+  alternates: { canonical: '/terms' },
 };
 
 export default function TermsPage() {
@@ -18,10 +19,10 @@ export default function TermsPage() {
             INTRODUCTION OVERVIEW OF TERMS
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            This website is operated by Sleep6, INC. Throughout the site, the terms "we", "us" and "our" refer to Sleep6, INC. Sleep6, INC offers this website, including all information, tools and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies and notices stated here.
+            This website is operated by Sleep6, INC. Throughout the site, the terms &quot;we&quot;, &quot;us&quot; and &quot;our&quot; refer to Sleep6, INC. Sleep6, INC offers this website, including all information, tools and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies and notices stated here.
           </p>
           <p className="text-gray-700 leading-relaxed mb-4">
-            By visiting our site and/ or purchasing something from us, you engage in our "Service" and agree to be bound by the following terms and conditions ("Terms of Service", "Terms"), including those additional terms and conditions and policies referenced herein and/or available by hyperlink. These Terms of Service apply  to all users of the site, including without limitation users who are browsers, vendors, customers, merchants, and/ or contributors of content.
+            By visiting our site and/ or purchasing something from us, you engage in our &quot;Service&quot; and agree to be bound by the following terms and conditions (&quot;Terms of Service&quot;, &quot;Terms&quot;), including those additional terms and conditions and policies referenced herein and/or available by hyperlink. These Terms of Service apply  to all users of the site, including without limitation users who are browsers, vendors, customers, merchants, and/ or contributors of content.
           </p>
           <p className="text-gray-700 leading-relaxed mb-4">
             Please read these Terms of Service carefully before accessing or using our website. By accessing or using any part of the site, you agree to be bound by these Terms of Service. If you do not agree to all the terms and conditions of this agreement, then you may not access the website or use any services. If these Terms of Service are considered an offer, acceptance is expressly limited to these Terms of Service.
@@ -102,7 +103,7 @@ export default function TermsPage() {
             SECTION 5 – PRODUCTS OR SERVICES (if applicable)
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            Certain products or services may be available exclusively online through the website. These products or services may have limited quantities and are subject to return or exchange only according to our 100 day trial Return Policy.
+            Certain products or services may have limited quantities and are subject to return or exchange only according to our 100 day trial Return Policy.
           </p>
           <p className="text-gray-700 leading-relaxed mb-4">
             We have made every effort to display as accurately as possible the colors and images of our products that appear online. We cannot guarantee that your computer monitor&apos;s display of any color will be accurate.
@@ -180,9 +181,9 @@ export default function TermsPage() {
             SECTION 10 – PERSONAL INFORMATION
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
-            Your submission of personal information through the store is governed by our Privacy Policy. To view our Privacy Policy,{' '}
-            <Link href="/privacy" className="text-navy underline hover:text-gold-dark transition-colors">
-              Click here
+            Your submission of personal information through the store is governed by our Privacy Policy.{' '}
+            <Link href="/privacy-policy" className="text-navy underline hover:text-gold-dark transition-colors">
+              View our Privacy Policy
             </Link>
             .
           </p>
@@ -292,7 +293,7 @@ export default function TermsPage() {
 
         <section className="mb-8">
           <h2 className="font-semibold text-navy uppercase tracking-wide mb-4">
-            SECTION 18 – GOVERNING LAW
+            SECTION 19 – GOVERNING LAW
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
             These Terms of Service and any separate agreements whereby we provide you Services shall be governed by and construed in accordance with the STATE OF ILLINOIS.  The Illinois court will have exclusive jurisdiction to hear any dispute arising from the Terms of Use.
@@ -301,7 +302,7 @@ export default function TermsPage() {
 
         <section className="mb-8">
           <h2 className="font-semibold text-navy uppercase tracking-wide mb-4">
-            SECTION 19 – CHANGES TO TERMS OF SERVICE
+            SECTION 20 – CHANGES TO TERMS OF SERVICE
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
             You can review the most current version of the Terms of Service at any time at this page.
@@ -313,7 +314,7 @@ export default function TermsPage() {
 
         <section className="mb-8">
           <h2 className="font-semibold text-navy uppercase tracking-wide mb-4">
-            SECTION 20 – CONTACT INFORMATION
+            SECTION 21 – CONTACT INFORMATION
           </h2>
           <p className="text-gray-700 leading-relaxed mb-4">
             Questions about the Terms of Service should be sent to us at{' '}

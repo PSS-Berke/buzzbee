@@ -19,8 +19,8 @@ export default function OurStoryTeaser() {
             <div className="space-y-4">
               <div className="aspect-[4/3] bg-gray-100 rounded-3xl overflow-hidden relative">
                 <Image
-                  src="/images/team/tag no tag.png"
-                  alt="Robert Taglianetti, Founder"
+                  src="/images/products/new photos/i-want-you-to-put-this-mattress-in-a-high-rise-som.png"
+                  alt="Busby mattress styled in a high-rise bedroom"
                   fill
                   className="object-cover"
                 />
@@ -34,7 +34,7 @@ export default function OurStoryTeaser() {
               <div className="aspect-square bg-gray-100 rounded-3xl overflow-hidden relative">
                 <Image
                   src="/images/products/new photos/New photos for site /can-you-change-the-wall-color-to-hex--f3a51d-.png"
-                  alt="Bedroom lifestyle"
+                  alt="Busby mattress in a softly lit bedroom"
                   fill
                   className="object-cover"
                 />
@@ -79,15 +79,15 @@ export default function OurStoryTeaser() {
             </blockquote>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
+            <ul className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
               {stats.map((stat) => (
-                <div key={stat.label} className="text-center">
+                <li key={stat.label} className="text-center">
                   <stat.icon className="w-8 h-8 text-gold mx-auto mb-2" />
                   <p className="text-2xl font-bold text-navy">{stat.value}</p>
                   <p className="text-sm text-gray-600">{stat.label}</p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
 
             <Link
               href="/about"

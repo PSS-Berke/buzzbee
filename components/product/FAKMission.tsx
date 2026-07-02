@@ -21,7 +21,7 @@ export default function FAKMission() {
             <h2 className="font-serif text-navy text-3xl md:text-4xl leading-tight mb-4">
               A Mattress<br />With Purpose
             </h2>
-            <p className="text-gray-500 text-base md:text-lg leading-relaxed max-w-md">
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-md">
               For every ten FAK Cosmos mattresses sold in store or online, Sleep6 will donate one
               mattress to the For Autistic Kids Foundation.
             </p>

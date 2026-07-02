@@ -21,6 +21,9 @@ export default function AnnouncementBar() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Hydration-safe reveal: localStorage is only readable client-side, so the
+    // initial render must stay hidden and flip in this mount effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -55,6 +58,9 @@ export default function AnnouncementBar() {
     }
     window.gtag?.('event', 'home_announcement_dismiss');
     setHidden(true);
+    // The focused dismiss button is about to unmount — land focus on the main
+    // landmark instead of dropping keyboard users back to <body>
+    document.getElementById('main')?.focus();
   };
 
   const handleClick = () => {

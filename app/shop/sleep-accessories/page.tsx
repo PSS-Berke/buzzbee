@@ -41,7 +41,7 @@ export default function SleepAccessoriesPage() {
           </p>
 
           {/* Trust badges */}
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-500">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-600">
             {[
               'Certified & Lab Tested',
               'Machine Washable',
@@ -86,7 +86,7 @@ export default function SleepAccessoriesPage() {
                   <h2 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
                     {encasement.name}
                   </h2>
-                  <p className="text-xl text-gray-500 mb-6 italic">{encasement.tagline}</p>
+                  <p className="text-xl text-gray-600 mb-6 italic">{encasement.tagline}</p>
 
                   {/* Features list */}
                   <ul className="space-y-2.5 mb-8">
@@ -129,8 +129,8 @@ export default function SleepAccessoriesPage() {
               <h3 className="text-2xl font-serif text-navy mb-1">
                 Looking for a new mattress?
               </h3>
-              <p className="text-gray-500 text-sm">
-                Four tiers of premium comfort, built and shipped from the USA.
+              <p className="text-gray-600 text-sm">
+                Two lines of premium comfort, built and shipped from the USA.
               </p>
             </div>
             <Link

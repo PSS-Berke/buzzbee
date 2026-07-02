@@ -1,11 +1,15 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import { Check } from 'lucide-react';
 import { QuizQuestion as QuizQuestionType, QuizOption } from '@/lib/quiz-logic';
 
 interface QuizQuestionProps {
   question: QuizQuestionType;
   selectedOption: string | undefined;
   onSelect: (optionId: string) => void;
+  currentStep: number;
+  totalSteps: number;
 }
 
 function IconGrid({
@@ -26,13 +30,23 @@ function IconGrid({
         return (
           <button
             key={option.id}
+            type="button"
             onClick={() => onSelect(option.id)}
-            className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 ${
+            aria-pressed={isSelected}
+            className={`relative flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all duration-300 ${
               isSelected
                 ? 'border-gold bg-gold/5 shadow-md'
                 : 'border-gray-200 hover:border-gold/50 hover:bg-gray-50'
             }`}
           >
+            {isSelected && (
+              <span
+                aria-hidden="true"
+                className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-gold-dark"
+              >
+                <Check className="h-3 w-3 text-white" strokeWidth={3} />
+              </span>
+            )}
             {Icon && (
               <div
                 className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 ${
@@ -41,7 +55,7 @@ function IconGrid({
               >
                 <Icon
                   className={`w-6 h-6 transition-colors duration-300 ${
-                    isSelected ? 'text-gold-dark' : 'text-gray-400'
+                    isSelected ? 'text-gold-dark' : 'text-gray-600'
                   }`}
                   strokeWidth={1.5}
                 />
@@ -55,7 +69,7 @@ function IconGrid({
               {option.label}
             </span>
             {option.sublabel && (
-              <span className="text-sm text-gray-500">{option.sublabel}</span>
+              <span className="text-sm text-gray-600">{option.sublabel}</span>
             )}
           </button>
         );
@@ -81,7 +95,9 @@ function OptionList({
         return (
           <button
             key={option.id}
+            type="button"
             onClick={() => onSelect(option.id)}
+            aria-pressed={isSelected}
             className={`w-full p-4 md:p-5 rounded-xl border-2 text-left transition-all duration-300 ${
               isSelected
                 ? 'border-gold bg-gold/5 shadow-md'
@@ -90,6 +106,7 @@ function OptionList({
           >
             <div className="flex items-center gap-4">
               <div
+                aria-hidden="true"
                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
                   isSelected ? 'border-gold bg-gold' : 'border-gray-300'
                 }`}
@@ -107,7 +124,7 @@ function OptionList({
                   {option.label}
                 </span>
                 {option.sublabel && (
-                  <span className="block text-sm text-gray-500 mt-1">
+                  <span className="block text-sm text-gray-600 mt-1">
                     {option.sublabel}
                   </span>
                 )}
@@ -124,13 +141,29 @@ export default function QuizQuestion({
   question,
   selectedOption,
   onSelect,
+  currentStep,
+  totalSteps,
 }: QuizQuestionProps) {
   // Check if all options have icons - use icon grid layout
   const allHaveIcons = question.options.every((opt) => opt.icon);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // Move focus to the question heading on each step so screen readers
+  // announce the new question (including position) automatically.
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, [question.id]);
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl md:text-3xl font-semibold text-navy text-center">
+      <h2
+        ref={headingRef}
+        tabIndex={-1}
+        className="text-2xl md:text-3xl font-semibold text-navy text-center"
+      >
+        <span className="sr-only">
+          Question {currentStep} of {totalSteps}:{' '}
+        </span>
         {question.question}
       </h2>
 

@@ -196,7 +196,7 @@ export default function PressPage() {
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-3xl">
-                <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold mb-8">
+                <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-8">
                   <Mic className="w-4 h-4" />
                   <span>Podcast Guest &nbsp;·&nbsp; Sleep Industry Expert</span>
                 </div>
@@ -219,7 +219,7 @@ export default function PressPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/book"
-                    className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105"
+                    className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-8 py-4 rounded-full transition-all hover:scale-105"
                   >
                     <Mic className="w-5 h-5" />
                     Book Robert as a Guest
@@ -231,7 +231,8 @@ export default function PressPage() {
                     className="inline-flex items-center justify-center gap-2 border-2 border-white/30 hover:border-gold text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105"
                   >
                     <Download className="w-5 h-5" />
-                    Download One-Sheet
+                    Open One-Sheet
+                    <span className="sr-only"> (opens in new tab; print to save as PDF)</span>
                   </a>
                 </div>
               </div>
@@ -340,7 +341,7 @@ export default function PressPage() {
                 <h2 className="text-3xl md:text-4xl font-serif text-navy">
                   Interview Angles
                 </h2>
-                <p className="text-gray-500 mt-3">
+                <p className="text-gray-600 mt-3">
                   Pick the framing that fits your audience — Robert can go deep on any of these.
                 </p>
               </div>
@@ -376,7 +377,7 @@ export default function PressPage() {
                   <h2 className="text-3xl md:text-4xl font-serif text-navy mb-3">
                     Suggested Questions
                   </h2>
-                  <p className="text-gray-500">
+                  <p className="text-gray-600">
                     Copy-paste ready for your show prep. Robert has detailed answers for all of these.
                   </p>
                 </div>
@@ -387,7 +388,7 @@ export default function PressPage() {
                       key={index}
                       className="flex gap-5 bg-white border-2 border-gold/20 rounded-2xl p-6 shadow-sm shadow-gold/5"
                     >
-                      <span className="text-2xl font-bold text-gold/40 leading-none w-8 flex-shrink-0 pt-0.5">
+                      <span aria-hidden="true" className="text-2xl font-bold text-gold-dark/80 leading-none w-8 flex-shrink-0 pt-0.5">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       <p className="text-gray-700 leading-relaxed">{question}</p>
@@ -401,20 +402,17 @@ export default function PressPage() {
           {/* ── Section 6: As Seen In ── */}
           <section className="py-16 bg-white border-y border-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <p className="text-center text-sm uppercase tracking-widest text-gray-400 font-semibold mb-10">
+              <h2 className="text-center text-sm uppercase tracking-widest text-gray-600 font-semibold mb-10">
                 As Seen In
-              </p>
+              </h2>
               <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12">
                 {pressLogos.map((logo) => (
-                  <a
+                  <span
                     key={logo.name}
-                    href={logo.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-navy font-semibold text-lg transition-colors duration-200 border-2 border-gray-200 hover:border-navy rounded-full px-6 py-2"
+                    className="text-gray-600 font-semibold text-lg border-2 border-gray-200 rounded-full px-6 py-2"
                   >
                     {logo.name}
-                  </a>
+                  </span>
                 ))}
               </div>
             </div>
@@ -454,7 +452,7 @@ export default function PressPage() {
                 <h2 className="text-3xl md:text-4xl font-serif text-navy mb-3">
                   Downloads
                 </h2>
-                <p className="text-gray-500">
+                <p className="text-gray-600">
                   Everything you need to promote the episode — grab what you need below.
                 </p>
               </div>
@@ -475,7 +473,7 @@ export default function PressPage() {
                       <span className="font-medium text-navy group-hover:text-gold-dark transition-colors">
                         {item.label}
                       </span>
-                      <Download className="w-4 h-4 text-gray-400 group-hover:text-gold ml-auto transition-colors" />
+                      <Download className="w-4 h-4 text-gray-600 group-hover:text-gold-dark ml-auto transition-colors" />
                     </a>
                   );
                 })}
@@ -489,7 +487,7 @@ export default function PressPage() {
             <div className="absolute bottom-0 left-0 w-[200px] h-[200px] md:w-[350px] md:h-[350px] bg-white/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
 
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold mb-6">
+              <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-6">
                 <Mic className="w-4 h-4" />
                 <span>Ready to Book?</span>
               </div>
@@ -508,10 +506,11 @@ export default function PressPage() {
                 {/* TODO: Replace href with Calendly link when available */}
                 <a
                   href="mailto:press@mybusby.com"
-                  className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105"
+                  className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-8 py-4 rounded-full transition-all hover:scale-105"
                 >
                   <Mic className="w-5 h-5" />
                   Book Robert as a Guest
+                  <span className="sr-only"> (opens your email app)</span>
                 </a>
                 <a
                   href="/press/one-sheet"
@@ -520,7 +519,8 @@ export default function PressPage() {
                   className="inline-flex items-center justify-center gap-2 border-2 border-white/30 hover:border-gold text-white font-semibold px-8 py-4 rounded-full transition-all hover:scale-105"
                 >
                   <Download className="w-5 h-5" />
-                  Download One-Sheet
+                  Open One-Sheet
+                  <span className="sr-only"> (opens in new tab; print to save as PDF)</span>
                 </a>
               </div>
 
@@ -548,6 +548,7 @@ export default function PressPage() {
                 >
                   <Linkedin className="w-4 h-4" />
                   LinkedIn
+                  <span className="sr-only"> (opens in new tab)</span>
                   <ArrowRight className="w-3 h-3" />
                 </a>
               </div>

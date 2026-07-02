@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/site';
-import { elmhurstStore } from '@/data/store';
+import { elmhurstStore, formatAddress } from '@/data/store';
+import { showroomFaqs } from '@/data/showroomFaqs';
 import LocationHero from '@/components/locations/LocationHero';
 import WhatToExpect from '@/components/locations/WhatToExpect';
 import SleepGuides from '@/components/locations/SleepGuides';
@@ -10,14 +11,13 @@ import LocationFAQ from '@/components/locations/LocationFAQ';
 import StoreViewTracker from '@/components/locations/StoreViewTracker';
 
 export const metadata: Metadata = {
-  title: 'Visit Busby Elmhurst — Chicagoland Showroom',
-  description:
-    'Try every Busby mattress side-by-side at our Elmhurst showroom. Walk-ins welcome. American-made, 100-night trial, 10-year warranty.',
+  title: 'Mattress Store in Elmhurst, IL — Busby Showroom, Open 24/7',
+  description: `Try every Busby mattress side-by-side at our 24/7 self-serve showroom at ${formatAddress(elmhurstStore.address)}. Serving Elmhurst, Oak Brook, Hinsdale, and the western Chicago suburbs. American-made, 100-night trial, walk-ins welcome.`,
   alternates: { canonical: '/locations/elmhurst' },
   openGraph: {
-    title: 'Visit Busby Elmhurst — Chicagoland Showroom',
+    title: 'Mattress Store in Elmhurst, IL — Busby Showroom, Open 24/7',
     description:
-      'Try every Busby mattress side-by-side at our Elmhurst showroom. Walk-ins welcome.',
+      'Try every Busby mattress side-by-side at our 24/7 self-serve Elmhurst showroom. Walk-ins welcome.',
     url: `${SITE_URL}/locations/elmhurst`,
     type: 'website',
   },
@@ -63,6 +63,39 @@ const localBusinessSchema = {
   ],
   areaServed: ['Elmhurst', 'Oak Brook', 'Hinsdale', 'Chicago', 'DuPage County'],
   priceRange: '$$$',
+  description:
+    'Self-serve Busby mattress showroom in Elmhurst, IL. Open 24/7 — try every American-made Busby mattress side-by-side, no salespeople, same prices as online.',
+  hasMap: elmhurstStore.mapsLink,
+  parentOrganization: {
+    '@type': 'Organization',
+    name: 'Busby',
+    url: SITE_URL,
+  },
+  sameAs: [
+    'https://www.facebook.com/mybusby',
+    'https://www.instagram.com/my_busby',
+    'https://x.com/Sleep6Mattress',
+  ],
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: showroomFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Locations', item: `${SITE_URL}/locations` },
+    { '@type': 'ListItem', position: 3, name: 'Elmhurst', item: `${SITE_URL}/locations/elmhurst` },
+  ],
 };
 
 export default function ElmhurstPage() {
@@ -71,6 +104,14 @@ export default function ElmhurstPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <StoreViewTracker slug={elmhurstStore.slug} />
       <LocationHero />

@@ -5,6 +5,7 @@ export const metadata = {
   title: "Privacy Policy | Busby",
   description:
     "Learn how Busby collects, uses, shares, and protects your personal information.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 const sections = [
@@ -362,7 +363,7 @@ export default function PrivacyPolicyPage() {
                   </li>
                 ))}
               </ul>
-              <p className="text-sm text-gray-500 mt-4">
+              <p className="text-sm text-gray-600 mt-4">
                 This Policy applies to Sleep6.com or any of its affiliates.
               </p>
             </div>
@@ -414,7 +415,7 @@ export default function PrivacyPolicyPage() {
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
                   <Phone className="w-5 h-5 text-gold-dark" />
                 </div>
-                <span className="text-sm text-gray-500">Phone</span>
+                <span className="text-sm text-gray-600">Phone</span>
                 <span className="text-navy font-semibold">(844) 886-1640</span>
               </a>
 
@@ -425,7 +426,7 @@ export default function PrivacyPolicyPage() {
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
                   <Mail className="w-5 h-5 text-gold-dark" />
                 </div>
-                <span className="text-sm text-gray-500">Email</span>
+                <span className="text-sm text-gray-600">Email</span>
                 <span className="text-navy font-semibold">support@mybusby.com</span>
               </a>
 
@@ -433,7 +434,7 @@ export default function PrivacyPolicyPage() {
                 <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-gold-dark" />
                 </div>
-                <span className="text-sm text-gray-500">Address</span>
+                <span className="text-sm text-gray-600">Address</span>
                 <span className="text-navy font-semibold">Sleep6, LLC</span>
               </div>
             </div>
@@ -454,7 +455,7 @@ export default function PrivacyPolicyPage() {
               </Link>
             </div>
 
-            <p className="text-sm text-gray-400 mt-10">
+            <p className="text-sm text-gray-600 mt-10">
               Last Updated: July 7, 2015
             </p>
           </div>

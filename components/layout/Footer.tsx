@@ -8,7 +8,8 @@ import EmailCaptureForm from '@/components/forms/EmailCaptureForm';
 import { elmhurstStore, formatAddress } from '@/data/store';
 
 const shopLinks = [
-  { name: 'Busby Mattresses', href: '/shop/mattresses' },
+  { name: 'Artisan Collection', href: '/shop/mattresses' },
+  { name: 'Studio Collection', href: '/studio' },
   { name: 'Shop by Feel', href: '/shop-by-feel' },
   { name: 'Compare Mattresses', href: '/compare' },
 ];
@@ -20,6 +21,7 @@ const companyLinks = [
   { name: 'Warranty', href: '/warranty' },
   { name: 'Terms & Conditions', href: '/terms' },
   { name: 'Privacy Policy', href: '/privacy-policy' },
+  { name: 'Accessibility', href: '/accessibility' },
 ];
 
 export default function Footer() {
@@ -77,13 +79,13 @@ export default function Footer() {
                 <span>support@mybusby.com</span>
               </a>
             </div>
-            <div className="flex items-center gap-4 mt-4">
+            <div className="flex items-center gap-2 mt-4">
               <a
                 href="https://www.facebook.com/mybusby"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-gold transition-colors"
-                aria-label="Facebook"
+                className="p-2 text-gray-300 hover:text-gold transition-colors"
+                aria-label="Facebook (opens in new tab)"
               >
                 <Facebook className="w-5 h-5" />
               </a>
@@ -91,8 +93,8 @@ export default function Footer() {
                 href="https://x.com/Sleep6Mattress"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-gold transition-colors"
-                aria-label="X (Twitter)"
+                className="p-2 text-gray-300 hover:text-gold transition-colors"
+                aria-label="X (Twitter) (opens in new tab)"
               >
                 <Twitter className="w-5 h-5" />
               </a>
@@ -100,8 +102,8 @@ export default function Footer() {
                 href="https://www.instagram.com/my_busby"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-gold transition-colors"
-                aria-label="Instagram"
+                className="p-2 text-gray-300 hover:text-gold transition-colors"
+                aria-label="Instagram (opens in new tab)"
               >
                 <Instagram className="w-5 h-5" />
               </a>
@@ -109,8 +111,8 @@ export default function Footer() {
           </div>
 
           {/* Shop links */}
-          <div className="pt-0 md:pt-16">
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Shop</h3>
+          <nav aria-label="Footer – Shop" className="pt-0 md:pt-16">
+            <h2 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Shop</h2>
             <ul className="space-y-2">
               {shopLinks.map((link) => (
                 <li key={link.name}>
@@ -123,11 +125,11 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Visit Us */}
           <div className="pt-0 md:pt-16">
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Visit Us</h3>
+            <h2 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Visit Us</h2>
             <p className="font-semibold text-white text-sm mb-2">{elmhurstStore.shortName}</p>
             <address className="not-italic text-gray-300 text-sm space-y-2 mb-3">
               <a
@@ -137,7 +139,10 @@ export default function Footer() {
                 className="flex items-start gap-2 hover:text-gold transition-colors"
               >
                 <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                <span>{formatAddress(elmhurstStore.address)}</span>
+                <span>
+                  {formatAddress(elmhurstStore.address)}
+                  <span className="sr-only"> (opens Google Maps in a new tab)</span>
+                </span>
               </a>
               <div className="flex items-start gap-2">
                 <Clock className="w-4 h-4 flex-shrink-0 mt-0.5" />
@@ -146,7 +151,7 @@ export default function Footer() {
             </address>
             <Link
               href="/locations"
-              className="inline-flex items-center gap-1 text-sm text-gold hover:text-gold-dark transition-colors"
+              className="inline-flex items-center gap-1 text-sm text-gold hover:text-gold-light transition-colors"
             >
               Find a Showroom
               <ArrowRight className="w-3.5 h-3.5" />
@@ -154,8 +159,8 @@ export default function Footer() {
           </div>
 
           {/* Company links */}
-          <div className="pt-0 md:pt-16">
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Company</h3>
+          <nav aria-label="Footer – Company" className="pt-0 md:pt-16">
+            <h2 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Company</h2>
             <ul className="space-y-2">
               {companyLinks.map((link) => (
                 <li key={link.name}>
@@ -168,7 +173,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
         </div>
       </div>
 
@@ -177,7 +182,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="font-semibold text-lg">Sleep tips, early access, showroom invites.</h3>
+              <h2 className="font-semibold text-lg">Sleep tips, early access, showroom invites.</h2>
               <p className="text-gray-300 text-sm">About two emails a month. Unsubscribe in one click.</p>
             </div>
             <EmailCaptureForm

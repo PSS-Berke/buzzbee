@@ -9,14 +9,14 @@ export default function QuizProgress({ currentStep, totalSteps }: QuizProgressPr
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-gray-600">
           Question {currentStep} of {totalSteps}
         </span>
-        <span className="text-sm text-gray-500">{Math.round(progress)}% complete</span>
+        <span className="text-sm text-gray-600">{Math.round(progress)}% complete</span>
       </div>
       <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
         <div
-          className="h-full bg-gold rounded-full transition-all duration-500 ease-out"
+          className="h-full bg-gold-dark rounded-full transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>

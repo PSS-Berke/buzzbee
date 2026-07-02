@@ -1,8 +1,14 @@
 import type { LucideIcon } from 'lucide-react';
-import { Moon, Activity, Bed, RefreshCw, Thermometer, User, Users, Home } from 'lucide-react';
+import { Moon, Activity, Bed, RefreshCw, Thermometer, User, Users, Home, Gem, LayoutGrid, Scale } from 'lucide-react';
 import { getProductBySlug } from '@/data/products';
 
-export type RecommendedProduct = 'nod' | 'slumber' | 'dream';
+export type ArtisanProduct = 'nod' | 'slumber' | 'dream';
+export type RecommendedProduct =
+  | ArtisanProduct
+  | 'studio-10'
+  | 'studio-14'
+  | 'studio-hybrid'
+  | 'studio-hybrid-firm';
 
 export interface ProductWeights {
   nod: number;
@@ -23,6 +29,8 @@ export interface QuizOption {
   icon?: LucideIcon;
   weights: ProductWeights;
   firmnessWeight?: FirmnessWeight;
+  /** Steers the result toward a product line; only used by the collection question. */
+  line?: 'artisan' | 'studio' | 'either';
 }
 
 export interface QuizQuestion {
@@ -231,6 +239,36 @@ export const quizQuestions: QuizQuestion[] = [
       },
     ],
   },
+  {
+    id: 'collection',
+    question: 'Which collection speaks to you?',
+    options: [
+      {
+        id: 'artisan',
+        label: 'Artisan',
+        sublabel: 'Handcrafted with natural latex & wool',
+        icon: Gem,
+        weights: { nod: 0, slumber: 0, dream: 0 },
+        line: 'artisan',
+      },
+      {
+        id: 'studio',
+        label: 'Studio',
+        sublabel: 'Modern, spec-forward design at a sharper price',
+        icon: LayoutGrid,
+        weights: { nod: 0, slumber: 0, dream: 0 },
+        line: 'studio',
+      },
+      {
+        id: 'either',
+        label: 'No preference',
+        sublabel: 'Just match my sleep needs',
+        icon: Scale,
+        weights: { nod: 0, slumber: 0, dream: 0 },
+        line: 'either',
+      },
+    ],
+  },
 ];
 
 export function calculateResult(answers: QuizAnswers): QuizResult {
@@ -269,16 +307,16 @@ export function calculateResult(answers: QuizAnswers): QuizResult {
 
   // Find the product with the highest score
   // Tie-breaker favors budget options: Nod > Slumber > Dream
-  let recommendedProduct: RecommendedProduct = 'nod';
+  let artisanWinner: ArtisanProduct = 'nod';
   let highestScore = scores.nod;
 
   if (scores.slumber > highestScore) {
-    recommendedProduct = 'slumber';
+    artisanWinner = 'slumber';
     highestScore = scores.slumber;
   }
 
   if (scores.dream > highestScore) {
-    recommendedProduct = 'dream';
+    artisanWinner = 'dream';
   }
 
   // Determine recommended firmness
@@ -287,6 +325,18 @@ export function calculateResult(answers: QuizAnswers): QuizResult {
     recommendedFirmness = 'Soft';
   } else if (firmnessScores.firm > firmnessScores.medium && firmnessScores.firm > firmnessScores.soft) {
     recommendedFirmness = 'Firm';
+  }
+
+  // If the sleeper prefers the Studio line, swap in the Studio counterpart
+  // of their Artisan match (the Hybrid pair splits on firmness).
+  let recommendedProduct: RecommendedProduct = artisanWinner;
+  if (answers['collection'] === 'studio') {
+    const studioCounterpart: Record<ArtisanProduct, RecommendedProduct> = {
+      nod: 'studio-10',
+      slumber: 'studio-14',
+      dream: recommendedFirmness === 'Firm' ? 'studio-hybrid-firm' : 'studio-hybrid',
+    };
+    recommendedProduct = studioCounterpart[artisanWinner];
   }
 
   // Get product data for bestFor
@@ -339,6 +389,26 @@ function getResultMessaging(
           ? "Temperature regulation is clearly key to your best sleep. The Busby Dream combines Joma® Wool-infused CoolGel quilting with natural latex to actively dissipate heat — you'll notice the difference from night one."
           : "The Busby Dream is perfect for you. With premium cooling materials and seven precision-engineered layers, it delivers the temperature-regulated, luxurious sleep experience you're looking for.",
     },
+    'studio-10': {
+      headline: 'Clean Design, Smart Value',
+      reason:
+        "You want quality sleep without the extras — and you like the Studio approach. The Studio 10's three-layer foam build delivers essential comfort and honest support at our most accessible price.",
+    },
+    'studio-14': {
+      headline: 'Undisturbed Sleep by Design',
+      reason:
+        "The Studio 14 is your match. Its motion-isolating core and contouring comfort layer absorb pressure and movement, so you get the restorative, undisturbed sleep your body needs — at a Studio price.",
+    },
+    'studio-hybrid': {
+      headline: 'Balanced Hybrid Comfort',
+      reason:
+        'The Studio Hybrid is built for you. Seven precision-engineered layers pair premium foams with a pocketed-coil core for a balanced medium feel, zero motion transfer, and cool, pressure-relieving sleep.',
+    },
+    'studio-hybrid-firm': {
+      headline: 'Firm Support, Hybrid Performance',
+      reason:
+        'The Studio Hybrid Firm is built for you. It shares the same seven-layer pocketed-coil build as the Studio Hybrid, topped with a firmer comfort layer for the flatter, more supportive surface your sleep style calls for.',
+    },
   };
 
   return messages[product];
@@ -365,5 +435,29 @@ export const productDetails: Record<
     price: 1999,
     tagline: 'Engineered for luxury performance.',
     features: ['Joma® Wool CoolGel quilting', 'Tri-Zone encased coil system', 'Made in Wisconsin, USA'],
+  },
+  'studio-10': {
+    name: 'Studio 10',
+    price: 898,
+    tagline: 'The essentials of comfort and support',
+    features: ['3-layer foam construction', 'CertiPUR-US certified foams', 'Made in the USA'],
+  },
+  'studio-14': {
+    name: 'Studio 14',
+    price: 1348,
+    tagline: 'Balances affordability and comfort',
+    features: ['Motion-isolating core', '100% fiber glass free', 'Made in the USA'],
+  },
+  'studio-hybrid': {
+    name: 'Studio Hybrid',
+    price: 2448,
+    tagline: 'Balanced hybrid comfort, medium feel',
+    features: ['7-layer construction', 'Pocketed coil support system', 'Made in the USA'],
+  },
+  'studio-hybrid-firm': {
+    name: 'Studio Hybrid Firm',
+    price: 2448,
+    tagline: 'Same hybrid build, firmer feel',
+    features: ['7-layer construction', 'Firmer comfort top', 'Made in the USA'],
   },
 };

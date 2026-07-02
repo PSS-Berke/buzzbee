@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Info, ArrowRight } from 'lucide-react';
+import { useRef, useState } from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import type { Product, Size } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 
@@ -11,9 +12,32 @@ interface ProductInfoProps {
 
 export default function ProductInfo({ product }: ProductInfoProps) {
   const { addItem, openCartDrawer } = useCart();
+  const isStudio = product.line === 'studio';
   const [selectedSize, setSelectedSize] = useState<Size>(
     product.sizes.find((s) => s.name === 'Queen') || product.sizes[0]
   );
+  const sizeRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Arrow-key selection for the size radiogroup, skipping out-of-stock sizes
+  const handleSizeKeyDown = (e: React.KeyboardEvent, index: number) => {
+    const forward = e.key === 'ArrowRight' || e.key === 'ArrowDown';
+    const backward = e.key === 'ArrowLeft' || e.key === 'ArrowUp';
+    if (!forward && !backward) return;
+    e.preventDefault();
+    const sizes = product.sizes;
+    const step = forward ? 1 : -1;
+    let next = (index + step + sizes.length) % sizes.length;
+    let attempts = 0;
+    while (!sizes[next].inStock && attempts < sizes.length) {
+      next = (next + step + sizes.length) % sizes.length;
+      attempts++;
+    }
+    if (sizes[next].inStock) {
+      setSelectedSize(sizes[next]);
+      sizeRefs.current[next]?.focus();
+    }
+  };
+
   const handleAddToCart = () => {
     addItem({
       productId: product.id,
@@ -33,71 +57,84 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   return (
     <div className="space-y-8">
       {/* Breadcrumb */}
-      <nav className="text-sm text-gray-400 font-light">
-        <a href="/" className="hover:text-navy transition-colors">Home</a>
-        <span className="mx-2">/</span>
-        <a href="/products" className="hover:text-navy transition-colors">Mattresses</a>
-        <span className="mx-2">/</span>
-        <span className="text-navy">{product.name}</span>
+      <nav aria-label="Breadcrumb" className="text-sm text-gray-600 font-light">
+        <ol className="flex flex-wrap items-center">
+          <li className="flex items-center">
+            <Link href="/" className="hover:text-navy transition-colors">Home</Link>
+            <span aria-hidden="true" className="mx-2">/</span>
+          </li>
+          <li className="flex items-center">
+            <Link href="/products" className="hover:text-navy transition-colors">Mattresses</Link>
+            <span aria-hidden="true" className="mx-2">/</span>
+          </li>
+          <li aria-current="page" className="text-navy">
+            {product.name}
+          </li>
+        </ol>
       </nav>
 
       {/* Title Section - Editorial */}
       <div>
-        <span className="inline-block text-gold-dark font-medium text-sm mb-3">
-          {product.brand === 'abt' ? 'abt Exclusive' : 'Busby · Online Exclusive'}
+        <span className="inline-block text-[var(--accent-strong)] font-medium text-sm mb-3">
+          {product.line === 'studio' ? 'Studio' : product.brand === 'abt' ? 'abt Exclusive' : 'Busby'}
         </span>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif text-navy mb-3">
+        <h1 className={`text-3xl md:text-4xl lg:text-5xl text-navy mb-3 ${isStudio ? 'font-sans' : 'font-serif'}`}>
           The <span className="font-semibold">{product.name}</span>
         </h1>
-        <p className="text-lg text-gray-500">{product.tagline}</p>
+        <p className="text-lg text-gray-600">{product.tagline}</p>
       </div>
 
-      {/* Price - Simplified */}
-      <div className="py-6 border-t border-b border-gold/10">
-        <div className="flex items-baseline gap-2">
+      {/* Price - Simplified; live so size changes announce the new price */}
+      <div className="py-6 border-t border-b border-[var(--card-border)]/10">
+        <div className="flex items-baseline gap-2" aria-live="polite">
           <span className="text-3xl text-navy">
             ${selectedSize.price.toLocaleString()}
           </span>
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-gray-600">
             {selectedSize.name}
           </span>
         </div>
-        <p className="text-sm text-gray-400 mt-2">
+        <p className="text-sm text-gray-600 mt-2">
           Flexible payment options available at checkout
         </p>
       </div>
 
       {/* Size Selector - Horizontal Pills */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <label className="text-sm text-gold-dark font-medium">
-            Select Size
-          </label>
-          <button className="text-sm text-gray-400 hover:text-gold-dark transition-colors duration-300 flex items-center gap-2">
-            <Info className="w-4 h-4" />
-            <span>Size guide</span>
-          </button>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          {product.sizes.map((size) => (
+        <p id="size-group-label" className="block text-sm text-[var(--accent-strong)] font-medium">
+          Select Size
+        </p>
+        <div role="radiogroup" aria-labelledby="size-group-label" className="flex flex-wrap gap-3">
+          {product.sizes.map((size, index) => (
             <button
               key={size.name}
+              ref={(el) => {
+                sizeRefs.current[index] = el;
+              }}
+              type="button"
+              role="radio"
+              aria-checked={selectedSize.name === size.name}
+              tabIndex={selectedSize.name === size.name ? 0 : -1}
               onClick={() => setSelectedSize(size)}
+              onKeyDown={(e) => handleSizeKeyDown(e, index)}
               disabled={!size.inStock}
               className={`
                 relative px-5 py-4 rounded-2xl border-2 transition-all duration-500
                 ${selectedSize.name === size.name
-                  ? 'border-gold bg-white shadow-lg shadow-gold/10'
+                  ? 'border-[var(--card-border)] bg-white shadow-lg shadow-[var(--accent)]/10'
                   : size.inStock
-                    ? 'border-gold/10 hover:border-gold/30 bg-white/60'
+                    ? 'border-[var(--card-border)]/10 hover:border-[var(--card-border)]/30 bg-white/60'
                     : 'border-gray-100 bg-gray-50/50 opacity-40 cursor-not-allowed'
                 }
               `}
             >
-              <p className="font-semibold text-navy">{size.name}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{size.dimensions}</p>
+              <span className="block font-semibold text-navy">{size.name}</span>
+              <span className="block text-xs text-gray-600 mt-0.5">{size.dimensions}</span>
               {selectedSize.name === size.name && (
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-gold rounded-full" />
+                <span
+                  aria-hidden="true"
+                  className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--accent)] rounded-full"
+                />
               )}
             </button>
           ))}
@@ -117,25 +154,25 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </button>
 
       {/* Trust Badges - Single Elegant Line */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 py-6 px-4 bg-gold/5 rounded-2xl text-sm text-gray-600">
-        <a href="/" className="flex items-center gap-2 hover:text-gold-dark transition-colors">
-          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
-          Financing Available
-        </a>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 py-6 px-4 bg-[var(--accent)]/5 rounded-2xl text-sm text-gray-600">
         <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
+          Financing Available
+        </span>
+        <span className="flex items-center gap-2">
+          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
           Free Doorstep Delivery
         </span>
         <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
           Free Returns
         </span>
         <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
           100 Night Guarantee
         </span>
         <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-gold rounded-full" />
+          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
           10 Year Warranty
         </span>
       </div>

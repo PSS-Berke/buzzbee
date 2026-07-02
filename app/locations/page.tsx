@@ -17,9 +17,25 @@ export const metadata: Metadata = {
   },
 };
 
+const locationsListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Busby Showroom Locations',
+  itemListElement: allLocations.map((loc, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: loc.name,
+    url: `${SITE_URL}/locations/${loc.slug}`,
+  })),
+};
+
 export default function LocationsIndex() {
   return (
     <div className="min-h-screen bg-[#faf8f5] linen-texture">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(locationsListSchema) }}
+      />
       <section className="bg-navy text-white py-20 md:py-28">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-block text-xs font-semibold tracking-widest text-gold mb-4">
@@ -57,7 +73,7 @@ export default function LocationsIndex() {
                   <span>{loc.hours}</span>
                 </div>
               </div>
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-dark group-hover:text-gold transition-colors">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-dark group-hover:text-navy transition-colors">
                 Visit the showroom
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </span>

@@ -48,15 +48,15 @@ export default function SleepQuizCTA() {
             </Link>
           </div>
 
-          <div className="relative">
-            {/* Quiz preview cards */}
+          {/* Illustration only — the real quiz lives at /quiz */}
+          <div className="relative" aria-hidden="true">
             <div className="space-y-4">
               <div className="bg-white border-2 border-gold/20 rounded-2xl p-6 shadow-lg shadow-gold/5 transform rotate-1">
-                <p className="text-sm text-gray-400 mb-2">Question 1 of 6</p>
+                <p className="text-sm text-gray-600 mb-2">Question 1 of 6</p>
                 <p className="font-semibold text-navy mb-4">What&apos;s your primary sleep position?</p>
                 <div className="grid grid-cols-3 gap-3">
                   {['Side', 'Back', 'Stomach'].map((pos) => (
-                    <div key={pos} className="bg-gray-50 rounded-xl p-3 text-center text-sm text-gray-500">
+                    <div key={pos} className="bg-gray-50 rounded-xl p-3 text-center text-sm text-gray-600">
                       {pos}
                     </div>
                   ))}
@@ -64,12 +64,12 @@ export default function SleepQuizCTA() {
               </div>
 
               <div className="bg-white border-2 border-gold/20 rounded-2xl p-6 shadow-lg shadow-gold/5 transform -rotate-1 translate-x-4">
-                <p className="text-sm text-gray-400 mb-2">Question 3 of 6</p>
+                <p className="text-sm text-gray-600 mb-2">Question 3 of 6</p>
                 <p className="font-semibold text-navy mb-4">How firm do you like your mattress?</p>
                 <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-gold-light to-gold w-1/2 rounded-full" />
                 </div>
-                <div className="flex justify-between text-xs text-gray-400 mt-2">
+                <div className="flex justify-between text-xs text-gray-600 mt-2">
                   <span>Soft</span>
                   <span>Firm</span>
                 </div>

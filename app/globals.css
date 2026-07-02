@@ -13,7 +13,15 @@
   --gold: #F3A51D;
   --gold-light: #F7B94D;
   --orange: #F26821;
-  --gold-dark: #D4792C;
+  /* Darkened from #D4792C for WCAG AA: 5.08:1 on white, 4.79:1 on #faf8f5 */
+  --gold-dark: #A85A0A;
+
+  /* Studio line palette — cool / clay (navy is the shared anchor) */
+  --paper: #F2EFE9;
+  --putty: #DBD2C6;
+  --grid: #C9BEAE;
+  --clay: #C08768;
+  --clay-deep: #95553C;
 
   /* Brand Blues */
   --sky: #3776BB;
@@ -69,6 +77,13 @@
   --color-orange: var(--orange);
   --color-gold-dark: var(--gold-dark);
 
+  /* Studio line utilities (enable bg-clay, text-paper, border-grid, etc.) */
+  --color-paper: var(--paper);
+  --color-putty: var(--putty);
+  --color-grid: var(--grid);
+  --color-clay: var(--clay);
+  --color-clay-deep: var(--clay-deep);
+
   /* Brand Blues */
   --color-sky: var(--sky);
   --color-sky-light: var(--sky-light);
@@ -98,6 +113,29 @@
   --color-gray-700: var(--gray-700);
   --color-gray-800: var(--gray-800);
   --color-gray-900: var(--gray-900);
+}
+
+/* ── Per-line semantic theme tokens (runtime-overridable; NOT inside @theme) ──
+   Flipping the data-line attribute on a wrapper re-points these for the whole
+   subtree, so shared components re-skin Artisan (warm/gold) <-> Studio (clay).
+   Mirrors the existing data-page="quiz" precedent below. */
+:root,
+[data-line='artisan'] {
+  --surface: #faf8f5;
+  --accent: var(--gold);
+  --accent-strong: var(--gold-dark);
+  --hairline: var(--gold);
+  --card-border: var(--gold);
+  --heading-font: var(--font-serif);
+}
+
+[data-line='studio'] {
+  --surface: var(--paper);
+  --accent: var(--clay);
+  --accent-strong: var(--clay-deep);
+  --hairline: var(--grid);
+  --card-border: var(--putty);
+  --heading-font: var(--font-sans);
 }
 
 body {
@@ -138,11 +176,46 @@ body:has([data-page="quiz"]) .quilted-wave-overlay {
   opacity: 0.08;
 }
 
+/* Suppress the warm quilted overlay on full Studio routes (cool, flat paper) */
+body:has([data-line="studio"]) .quilted-wave-overlay {
+  display: none;
+}
+
+/* Studio blueprint grid — the cool counterpart to .linen-texture (Artisan) */
+.blueprint-grid {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Studio hero "whisper grid" — the blueprint grid, almost fully dissolved.
+   Hairlines are softened (color-mix, not a blunt opacity) and a radial mask
+   lets them surface only as a faint pool behind the headline, fading to
+   nothing toward the edges. The most minimal, upscale read of the grid. */
+.blueprint-grid-hero {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--grid) 50%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--grid) 50%, transparent) 1px, transparent 1px);
+  background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(95% 70% at 50% 40%, #000 0%, transparent 62%);
+  mask-image: radial-gradient(95% 70% at 50% 40%, #000 0%, transparent 62%);
+}
+
+/* Soft paper depth wash — unmasked, full-bleed; lifts the flat #F2EFE9 surface
+   with a faint light pool up top and a whisper of putty grounding the base.
+   Carries most of the depth in the whisper-grid hero. */
+.studio-paper-wash {
+  background:
+    radial-gradient(120% 90% at 50% -12%, color-mix(in srgb, #fff 55%, transparent), transparent 55%),
+    radial-gradient(80% 60% at 50% 118%, color-mix(in srgb, var(--putty) 35%, transparent), transparent 60%);
+}
+
 /* Handwritten style underline */
 .wavy-underline {
   text-decoration: underline;
   text-decoration-style: wavy;
-  text-decoration-color: var(--gold);
+  text-decoration-color: var(--hairline);
   text-underline-offset: 4px;
 }
 
@@ -156,10 +229,12 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Focus styles for accessibility */
+/* Focus styles for accessibility — the white halo keeps the ring visible
+   on navy, gold, and clay surfaces (WCAG 1.4.11) */
 *:focus-visible {
   outline: 2px solid var(--sky);
   outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.9);
 }
 
 /* Selection styling */
@@ -182,4 +257,19 @@ html {
 
 .animate-fadeIn {
   animation: fadeIn 300ms ease-out;
+}
+
+/* Respect reduced-motion preferences (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

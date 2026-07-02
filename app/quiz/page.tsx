@@ -61,26 +61,26 @@ export default function QuizPage() {
         {state === 'intro' && (
           <div className="text-center space-y-8">
             <div className="space-y-4">
-              <span className="inline-block text-gold font-medium tracking-[0.15em] uppercase text-sm">
+              <span className="inline-block text-gold-dark font-medium tracking-[0.15em] uppercase text-sm">
                 Sleep Quiz
               </span>
               <h1 className="text-4xl md:text-5xl font-semibold text-navy">
                 Find Your Perfect Mattress
               </h1>
               <p className="text-lg text-gray-600 max-w-md mx-auto">
-                Answer 6 quick questions and we&apos;ll match you with the ideal mattress for your sleep style.
+                Answer 7 quick questions and we&apos;ll match you with the ideal mattress for your sleep style.
               </p>
             </div>
 
-            <div className="flex items-center justify-center gap-8 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-8 text-sm text-gray-600">
               <div className="flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold font-medium">
-                  6
+                <span className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold-dark font-medium">
+                  7
                 </span>
                 <span>Questions</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold font-medium">
+                <span className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold-dark font-medium">
                   1
                 </span>
                 <span>Minute</span>
@@ -89,7 +89,7 @@ export default function QuizPage() {
 
             <button
               onClick={handleStart}
-              className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-10 py-4 rounded-full transition-all hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-10 py-4 rounded-full transition-all hover:scale-105"
             >
               Start Quiz
               <ArrowRight className="w-5 h-5" />
@@ -108,29 +108,37 @@ export default function QuizPage() {
               question={currentQuestion}
               selectedOption={answers[currentQuestion.id]}
               onSelect={handleSelect}
+              currentStep={currentQuestionIndex + 1}
+              totalSteps={quizQuestions.length}
             />
 
             <div className="flex items-center justify-between pt-6">
               <button
                 onClick={handleBack}
-                className="inline-flex items-center gap-2 text-gray-500 hover:text-navy transition-colors"
+                className="inline-flex items-center gap-2 py-2 text-gray-600 hover:text-navy transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
               </button>
 
               <button
-                onClick={handleNext}
-                disabled={!canProceed}
+                onClick={() => {
+                  if (canProceed) handleNext();
+                }}
+                aria-disabled={!canProceed}
+                aria-describedby={!canProceed ? 'quiz-next-hint' : undefined}
                 className={`inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-semibold transition-all ${
                   canProceed
-                    ? 'bg-gold hover:bg-gold-dark text-white hover:scale-105'
-                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    ? 'bg-gold hover:bg-gold-light text-navy hover:scale-105'
+                    : 'bg-gray-200 text-gray-600 cursor-not-allowed'
                 }`}
               >
                 <span>{isLastQuestion ? 'See Results' : 'Next'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
+              <span id="quiz-next-hint" className="sr-only">
+                Select an answer to continue
+              </span>
             </div>
           </div>
         )}

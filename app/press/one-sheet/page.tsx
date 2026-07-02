@@ -10,16 +10,16 @@ export default function OneSheetPage() {
       <div className="os-toolbar">
         <div>
           <p className="text-white font-semibold text-sm">Robert Taglianetti — One-Sheet Preview</p>
-          <p className="text-white/40 text-xs mt-0.5">
+          <p className="text-white/70 text-xs mt-0.5">
             Click &ldquo;Save as PDF&rdquo; &rarr; set paper to Letter, margins to None
           </p>
         </div>
         <button
           onClick={() => window.print()}
-          style={{ backgroundColor: '#F3A51D' }}
-          className="inline-flex items-center gap-2 text-white font-semibold px-5 py-2 rounded-full text-sm hover:opacity-90 transition-opacity cursor-pointer"
+          style={{ backgroundColor: '#F3A51D', color: '#203552' }}
+          className="inline-flex items-center gap-2 font-semibold px-5 py-2 rounded-full text-sm hover:opacity-90 transition-opacity cursor-pointer"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
@@ -104,7 +104,7 @@ export default function OneSheetPage() {
                     {i > 0 && <div style={{ width: '1px', height: '28px', backgroundColor: 'rgba(255,255,255,0.15)', margin: '0 16px' }} />}
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ color: '#F3A51D', fontSize: '16px', fontWeight: 700, lineHeight: 1 }}>{s.value}</div>
-                      <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: '10px', marginTop: '3px', whiteSpace: 'nowrap' }}>{s.label}</div>
+                      <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '10px', marginTop: '3px', whiteSpace: 'nowrap' }}>{s.label}</div>
                     </div>
                   </div>
                 ))}
@@ -120,9 +120,9 @@ export default function OneSheetPage() {
 
             {/* ── Col 1: Topics ── */}
             <div style={{ width: '37%', padding: '20px 24px 16px 28px', borderRight: '1px solid #e8edf2', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#D4792C', marginBottom: '14px' }}>
+              <h2 style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A85A0A', marginBottom: '14px' }}>
                 What He Covers
-              </div>
+              </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {[
                   { title: 'Mattress Science', desc: 'How foam layers and support systems affect sleep quality and physical recovery.' },
@@ -146,9 +146,9 @@ export default function OneSheetPage() {
 
             {/* ── Col 2: Angles + Sample Qs ── */}
             <div style={{ width: '38%', padding: '20px 22px 16px 24px', borderRight: '1px solid #e8edf2', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#D4792C', marginBottom: '14px' }}>
+              <h2 style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A85A0A', marginBottom: '14px' }}>
                 Interview Angles
-              </div>
+              </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
                 {[
                   {
@@ -170,7 +170,7 @@ export default function OneSheetPage() {
                 ].map((a) => (
                   <div key={a.title} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                     <div style={{ width: '14px', height: '14px', borderRadius: '3px', backgroundColor: '#203552', flexShrink: 0, marginTop: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#F3A51D" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg aria-hidden="true" width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="#F3A51D" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="9 18 15 12 9 6"/>
                       </svg>
                     </div>
@@ -184,9 +184,9 @@ export default function OneSheetPage() {
 
               {/* Sample Qs */}
               <div style={{ borderTop: '1px solid #e8edf2', paddingTop: '14px' }}>
-                <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#D4792C', marginBottom: '10px' }}>
+                <h2 style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A85A0A', marginBottom: '10px' }}>
                   Sample Questions
-                </div>
+                </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
                   {[
                     '"What\'s the biggest change you\'ve seen in how people think about mattresses over 25 years?"',
@@ -202,9 +202,9 @@ export default function OneSheetPage() {
 
             {/* ── Col 3: Quick Facts + Contact ── */}
             <div style={{ flex: 1, padding: '20px 20px 16px 22px', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#D4792C', marginBottom: '14px' }}>
+              <h2 style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A85A0A', marginBottom: '14px' }}>
                 At a Glance
-              </div>
+              </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: 'auto' }}>
                 {[
                   { label: 'Experience', value: '25+ Years' },
@@ -225,20 +225,20 @@ export default function OneSheetPage() {
 
               {/* Contact card */}
               <div style={{ marginTop: '16px' }}>
-                <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#D4792C', marginBottom: '8px' }}>
+                <h2 style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#A85A0A', marginBottom: '8px' }}>
                   Book Robert
-                </div>
+                </h2>
                 <div style={{ backgroundColor: '#203552', borderRadius: '10px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '9px' }}>
                   <div>
-                    <div style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', marginBottom: '2px' }}>Email</div>
+                    <div style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.7)', marginBottom: '2px' }}>Email</div>
                     <div style={{ fontSize: '11px', fontWeight: 700, color: '#F3A51D' }}>press@mybusby.com</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', marginBottom: '2px' }}>Phone</div>
+                    <div style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.7)', marginBottom: '2px' }}>Phone</div>
                     <div style={{ fontSize: '11px', fontWeight: 600, color: 'white' }}>(844) 886-1640</div>
                   </div>
                   <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '8px' }}>
-                    <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.35)', marginBottom: '2px' }}>Full press kit</div>
+                    <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.7)', marginBottom: '2px' }}>Full press kit</div>
                     <div style={{ fontSize: '11px', fontWeight: 600, color: 'white' }}>mybusby.com/press</div>
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export default function OneSheetPage() {
               className="brightness-0 invert"
               style={{ opacity: 0.55, objectFit: 'contain' }}
             />
-            <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '10px', letterSpacing: '0.08em', margin: 0 }}>
+            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '10px', letterSpacing: '0.08em', margin: 0 }}>
               Chicago, IL &nbsp;·&nbsp; American-Made Since Day One
             </p>
             <p style={{ color: '#F3A51D', fontSize: '10px', fontWeight: 600, margin: 0 }}>

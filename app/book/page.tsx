@@ -76,7 +76,7 @@ export default function BookPage() {
             </Link>
 
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold mb-6">
+              <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-6">
                 <Calendar className="w-4 h-4" />
                 <span>Schedule a Recording</span>
               </div>
@@ -118,12 +118,12 @@ export default function BookPage() {
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <p className="font-semibold text-navy text-sm">{f.title}</p>
-                              <span className="flex items-center gap-1 text-xs text-gray-400">
+                              <span className="flex items-center gap-1 text-xs text-gray-600">
                                 <Clock className="w-3 h-3" />
                                 {f.duration}
                               </span>
                             </div>
-                            <p className="text-gray-500 text-sm leading-relaxed">{f.description}</p>
+                            <p className="text-gray-600 text-sm leading-relaxed">{f.description}</p>
                           </div>
                         </div>
                       );
@@ -170,6 +170,7 @@ export default function BookPage() {
                     >
                       <Linkedin className="w-4 h-4 text-gold flex-shrink-0" />
                       LinkedIn
+                      <span className="sr-only"> (opens in new tab)</span>
                     </a>
                   </div>
                 </div>
@@ -199,7 +200,7 @@ export default function BookPage() {
                       <Calendar className="w-8 h-8 text-gold-dark" />
                     </div>
                     <h3 className="text-xl font-serif text-navy mb-3">Booking Calendar Coming Soon</h3>
-                    <p className="text-gray-500 max-w-sm leading-relaxed mb-6">
+                    <p className="text-gray-600 max-w-sm leading-relaxed mb-6">
                       The scheduling calendar will appear here once set up. In the meantime,
                       reach out directly and we will find a time that works.
                     </p>

@@ -21,7 +21,7 @@ const breadcrumbSchema = {
 };
 
 // Add key benefits to products
-const productsWithBenefits = homeLineProducts.map((p) => ({
+const productsWithBenefits = homeLineProducts.filter((p) => p.line === 'artisan').map((p) => ({
   ...p,
   keyBenefit:
     p.slug === 'dream'
@@ -75,7 +75,7 @@ export default function ProductsPage() {
           </p>
 
           {/* Trust badges */}
-          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-500">
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-600">
             <span className="flex items-center gap-2">
               <span className="w-2 h-2 bg-gold rounded-full" />
               Made in USA
@@ -119,14 +119,14 @@ export default function ProductsPage() {
                   {flagship.images[0] ? (
                     <Image
                       src={flagship.images[0]}
-                      alt={`${flagship.name} ${flagship.type} mattress — ${flagship.tagline}`}
+                      alt={`${flagship.name} ${flagship.type} mattress`}
                       fill
                       className="object-cover"
                       priority
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                      <span className="text-gray-400 text-sm">Image Coming Soon</span>
+                      <span className="text-gray-600 text-sm">Image Coming Soon</span>
                     </div>
                   )}
                 </div>
@@ -139,8 +139,8 @@ export default function ProductsPage() {
                   <h2 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
                     Dream <span className="font-semibold">Pillowtop</span>
                   </h2>
-                  <p className="text-xl text-gray-500 mb-4">{flagship.tagline}</p>
-                  <p className="text-gray-400 leading-relaxed mb-8 max-w-md">{flagship.description}</p>
+                  <p className="text-xl text-gray-600 mb-4">{flagship.tagline}</p>
+                  <p className="text-gray-600 leading-relaxed mb-8 max-w-md">{flagship.description}</p>
 
                   {/* Feature Pills */}
                   <div className="flex flex-wrap gap-3 mb-8">
@@ -158,7 +158,7 @@ export default function ProductsPage() {
                   {/* Price */}
                   <div className="flex items-center gap-4 mb-8">
                     <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}</span>
-                    <span className="text-gray-400 text-sm">Queen</span>
+                    <span className="text-gray-600 text-sm">Queen</span>
                   </div>
 
                   {/* CTA */}
@@ -184,13 +184,13 @@ export default function ProductsPage() {
                   {product.images[0] ? (
                     <Image
                       src={product.images[0]}
-                      alt={`${product.name} ${product.type} mattress — ${product.tagline}`}
+                      alt={`${product.name} ${product.type} mattress`}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-                      <span className="text-gray-300 text-sm">Image Coming Soon</span>
+                      <span className="text-gray-600 text-sm">Image Coming Soon</span>
                     </div>
                   )}
 
@@ -207,12 +207,12 @@ export default function ProductsPage() {
                   <h3 className="text-xl font-semibold text-navy mb-2 group-hover:text-gold-dark transition-colors duration-300">
                     {product.name}
                   </h3>
-                  <p className="text-gray-500 text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                     {product.tagline}
                   </p>
 
                   {/* Key benefit */}
-                  <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
                     <span className="w-2 h-2 bg-gold rounded-full" />
                     <span>{product.keyBenefit}</span>
                   </div>
@@ -222,7 +222,7 @@ export default function ProductsPage() {
                     <span className="text-lg font-medium text-navy">
                       From ${product.price.toLocaleString()}
                     </span>
-                    <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-gold group-hover:translate-x-1 transition-all duration-300" />
+                    <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-navy group-hover:translate-x-1 transition-all duration-300" />
                   </div>
                 </div>
               </Link>

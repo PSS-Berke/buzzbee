@@ -13,7 +13,7 @@ export default function CartEmpty() {
         <ShoppingBag className="w-10 h-10 text-gold-dark" />
       </div>
       <h3 className="text-xl font-serif text-navy mb-2">Your cart is empty</h3>
-      <p className="text-gray-500 mb-8 max-w-xs">
+      <p className="text-gray-600 mb-8 max-w-xs">
         Discover our handcrafted mattresses and find your perfect sleep.
       </p>
       <Link

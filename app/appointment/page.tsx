@@ -39,7 +39,7 @@ const benefits = [
   },
   {
     title: 'Personalised to your sleep',
-    body: 'Tell us how you sleep, what hurts, what you’ve tried — we’ll narrow four mattresses to the one that fits.',
+    body: 'Tell us how you sleep, what hurts, what you’ve tried — we’ll narrow our lineup to the one that fits.',
   },
   {
     title: 'No pressure to buy',
@@ -55,7 +55,7 @@ export default function AppointmentPage() {
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gold/10 blur-3xl rounded-full -translate-y-1/3 translate-x-1/4" aria-hidden="true" />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12 md:pt-24 md:pb-16">
-          <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold mb-6">
+          <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-6">
             <CalendarCheck className="w-4 h-4" />
             <span>Sleep Consultation</span>
           </div>
@@ -113,7 +113,10 @@ export default function AppointmentPage() {
                   className="flex items-start gap-3 text-gray-600 hover:text-gold-dark transition-colors"
                 >
                   <MapPin className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
-                  <span>{formatAddress(elmhurstStore.address)}</span>
+                  <span>
+                    {formatAddress(elmhurstStore.address)}
+                    <span className="sr-only"> (opens Google Maps in a new tab)</span>
+                  </span>
                 </a>
                 <div className="flex items-start gap-3 text-gray-600">
                   <Clock className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
@@ -131,9 +134,10 @@ export default function AppointmentPage() {
                 href={elmhurstStore.mapsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-dark hover:text-gold transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-dark hover:text-navy transition-colors"
               >
                 Get directions
+                <span className="sr-only"> (opens Google Maps in a new tab)</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -179,7 +183,7 @@ export default function AppointmentPage() {
           </p>
           <Link
             href={`/locations/${elmhurstStore.slug}`}
-            className="inline-flex items-center gap-2 text-gold-dark font-semibold hover:text-gold transition-colors"
+            className="inline-flex items-center gap-2 text-gold-dark font-semibold hover:text-navy transition-colors"
           >
             See showroom details
             <ArrowRight className="w-4 h-4" />

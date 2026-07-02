@@ -1,34 +1,32 @@
+import Image from 'next/image';
+
 const bedTypes = [
   {
     name: 'Slatted Frame',
     description: 'Wood or metal slats spaced up to 4" apart',
     icon: (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src="/images/products/Untitled (1500 x 1200 px).png" alt="Slatted bed frame" className="w-full h-full object-contain" />
+      <Image src="/images/products/slatted-bed-frame.png" alt="Busby mattress on a slatted bed frame" width={500} height={400} className="w-full h-full object-contain" />
     ),
   },
   {
     name: 'Box Foundation',
     description: 'Traditional box spring or solid foundation',
     icon: (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src="/images/Untitled (1500 x 1200 px) (1).png" alt="Box foundation bed frame" className="w-full h-full object-contain" />
+      <Image src="/images/box-foundation.png" alt="Busby mattress on a box spring foundation" width={500} height={400} className="w-full h-full object-contain" />
     ),
   },
   {
     name: 'Adjustable Base',
     description: 'Fits any bed and its adjustable base',
     icon: (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src="/images/products/adjustable bed.png" alt="Adjustable base" className="w-full h-full object-contain scale-[1.44]" />
+      <Image src="/images/products/adjustable-bed-base.png" alt="Busby mattress on an adjustable bed base" width={500} height={400} className="w-full h-full object-contain scale-[1.44]" />
     ),
   },
   {
     name: 'Platform Bed',
     description: 'Low-profile frame, no box spring needed',
     icon: (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src="/images/products/Untitled (1500 x 1200 px) (2).png" alt="Platform bed frame" className="w-full h-full object-contain" />
+      <Image src="/images/products/platform-bed.png" alt="Busby mattress on a platform bed" width={500} height={400} className="w-full h-full object-contain" />
     ),
   },
 ];
@@ -60,7 +58,7 @@ export default function FitsAnyBed() {
                 {bed.name}
               </p>
               {/* Description */}
-              <p className="text-xs text-gray-400 leading-relaxed max-w-[160px]">
+              <p className="text-xs text-gray-600 leading-relaxed max-w-[160px]">
                 {bed.description}
               </p>
             </div>

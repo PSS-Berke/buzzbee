@@ -62,8 +62,8 @@ export default function FeaturedProducts() {
           <h2 className="text-4xl md:text-5xl font-serif text-navy mb-6">
             Handcrafted for <span className="wavy-underline">Perfect Sleep</span>
           </h2>
-          <p className="text-lg text-gray-500 max-w-xl mx-auto leading-relaxed">
-            Each mattress born from 25 years of expertise. Made in America, available exclusively online.
+          <p className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
+            Each mattress born from 25 years of expertise. Made in America.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function FeaturedProducts() {
               <div className="relative overflow-hidden min-h-[220px] sm:min-h-[300px] lg:min-h-0">
                 <Image
                   src={flagship.image}
-                  alt={`${flagship.name} ${flagship.type} mattress — ${flagship.tagline}`}
+                  alt={`${flagship.name} ${flagship.type} mattress`}
                   fill
                   className="object-cover"
                 />
@@ -92,10 +92,10 @@ export default function FeaturedProducts() {
                 <h3 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
                   Busby <span className="font-semibold">Dream</span>
                 </h3>
-                <p className="text-xl text-gray-500 mb-4">
+                <p className="text-xl text-gray-600 mb-4">
                   {flagship.tagline}
                 </p>
-                <p className="text-gray-400 leading-relaxed mb-8 max-w-md">
+                <p className="text-gray-600 leading-relaxed mb-8 max-w-md">
                   {flagship.heroDescription}
                 </p>
 
@@ -115,7 +115,7 @@ export default function FeaturedProducts() {
                 {/* Price */}
                 <div className="flex items-center gap-4 mb-8">
                   <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}</span>
-                  <span className="text-gray-400 text-sm">Queen</span>
+                  <span className="text-gray-600 text-sm">Queen</span>
                 </div>
 
                 {/* CTA */}
@@ -140,7 +140,7 @@ export default function FeaturedProducts() {
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
                   src={product.image}
-                  alt={`${product.name} ${product.type} mattress — ${product.tagline}`}
+                  alt={`${product.name} ${product.type} mattress`}
                   fill
                   className="object-cover"
                 />
@@ -157,14 +157,14 @@ export default function FeaturedProducts() {
                 <h3 className="text-xl font-semibold text-navy mb-2 group-hover:text-gold-dark transition-colors duration-300">
                   {product.name}
                 </h3>
-                <p className="text-gray-500 text-sm mb-4 line-clamp-2">{product.tagline}</p>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.tagline}</p>
 
                 {/* Price and arrow */}
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-medium text-navy">
                     From ${product.price.toLocaleString()}
                   </span>
-                  <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-gold group-hover:translate-x-1 transition-all duration-300" />
+                  <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-navy group-hover:translate-x-1 transition-all duration-300" />
                 </div>
               </div>
             </Link>
@@ -178,7 +178,7 @@ export default function FeaturedProducts() {
               Explore the Busby Home Line
             </span>
             <span className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gold/30 group-hover:border-gold group-hover:bg-gold transition-all duration-300">
-              <ArrowRight className="w-4 h-4 text-gold group-hover:text-white transition-colors duration-300" />
+              <ArrowRight className="w-4 h-4 text-gold-dark group-hover:text-navy transition-colors duration-300" />
             </span>
           </Link>
         </div>

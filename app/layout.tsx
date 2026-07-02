@@ -56,21 +56,12 @@ export const metadata: Metadata = {
     description:
       "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
     url: SITE_URL,
-    images: [
-      {
-        url: "/images/og-image.png",
-        width: 1500,
-        height: 1200,
-        alt: "Busby - American Made Mattresses",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Busby | American-Made Mattresses | Premium Sleep",
     description:
       "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
-    images: ["/images/og-image.png"],
   },
 };
 
@@ -89,6 +80,11 @@ const organizationSchema = {
     areaServed: 'US',
     availableLanguage: 'English',
   },
+  sameAs: [
+    'https://www.facebook.com/mybusby',
+    'https://www.instagram.com/my_busby',
+    'https://x.com/Sleep6Mattress',
+  ],
 };
 
 export default function RootLayout({
@@ -113,6 +109,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${lato.variable} ${josefinSans.variable} ${playfairDisplay.variable} antialiased`}>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-navy focus:px-5 focus:py-3 focus:font-semibold focus:text-white focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -122,7 +124,7 @@ export default function RootLayout({
         <CartProvider>
           <ScrollToTop />
           <Header />
-          <main>{children}</main>
+          <main id="main" tabIndex={-1}>{children}</main>
           <Footer />
           <AnnouncementBar />
           <CartDrawer />

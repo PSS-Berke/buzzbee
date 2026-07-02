@@ -7,7 +7,9 @@ export default function ScrollToTop() {
   const pathname = usePathname();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Instant, not smooth: route changes are navigation, not animation,
+    // and the global `scroll-behavior: smooth` would otherwise animate this.
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname]);
 
   return null;

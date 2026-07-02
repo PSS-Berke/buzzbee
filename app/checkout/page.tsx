@@ -70,7 +70,7 @@ export default function CheckoutPage() {
               <ShoppingBag className="w-12 h-12 text-gold-dark" />
             </div>
             <h1 className="text-3xl font-serif text-navy mb-4">Your cart is empty</h1>
-            <p className="text-gray-500 mb-8">
+            <p className="text-gray-600 mb-8">
               Add some items to your cart before checking out.
             </p>
             <Link
@@ -102,7 +102,7 @@ export default function CheckoutPage() {
         <div className="mb-8">
           <Link
             href="/cart"
-            className="inline-flex items-center gap-2 text-gray-500 hover:text-navy transition-colors"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-navy transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Cart
@@ -111,13 +111,17 @@ export default function CheckoutPage() {
 
         <div className="text-center mb-12">
           <h1 className="text-4xl font-serif text-navy">Checkout</h1>
-          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-gray-500">
+          <div className="flex items-center justify-center gap-2 mt-4 text-sm text-gray-600">
             <Lock className="w-4 h-4" />
             Secure Checkout
           </div>
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Announce the redirect state to screen readers */}
+          <p className="sr-only" role="status" aria-live="polite">
+            {loading ? 'Redirecting to Stripe payment page…' : ''}
+          </p>
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Form column */}
             <div className="lg:col-span-2 space-y-8">
@@ -133,10 +137,11 @@ export default function CheckoutPage() {
                       type="email"
                       id="email"
                       name="email"
+                      autoComplete="email"
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                       placeholder="you@example.com"
                     />
                   </div>
@@ -148,10 +153,11 @@ export default function CheckoutPage() {
                       type="tel"
                       id="phone"
                       name="phone"
+                      autoComplete="tel"
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                       placeholder="(555) 555-5555"
                     />
                   </div>
@@ -171,10 +177,11 @@ export default function CheckoutPage() {
                         type="text"
                         id="firstName"
                         name="firstName"
+                        autoComplete="given-name"
                         value={formData.firstName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                         placeholder="John"
                       />
                     </div>
@@ -186,10 +193,11 @@ export default function CheckoutPage() {
                         type="text"
                         id="lastName"
                         name="lastName"
+                        autoComplete="family-name"
                         value={formData.lastName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                         placeholder="Doe"
                       />
                     </div>
@@ -202,10 +210,11 @@ export default function CheckoutPage() {
                       type="text"
                       id="address"
                       name="address"
+                      autoComplete="address-line1"
                       value={formData.address}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                       placeholder="123 Main Street"
                     />
                   </div>
@@ -217,9 +226,10 @@ export default function CheckoutPage() {
                       type="text"
                       id="apartment"
                       name="apartment"
+                      autoComplete="address-line2"
                       value={formData.apartment}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                       placeholder="Apt 4B"
                     />
                   </div>
@@ -232,10 +242,11 @@ export default function CheckoutPage() {
                         type="text"
                         id="city"
                         name="city"
+                        autoComplete="address-level2"
                         value={formData.city}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                         placeholder="Chicago"
                       />
                     </div>
@@ -247,11 +258,12 @@ export default function CheckoutPage() {
                         type="text"
                         id="state"
                         name="state"
+                        autoComplete="address-level1"
                         value={formData.state}
                         onChange={handleInputChange}
                         required
                         maxLength={2}
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400 uppercase"
+                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600 uppercase"
                         placeholder="IL"
                       />
                     </div>
@@ -263,10 +275,12 @@ export default function CheckoutPage() {
                         type="text"
                         id="zip"
                         name="zip"
+                        autoComplete="postal-code"
+                        inputMode="numeric"
                         value={formData.zip}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gold/10 focus:border-gold focus:outline-none transition-colors text-navy placeholder-gray-400"
+                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
                         placeholder="60601"
                       />
                     </div>
@@ -286,13 +300,15 @@ export default function CheckoutPage() {
                     </p>
                   </div>
                 </div>
-                {error && (
-                  <p className="mt-4 text-sm text-red-600 text-center">{error}</p>
-                )}
               </div>
 
               {/* Submit button - Mobile */}
               <div className="lg:hidden">
+                {error && (
+                  <p role="alert" className="mb-4 text-sm text-red-600 text-center">
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
                   disabled={loading}
@@ -323,14 +339,14 @@ export default function CheckoutPage() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs">
+                          <div className="w-full h-full flex items-center justify-center text-gray-600 text-xs">
                             No image
                           </div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-navy truncate">{item.productName}</p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-gray-600">
                           {item.size}
                         </p>
                         <p className="text-sm text-navy mt-1">${item.price.toLocaleString()}</p>
@@ -345,24 +361,24 @@ export default function CheckoutPage() {
                 {/* Totals */}
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Subtotal</span>
+                    <span className="text-gray-600">Subtotal</span>
                     <span className="text-navy">${subtotal.toLocaleString()}</span>
                   </div>
                   {savings > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-gray-500">You Save</span>
+                      <span className="text-gray-600">You Save</span>
                       <span className="text-gold-dark font-medium">
                         -${savings.toLocaleString()}
                       </span>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Shipping</span>
+                    <span className="text-gray-600">Shipping</span>
                     <span className="text-gold-dark font-medium">FREE</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Tax</span>
-                    <span className="text-gray-400">Calculated at next step</span>
+                    <span className="text-gray-600">Tax</span>
+                    <span className="text-gray-600">Calculated at next step</span>
                   </div>
                 </div>
 
@@ -378,6 +394,11 @@ export default function CheckoutPage() {
 
                 {/* Submit button - Desktop */}
                 <div className="hidden lg:block">
+                  {error && (
+                    <p role="alert" className="mb-4 text-sm text-red-600 text-center">
+                      {error}
+                    </p>
+                  )}
                   <button
                     type="submit"
                     disabled={loading}
@@ -390,7 +411,7 @@ export default function CheckoutPage() {
 
                 {/* Trust badges */}
                 <div className="mt-6 pt-6 border-t border-gold/10">
-                  <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
+                  <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-600">
                     <span className="flex items-center gap-1">
                       <span className="w-2 h-2 bg-gold rounded-full" />
                       Free Shipping

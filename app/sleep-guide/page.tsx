@@ -17,21 +17,12 @@ export const metadata: Metadata = {
       'Get the Busby Sleep Guide — 25 years of bedding expertise distilled into one free PDF.',
     url: `${SITE_URL}/sleep-guide`,
     type: 'website',
-    images: [
-      {
-        url: `${SITE_URL}/images/og-image.png`,
-        width: 1500,
-        height: 1200,
-        alt: 'Busby Sleep Guide',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Free Sleep Guide | Busby Mattresses',
     description:
       'Get the Busby Sleep Guide — 25 years of bedding expertise distilled into one free PDF.',
-    images: [`${SITE_URL}/images/og-image.png`],
   },
 };
 
@@ -106,7 +97,7 @@ export default function SleepGuidePage() {
                 FREE SLEEP GUIDE
               </span>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy leading-tight mb-5">
-                Sleep deeper, in <span className="text-gold">30 nights</span> or less.
+                Sleep deeper, in <span className="text-gold-dark">30 nights</span> or less.
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed mb-8">
                 Get the Busby Sleep Guide — 25 years of bedding expertise, distilled into one PDF.
@@ -119,7 +110,7 @@ export default function SleepGuidePage() {
                 formPosition="hero"
               />
 
-              <p className="mt-6 text-sm text-gray-500">
+              <p className="mt-6 text-sm text-gray-600">
                 10,000+ American sleepers · Made in USA · 100-night trial
               </p>
             </div>
@@ -129,7 +120,7 @@ export default function SleepGuidePage() {
                 <div>
                   <BookOpen className="w-12 h-12 text-gold mx-auto mb-3" />
                   <p className="text-navy font-semibold">[REPLACE: Hero bedroom photo]</p>
-                  <p className="text-sm text-gray-500 mt-1">Real bedroom, late-morning light</p>
+                  <p className="text-sm text-gray-600 mt-1">Real bedroom, late-morning light</p>
                 </div>
               </div>
             </div>
@@ -189,11 +180,11 @@ export default function SleepGuidePage() {
             “I’d tried four other online mattresses before Busby. The one that finally let me stop
             waking up at 4 a.m. with a sore lower back. I should have started here.”
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-600">
             <span className="font-semibold text-navy">— [Jenna], [Oak Park]</span>
             <span className="mx-2">·</span>side sleeper
             <span className="mx-2">·</span>Busby Slumber
-            <span className="ml-2 text-[10px] uppercase tracking-wider text-gold-dark/70">
+            <span className="ml-2 text-[10px] uppercase tracking-wider text-gold-dark">
               Placeholder
             </span>
           </p>
@@ -206,13 +197,13 @@ export default function SleepGuidePage() {
           <div className="bg-gradient-to-br from-navy to-navy-light rounded-3xl p-10 md:p-12 text-center text-white">
             <h2 className="text-2xl md:text-3xl font-serif mb-3">Want a recommendation right now?</h2>
             <p className="text-gray-300 mb-6 max-w-xl mx-auto">
-              Skip the guide and take our 2-minute Sleep Quiz. Six questions, instant personalized
+              Skip the guide and take our 2-minute Sleep Quiz. Seven questions, instant personalized
               mattress match. (You can always come back for the guide later.)
             </p>
             <Link
               href="/quiz"
               data-event="lp_quiz_click"
-              className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-white font-semibold px-7 py-3.5 rounded-full transition-colors"
+              className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-navy font-semibold px-7 py-3.5 rounded-full transition-colors"
             >
               Take the Sleep Quiz
               <ArrowRight className="w-4 h-4" />

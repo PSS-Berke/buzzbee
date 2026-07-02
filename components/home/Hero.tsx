@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import HeroVideo from './HeroVideo';
 
 export default function Hero() {
   return (
@@ -48,26 +49,17 @@ export default function Hero() {
           {/* Visual */}
           <div className="relative">
             <div className="aspect-square bg-white/80 border-2 border-gold/20 rounded-3xl p-8 flex items-center justify-center shadow-xl shadow-gold/5">
-              <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                <video
-                  src="/Videos/Untitled design (9).mp4"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="w-full h-full object-cover"
-                />
-              </div>
+              <HeroVideo />
             </div>
 
             {/* Floating badges */}
             <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-lg shadow-gold/10 p-4 hidden md:block border border-gold/10">
               <p className="text-sm font-semibold text-navy">Financing Available</p>
-              <p className="text-xs text-gray-500">Flexible payment options</p>
+              <p className="text-xs text-gray-600">Flexible payment options</p>
             </div>
             <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-lg shadow-gold/10 p-4 hidden md:block border border-gold/10">
               <p className="text-sm font-semibold text-navy">10 Year Warranty</p>
-              <p className="text-xs text-gray-500">Built to last</p>
+              <p className="text-xs text-gray-600">Built to last</p>
             </div>
           </div>
         </div>

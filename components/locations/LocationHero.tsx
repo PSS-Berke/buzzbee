@@ -15,7 +15,7 @@ export default function LocationHero() {
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gold/10 blur-3xl rounded-full -translate-y-1/3 translate-x-1/4" aria-hidden="true" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 md:pt-24 md:pb-28">
-        <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold mb-6">
+        <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-6">
           {eyebrowByPhase[elmhurstStore.launchPhase]}
         </div>
 
@@ -42,10 +42,11 @@ export default function LocationHero() {
             href={elmhurstStore.mapsLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 bg-white text-navy text-xs font-semibold px-3 py-2 rounded-full shadow-lg hover:bg-gold hover:text-white transition-colors"
+            className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 bg-white text-navy text-xs font-semibold px-3 py-2 rounded-full shadow-lg hover:bg-gold hover:text-navy transition-colors"
           >
             <MapPin className="w-3.5 h-3.5" />
             Open in Maps
+            <span className="sr-only"> (opens Google Maps in a new tab)</span>
           </a>
         </div>
 
@@ -61,6 +62,7 @@ export default function LocationHero() {
                 className="text-sm text-white hover:text-gold transition-colors"
               >
                 {formatAddress(elmhurstStore.address)}
+                <span className="sr-only"> (opens Google Maps in a new tab)</span>
               </a>
             </div>
           </div>
@@ -89,7 +91,7 @@ export default function LocationHero() {
               <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">Visits</p>
               <p className="text-sm text-white">
                 Walk-ins welcome ·{' '}
-                <Link href="/appointment" className="text-gold hover:underline">
+                <Link href="/appointment" className="text-gold underline">
                   Book a visit
                 </Link>
               </p>

@@ -38,13 +38,13 @@ export default function FinancingBanner() {
                   className="object-contain"
                 />
               </div>
-              <span className="text-sm text-gray-500">{opt.detail}</span>
+              <span className="text-sm text-gray-600">{opt.detail}</span>
             </div>
           ))}
 
           <div className="w-px h-5 bg-gold/30 hidden sm:block" />
 
-          <p className="text-xs text-gray-400 tracking-wide">Powered by Stripe</p>
+          <p className="text-xs text-gray-600 tracking-wide">Powered by Stripe</p>
         </div>
       </div>
     </section>

@@ -70,7 +70,7 @@ export default async function NotificationsPage({
         <header className="mb-8 flex items-baseline justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-3xl font-serif text-navy">Notification recipients</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-600 mt-1">
               Who gets an email every time someone books a showroom visit.
             </p>
           </div>
@@ -83,17 +83,17 @@ export default async function NotificationsPage({
         </header>
 
         {ok === 'added' && (
-          <p className="mb-5 text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl p-3">
+          <p role="status" className="mb-5 text-sm text-green-700 bg-green-50 border border-green-200 rounded-xl p-3">
             Recipient added.
           </p>
         )}
         {ok === 'removed' && (
-          <p className="mb-5 text-sm text-gray-600 bg-white border border-gray-200 rounded-xl p-3">
+          <p role="status" className="mb-5 text-sm text-gray-600 bg-white border border-gray-200 rounded-xl p-3">
             Recipient removed.
           </p>
         )}
         {error === 'email' && (
-          <p className="mb-5 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
+          <p role="alert" className="mb-5 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
             That doesn’t look like a valid email address.
           </p>
         )}
@@ -122,23 +122,23 @@ export default async function NotificationsPage({
               type="email"
               required
               placeholder="name@mybusby.com"
-              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-gold focus:outline-none"
+              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-gold"
             />
           </label>
           <label className="block flex-1">
             <span className="block text-sm font-medium text-navy mb-1.5">
-              Label <span className="text-gray-400 font-normal">(optional)</span>
+              Label <span className="text-gray-600 font-normal">(optional)</span>
             </span>
             <input
               name="label"
               type="text"
               placeholder="e.g. Front desk"
-              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-gold focus:outline-none"
+              className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-gold"
             />
           </label>
           <button
             type="submit"
-            className="px-6 py-2.5 bg-gold hover:bg-gold-dark text-white font-semibold rounded-lg transition-colors whitespace-nowrap"
+            className="px-6 py-2.5 bg-gold hover:bg-gold-light text-navy font-semibold rounded-lg transition-colors whitespace-nowrap"
           >
             Add recipient
           </button>
@@ -151,13 +151,13 @@ export default async function NotificationsPage({
                 <th className="px-4 py-3 font-semibold text-navy">Email</th>
                 <th className="px-4 py-3 font-semibold text-navy">Label</th>
                 <th className="px-4 py-3 font-semibold text-navy">Added</th>
-                <th className="px-4 py-3" />
+                <th className="px-4 py-3"><span className="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody>
               {recipients.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
+                  <td colSpan={4} className="px-4 py-8 text-center text-gray-600">
                     No managed recipients yet.
                   </td>
                 </tr>
@@ -166,7 +166,7 @@ export default async function NotificationsPage({
                 <tr key={r.id} className="border-b border-gray-100 last:border-0">
                   <td className="px-4 py-2.5 font-medium text-navy">{r.email}</td>
                   <td className="px-4 py-2.5 text-gray-600">{r.label || '—'}</td>
-                  <td className="px-4 py-2.5 text-gray-400 text-xs whitespace-nowrap">
+                  <td className="px-4 py-2.5 text-gray-600 text-xs whitespace-nowrap">
                     {fmtDate(r.created_at)}
                   </td>
                   <td className="px-4 py-2.5 text-right">
@@ -174,7 +174,8 @@ export default async function NotificationsPage({
                       <input type="hidden" name="id" value={r.id} />
                       <button
                         type="submit"
-                        className="text-xs text-red-600 hover:text-red-700 hover:underline"
+                        aria-label={`Remove ${r.email} from notification recipients`}
+                        className="px-2 py-1.5 text-xs text-red-600 hover:text-red-700 hover:underline"
                       >
                         Remove
                       </button>
