@@ -24,7 +24,7 @@ function formatOpeningDate(iso: string | null): string | null {
 }
 
 export const announcement: Announcement = {
-  version: 1,
+  version: 2,
   copy: phaseCopy[elmhurstStore.launchPhase](
     elmhurstStore.shortName,
     formatOpeningDate(elmhurstStore.openingDate)

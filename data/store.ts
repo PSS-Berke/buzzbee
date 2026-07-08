@@ -55,7 +55,7 @@ export const elmhurstStore: StoreLocation = {
     { day: 'Sunday', opens: '00:00', closes: '23:59' },
   ],
   openingDate: null,
-  launchPhase: 'opening-on-date',
+  launchPhase: 'now-open',
   parking: 'Free parking in the lot on site, available anytime.',
   transit: 'Elmhurst Metra (UP-W line) is in downtown Elmhurst, a short drive south of the showroom.',
   accessibility: 'Call us at (844) 886-1640 with any accessibility questions and we’ll walk you through what to expect.',
