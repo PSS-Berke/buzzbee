@@ -54,6 +54,8 @@ export async function POST(req: NextRequest) {
       price_data: {
         currency: 'usd',
         unit_amount: Math.round(item!.price * 100),
+        // Tax is added on top of the listed price, not carved out of it.
+        tax_behavior: 'exclusive' as const,
         product_data: {
           name: item!.name,
           ...(item!.image && origin.startsWith('https')
@@ -66,6 +68,10 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      // Requires Stripe Tax to be activated in the Dashboard (Settings → Tax),
+      // with an origin address and state registrations — session creation
+      // fails otherwise.
+      automatic_tax: { enabled: true },
       customer_email: email || undefined,
       line_items,
       shipping_address_collection: {
