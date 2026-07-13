@@ -8,22 +8,7 @@ import { useCart } from '@/contexts/CartContext';
 
 export default function CheckoutPage() {
   const { state, subtotal, savings } = useCart();
-  const [formData, setFormData] = useState({
-    email: '',
-    phone: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    apartment: '',
-    city: '',
-    state: '',
-    zip: '',
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const [email, setEmail] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -45,7 +30,7 @@ export default function CheckoutPage() {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, email: formData.email }),
+        body: JSON.stringify({ items, email }),
       });
 
       const data = await res.json();
@@ -128,175 +113,38 @@ export default function CheckoutPage() {
               {/* Contact Information */}
               <div className="bg-white rounded-3xl border-2 border-gold/10 p-6 md:p-8">
                 <h2 className="text-xl font-serif text-navy mb-6">Contact Information</h2>
-                <div className="grid gap-4">
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      autoComplete="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                      placeholder="you@example.com"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      autoComplete="tel"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                      placeholder="(555) 555-5555"
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
+                    placeholder="you@example.com"
+                  />
+                  <p className="mt-2 text-sm text-gray-600">
+                    We&apos;ll send your order confirmation here.
+                  </p>
                 </div>
               </div>
 
-              {/* Shipping Address */}
-              <div className="bg-white rounded-3xl border-2 border-gold/10 p-6 md:p-8">
-                <h2 className="text-xl font-serif text-navy mb-6">Shipping Address</h2>
-                <div className="grid gap-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        autoComplete="given-name"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                        placeholder="John"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        id="lastName"
-                        name="lastName"
-                        autoComplete="family-name"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                        placeholder="Doe"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                      Street Address
-                    </label>
-                    <input
-                      type="text"
-                      id="address"
-                      name="address"
-                      autoComplete="address-line1"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                      placeholder="123 Main Street"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="apartment" className="block text-sm font-medium text-gray-700 mb-2">
-                      Apartment, suite, etc. (optional)
-                    </label>
-                    <input
-                      type="text"
-                      id="apartment"
-                      name="apartment"
-                      autoComplete="address-line2"
-                      value={formData.apartment}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                      placeholder="Apt 4B"
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-6 gap-4">
-                    <div className="sm:col-span-3">
-                      <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        id="city"
-                        name="city"
-                        autoComplete="address-level2"
-                        value={formData.city}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                        placeholder="Chicago"
-                      />
-                    </div>
-                    <div className="sm:col-span-1">
-                      <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
-                        State
-                      </label>
-                      <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        autoComplete="address-level1"
-                        value={formData.state}
-                        onChange={handleInputChange}
-                        required
-                        maxLength={2}
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600 uppercase"
-                        placeholder="IL"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label htmlFor="zip" className="block text-sm font-medium text-gray-700 mb-2">
-                        ZIP Code
-                      </label>
-                      <input
-                        type="text"
-                        id="zip"
-                        name="zip"
-                        autoComplete="postal-code"
-                        inputMode="numeric"
-                        value={formData.zip}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 focus:border-gold transition-colors text-navy placeholder-gray-600"
-                        placeholder="60601"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment */}
+              {/* Shipping & Payment */}
               <div className="bg-white rounded-3xl border-2 border-gold/20 p-6 md:p-8">
-                <h2 className="text-xl font-serif text-navy mb-6">Payment</h2>
+                <h2 className="text-xl font-serif text-navy mb-6">Shipping &amp; Payment</h2>
                 <div className="bg-gold/5 rounded-2xl p-6 flex items-start gap-4">
                   <Lock className="w-5 h-5 text-gold-dark flex-shrink-0 mt-0.5" />
                   <div className="text-sm text-gray-600">
-                    <p className="font-medium text-navy mb-1">Secure Payment via Stripe</p>
+                    <p className="font-medium text-navy mb-1">Secure Checkout via Stripe</p>
                     <p>
-                      You&apos;ll enter your card details on Stripe&apos;s encrypted payment page. We never store your card information.
+                      Next, you&apos;ll enter your shipping address, phone number, and card
+                      details on Stripe&apos;s encrypted payment page. We never store your
+                      card information.
                     </p>
                   </div>
                 </div>
