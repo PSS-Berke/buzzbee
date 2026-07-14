@@ -8,6 +8,7 @@ import FeaturedProducts from '@/components/home/FeaturedProducts';
 import SleepQuizCTA from '@/components/home/SleepQuizCTA';
 import OurStoryTeaser from '@/components/home/OurStoryTeaser';
 import ElmhurstAnnouncement from '@/components/home/ElmhurstAnnouncement';
+import AppointmentModal from '@/components/home/AppointmentModal';
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -49,6 +50,7 @@ export default function Home() {
           <OurStoryTeaser />
         </div>
       </div>
+      <AppointmentModal />
     </>
   );
 }

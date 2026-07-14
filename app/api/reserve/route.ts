@@ -4,6 +4,7 @@ import { elmhurstStore } from '@/data/store';
 import { insertReservation, SlotTakenError } from '@/lib/db';
 import { sendAdminReservationEmail, sendUserReservationEmail } from '@/lib/email';
 import { isValidSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { isOpenSlot } from '@/lib/availability';
 import { getClientIp, rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
@@ -114,6 +115,12 @@ export async function POST(req: NextRequest) {
   }
   if (!isValidSlot(timeSlot)) {
     return bad('Please choose a valid time slot.');
+  }
+  // The slot must also be one the showroom is open for on that date (schedule
+  // layer, separate from double-booking). Guards against stale forms and direct
+  // POSTs to a closed time.
+  if (!isOpenSlot(date, timeSlot)) {
+    return bad('That time isn’t available on the selected date. Please choose an open slot.');
   }
 
   const record = {

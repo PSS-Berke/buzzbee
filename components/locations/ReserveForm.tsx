@@ -2,7 +2,8 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Send } from 'lucide-react';
-import { ALL_SLOTS, formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { openSlotsForDate } from '@/lib/availability';
 
 declare global {
   interface Window {
@@ -172,6 +173,10 @@ export default function ReserveForm() {
   const canSubmit =
     status !== 'submitting' && date !== '' && slot !== '' && availabilityState !== 'loading';
 
+  // Slots the showroom is open for on the chosen date (schedule layer). Booked
+  // slots below are then greyed out of this set.
+  const openSlots = date ? openSlotsForDate(date) : [];
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -266,14 +271,19 @@ export default function ReserveForm() {
         {date && availabilityState === 'loading' && (
           <p className="text-sm text-gray-600">Loading times…</p>
         )}
-        {date && availabilityState === 'error' && (
+        {date && availabilityState === 'error' && openSlots.length > 0 && (
           <p className="text-sm text-red-600">
             Couldn’t load availability. Pick a time anyway and we’ll confirm by email if there’s a clash.
           </p>
         )}
-        {date && (
+        {date && availabilityState !== 'loading' && openSlots.length === 0 && (
+          <p className="text-sm text-gray-600">
+            No appointment times are available on this date. Please choose another day.
+          </p>
+        )}
+        {date && openSlots.length > 0 && (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-            {ALL_SLOTS.map((s) => {
+            {openSlots.map((s) => {
               const taken = bookedSlots.includes(s);
               const selected = slot === s;
               return (
