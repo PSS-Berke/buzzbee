@@ -24,6 +24,7 @@ const ROUTES = [
   '/cart',
   '/checkout',
   '/appointment',
+  '/appointment/confirmed?date=2026-07-24&slot=14:30',
   '/faq',
   '/about',
   '/locations',

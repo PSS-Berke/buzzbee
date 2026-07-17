@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { Check, Send } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
 
@@ -13,7 +13,9 @@ declare global {
 
 const mattressOptions = ['Dream', 'Slumber', 'Nod', 'Doze', 'Not sure yet'];
 
-type Status = 'idle' | 'submitting' | 'success' | 'error';
+// No 'success' state — a booking redirects to /appointment/confirmed, so the
+// form stays in 'submitting' until the browser leaves the page.
+type Status = 'idle' | 'submitting' | 'error';
 
 function todayLocalISO(): string {
   const now = new Date();
@@ -31,10 +33,6 @@ function localISOPlusDays(days: number): string {
 export default function ReserveForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const [confirmedDate, setConfirmedDate] = useState('');
-  const [confirmedSlot, setConfirmedSlot] = useState('');
-  const [confirmedEmail, setConfirmedEmail] = useState('');
-
   const [date, setDate] = useState('');
   const [slot, setSlot] = useState('');
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
@@ -73,12 +71,6 @@ export default function ReserveForm() {
   const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string }>({});
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
-  const successHeadingRef = useRef<HTMLHeadingElement>(null);
-
-  // Announce the booking confirmation by focusing its heading
-  useEffect(() => {
-    if (status === 'success') successHeadingRef.current?.focus();
-  }, [status]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -137,38 +129,18 @@ export default function ReserveForm() {
         return;
       }
       window.gtag?.('event', 'store_reserve_submit');
-      setConfirmedDate(payload.date);
-      setConfirmedSlot(payload.timeSlot);
-      setConfirmedEmail(payload.email);
-      setStatus('success');
+      // Full page load (not router.push) so gtag.js re-runs and fires a page_view
+      // for /appointment/confirmed. The tag only configures on initial document
+      // load, so a client-side navigation would leave the Google Ads URL-based
+      // conversion trigger unfired. Date and slot ride along to personalise the
+      // page; email deliberately does not — it is PII and would land in GA.
+      const params = new URLSearchParams({ date: payload.date, slot: payload.timeSlot });
+      window.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
       setErrorMsg('We couldn’t reach the server. Try once more, or email showroom@mybusby.com.');
     }
   };
-
-  if (status === 'success') {
-    return (
-      <div role="status" className="bg-white rounded-2xl p-8 border-2 border-gold/30 shadow-sm text-center">
-        <div className="w-14 h-14 mx-auto mb-4 bg-gold/15 rounded-full flex items-center justify-center">
-          <Send className="w-7 h-7 text-gold-dark" />
-        </div>
-        <h3 ref={successHeadingRef} tabIndex={-1} className="text-2xl font-serif text-navy mb-3">
-          We’ll see you soon.
-        </h3>
-        <p className="text-gray-600 leading-relaxed">
-          {confirmedDate ? (
-            <>
-              We have you down for <strong>{confirmedDate}</strong>
-              {confirmedSlot ? <> at <strong>{formatSlot(confirmedSlot)}</strong></> : null}.{' '}
-            </>
-          ) : null}
-          A confirmation is on its way to <strong>{confirmedEmail}</strong>. If anything comes up,
-          reply to that email or call the showroom.
-        </p>
-      </div>
-    );
-  }
 
   const canSubmit =
     status !== 'submitting' && date !== '' && slot !== '' && availabilityState !== 'loading';
