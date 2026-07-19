@@ -13,6 +13,16 @@ function client(): Resend {
   return _resend;
 }
 
+// The Resend SDK does not throw on API-level failures — send() resolves with
+// { data: null, error }. Convert that into a thrown error so callers' existing
+// catch/log paths fire; otherwise a rejected send (suppressed recipient, bad
+// domain, quota) is silently swallowed and never logged.
+function assertSent(result: { error: { name: string; message: string } | null }): void {
+  if (result.error) {
+    throw new Error(`Resend send failed: ${result.error.name} — ${result.error.message}`);
+  }
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -376,14 +386,16 @@ export function renderUserSleepGuideEmail(toEmail: string): {
 
 export async function sendUserSleepGuideEmail(toEmail: string): Promise<void> {
   const { subject, html, text, headers } = renderUserSleepGuideEmail(toEmail);
-  await client().emails.send({
-    from: env.EMAIL_FROM,
-    to: toEmail,
-    subject,
-    html,
-    text,
-    headers,
-  });
+  assertSent(
+    await client().emails.send({
+      from: env.EMAIL_FROM,
+      to: toEmail,
+      subject,
+      html,
+      text,
+      headers,
+    })
+  );
 }
 
 export interface ReservationPayload {
@@ -683,14 +695,16 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
 
 export async function sendUserReservationEmail(payload: ReservationPayload): Promise<void> {
   const { subject, html, text } = renderUserReservationEmail(payload);
-  await client().emails.send({
-    from: env.EMAIL_FROM,
-    to: payload.email,
-    replyTo: env.RESERVATIONS_INBOX_EMAIL,
-    subject,
-    html,
-    text,
-  });
+  assertSent(
+    await client().emails.send({
+      from: env.EMAIL_FROM,
+      to: payload.email,
+      replyTo: env.RESERVATIONS_INBOX_EMAIL,
+      subject,
+      html,
+      text,
+    })
+  );
 }
 
 // Recipients for the internal booking notification. Prefer the DB-managed list
@@ -818,12 +832,14 @@ export async function sendAdminReservationEmail(payload: ReservationPayload): Pr
   const to = await reservationRecipients();
   if (to.length === 0) return;
   const { subject, html, text } = renderAdminReservationEmail(payload);
-  await client().emails.send({
-    from: env.EMAIL_FROM,
-    to,
-    replyTo: payload.email,
-    subject,
-    html,
-    text,
-  });
+  assertSent(
+    await client().emails.send({
+      from: env.EMAIL_FROM,
+      to,
+      replyTo: payload.email,
+      subject,
+      html,
+      text,
+    })
+  );
 }
