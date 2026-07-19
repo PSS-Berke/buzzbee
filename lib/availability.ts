@@ -3,10 +3,11 @@
 // `getBookedSlots` is the occupancy layer. A slot is bookable only if it's both
 // offered here AND not already booked.
 //
-// ── Temporary override: week of Mon Jul 13 – Sun Jul 19, 2026 ──────────────────
-// This week the showroom is only staffed Tue/Wed/Thu, 10:30 AM–1:30 PM (last
-// appointment starts 1:30, ends 2:00). Every other day THIS WEEK is closed.
-// Dates outside this week are unaffected and keep the normal all-day slots.
+// ── Temporary override: week of Mon Jul 20 – Sun Jul 26, 2026 ──────────────────
+// Same pattern as the prior week: staffed Tue/Wed/Thu, 10:30 AM–1:30 PM (last
+// appointment starts 1:30, ends 2:00). Monday closed (Robbert is out). Every
+// other day THIS WEEK is closed. Dates outside this week are unaffected and
+// keep the normal all-day slots.
 //
 // To lift the restriction, delete the entries in WEEK_OVERRIDE (or the whole
 // map) — openSlotsForDate then falls back to ALL_SLOTS for every date.
@@ -27,13 +28,14 @@ const CLOSED: readonly string[] = [];
 
 // Keyed by YYYY-MM-DD in the showroom's local calendar.
 const WEEK_OVERRIDE: Record<string, readonly string[]> = {
-  '2026-07-13': CLOSED, // Mon — closed
-  '2026-07-14': THIS_WEEK_WINDOW, // Tue
-  '2026-07-15': THIS_WEEK_WINDOW, // Wed
-  '2026-07-16': THIS_WEEK_WINDOW, // Thu
-  '2026-07-17': CLOSED, // Fri — closed
-  '2026-07-18': CLOSED, // Sat — closed
-  '2026-07-19': CLOSED, // Sun — closed
+  '2026-07-19': CLOSED, // Sun (still today) — closed
+  '2026-07-20': CLOSED, // Mon — closed (Robbert out)
+  '2026-07-21': THIS_WEEK_WINDOW, // Tue
+  '2026-07-22': THIS_WEEK_WINDOW, // Wed
+  '2026-07-23': THIS_WEEK_WINDOW, // Thu
+  '2026-07-24': CLOSED, // Fri — closed
+  '2026-07-25': CLOSED, // Sat — closed
+  '2026-07-26': CLOSED, // Sun — closed
 };
 
 /** Slots offered on `date` (YYYY-MM-DD). Dates with no override get all slots. */
