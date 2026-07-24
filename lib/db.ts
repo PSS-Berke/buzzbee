@@ -131,6 +131,54 @@ export async function getBookedSlots(date: string): Promise<string[]> {
   return rows.map((r) => r.time_slot);
 }
 
+// --- Day-of reminder emails --------------------------------------------------
+
+export interface ReminderClaim {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  preferred_date: string;
+  time_slot: string | null;
+  mattresses: string[];
+  notes: string | null;
+  source: string;
+  location: string;
+}
+
+/**
+ * Claim every not-yet-reminded reservation for `date` (YYYY-MM-DD, showroom
+ * timezone) and return them.
+ *
+ * The claim is the UPDATE itself: stamping reminder_sent_at inside the same
+ * statement that selects the rows means a second cron fire (Vercel retries, a
+ * manual re-trigger, two instances) matches nothing and sends nothing. A
+ * SELECT-then-UPDATE would not be safe here — the Neon HTTP driver has no
+ * transaction spanning two calls, so the window between them is a double-send.
+ *
+ * Cost of claiming up front: a send that fails is already marked. Callers must
+ * hand failed ids back to `releaseReminderClaim` so the next run retries them.
+ *
+ * preferred_date is cast to text so the caller always gets 'YYYY-MM-DD' rather
+ * than a Date that would shift under UTC parsing.
+ */
+export async function claimRemindersForDate(date: string): Promise<ReminderClaim[]> {
+  return (await sql()`
+    update reservations
+       set reminder_sent_at = now()
+     where preferred_date = ${date}::date
+       and reminder_sent_at is null
+    returning id, name, email, phone,
+              to_char(preferred_date, 'YYYY-MM-DD') as preferred_date,
+              time_slot, mattresses, notes, source, location
+  `) as ReminderClaim[];
+}
+
+/** Undo a claim so the next cron run retries that reservation. */
+export async function releaseReminderClaim(id: number): Promise<void> {
+  await sql()`update reservations set reminder_sent_at = null where id = ${id}`;
+}
+
 /**
  * Atomic fixed-window rate-limit counter, backed by Postgres so the limit holds
  * across serverless instances (in-memory counters reset per cold start and are

@@ -707,6 +707,232 @@ export async function sendUserReservationEmail(payload: ReservationPayload): Pro
   );
 }
 
+export function renderUserReminderEmail(payload: ReservationPayload): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  const store = elmhurstStore;
+  const addressText = formatAddress(store.address);
+  const slotPretty = payload.time_slot ? formatSlot(payload.time_slot) : null;
+  // First name only — a reminder should read like a note, not a form letter.
+  const firstName = payload.name.trim().split(/\s+/)[0] || payload.name;
+
+  const preheader = slotPretty
+    ? `Your Busby visit is today at ${slotPretty}. ${store.address.street}, ${store.address.city}.`
+    : `Your Busby visit is today. ${store.address.street}, ${store.address.city}.`;
+
+  const timePill = slotPretty
+    ? `
+        <tr>
+          <td class="px" style="padding:24px 40px 0 40px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="background:#F3A51D;border-radius:999px;padding:8px 16px;font-family:Georgia,'Times New Roman',serif;color:#203552;font-size:13px;font-weight:700;letter-spacing:0.12em;">
+                  TODAY · ${escapeHtml(slotPretty.toUpperCase())}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>`
+    : '';
+
+  const mattressesRow = payload.mattresses.length
+    ? `
+            <tr>
+              <td style="padding:18px 0 0 0;font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">We'll have these ready</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:16px;line-height:1.5;">
+                ${escapeHtml(payload.mattresses.join(', '))}
+              </td>
+            </tr>`
+    : '';
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="x-apple-disable-message-reformatting" />
+<meta name="color-scheme" content="light only" />
+<meta name="supported-color-schemes" content="light only" />
+<title>Your Busby visit is today</title>
+<style>
+  :root { color-scheme: light only; supported-color-schemes: light only; }
+  @media only screen and (max-width: 600px) {
+    .container { width:100% !important; }
+    .px { padding-left:24px !important; padding-right:24px !important; }
+    .h1 { font-size:34px !important; line-height:1.1 !important; }
+    .btn { display:block !important; width:100% !important; }
+    .btn-row td { display:block !important; width:100% !important; }
+    .btn-row td + td { margin-top:12px !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#faf8f5;">
+  <div style="display:none;visibility:hidden;mso-hide:all;height:0;width:0;overflow:hidden;font-size:1px;line-height:1px;color:#faf8f5;opacity:0;">
+    ${escapeHtml(preheader)}
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#faf8f5;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" class="container" style="width:600px;max-width:600px;">
+          <tr>
+            <td class="px" style="padding:0 40px 8px 40px;">
+              <div style="font-family:Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:0.32em;font-size:14px;color:#203552;">BUSBY</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:32px 40px 0 40px;">
+              <h1 class="h1" style="margin:0;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:40px;line-height:1.1;color:#203552;letter-spacing:-0.01em;">
+                Today's the day,<br/>${escapeHtml(firstName)}.
+              </h1>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:24px 40px 0 40px;">
+              <div style="height:2px;width:48px;background:#F3A51D;line-height:0;font-size:0;">&nbsp;</div>
+            </td>
+          </tr>
+          ${timePill}
+          <tr>
+            <td class="px" style="padding:24px 40px 0 40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#3a4a64;font-size:16px;line-height:1.65;">
+              ${
+                slotPretty
+                  ? `Just a note that we're expecting you at <strong style="color:#203552;">${escapeHtml(slotPretty)}</strong> in Elmhurst. Wear something you can lie down in — the only way to know a mattress is to spend ten minutes on it.`
+                  : `Just a note that we're expecting you in Elmhurst today. Wear something you can lie down in — the only way to know a mattress is to spend ten minutes on it.`
+              }
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:28px 40px 0 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:14px;border:1px solid #e6dccd;">
+                <tr>
+                  <td style="padding:28px 28px 24px 28px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Where</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:6px 0 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:16px;line-height:1.5;">
+                          ${escapeHtml(store.address.street)}<br/>
+                          ${escapeHtml(store.address.city)}, ${escapeHtml(store.address.state)} ${escapeHtml(store.address.zip)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:18px 0 0 0;font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Phone</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:6px 0 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:16px;line-height:1.5;">
+                          <a href="tel:${escapeHtml(store.phoneE164)}" style="color:#203552;text-decoration:none;border-bottom:1px solid #F3A51D;">${escapeHtml(store.phone)}</a>
+                        </td>
+                      </tr>
+                      ${mattressesRow}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:24px 40px 0 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btn-row">
+                <tr>
+                  <td class="btn" align="center" style="border-radius:999px;background:#203552;mso-padding-alt:14px 28px;">
+                    <a href="${store.mapsLink}" target="_blank" rel="noopener" style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#faf8f5;text-decoration:none;border-radius:999px;">
+                      Get directions
+                    </a>
+                  </td>
+                  <td style="width:12px;font-size:0;line-height:0;">&nbsp;</td>
+                  <td class="btn" align="center" style="border-radius:999px;border:1.5px solid #203552;mso-padding-alt:13px 28px;">
+                    <a href="tel:${escapeHtml(store.phoneE164)}" style="display:inline-block;padding:12px 26px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#203552;text-decoration:none;border-radius:999px;">
+                      Call the showroom
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:36px 40px 0 40px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;line-height:1.6;color:#203552;">
+              Running late or something came up? Reply to this email or give us a call — no problem either way.
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:14px 40px 0 40px;font-family:Georgia,'Times New Roman',serif;font-size:16px;color:#203552;">
+              — The Busby team
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:40px 40px 0 40px;">
+              <div style="height:1px;background:#e6dccd;line-height:0;font-size:0;">&nbsp;</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:20px 40px 40px 40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:#8a8174;">
+              ${escapeHtml(store.name)} · ${escapeHtml(addressText)}<br/>
+              You're receiving this because you reserved a visit at mybusby.com.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  const text = [
+    `Today's the day, ${firstName}.`,
+    '',
+    slotPretty
+      ? `We're expecting you at ${slotPretty} today in Elmhurst.`
+      : `We're expecting you in Elmhurst today.`,
+    'Wear something you can lie down in — the only way to know a mattress is to spend ten minutes on it.',
+    '',
+    'WHERE',
+    store.address.street,
+    `${store.address.city}, ${store.address.state} ${store.address.zip}`,
+    `Directions: ${store.mapsLink}`,
+    '',
+    'PHONE',
+    `${store.phone} (tel:${store.phoneE164})`,
+    payload.mattresses.length ? `\nWE'LL HAVE THESE READY\n${payload.mattresses.join(', ')}` : '',
+    '',
+    'Running late or something came up? Reply to this email or give us a call — no problem either way.',
+    '',
+    '— The Busby team',
+    '',
+    '---',
+    `${store.name} · ${addressText}`,
+    `You're receiving this because you reserved a visit at mybusby.com.`,
+  ]
+    .filter((line) => line !== '')
+    .join('\n');
+
+  return {
+    subject: slotPretty
+      ? `Today at ${slotPretty} — your Busby showroom visit.`
+      : 'Today — your Busby showroom visit.',
+    html,
+    text,
+  };
+}
+
+export async function sendUserReminderEmail(payload: ReservationPayload): Promise<void> {
+  const { subject, html, text } = renderUserReminderEmail(payload);
+  assertSent(
+    await client().emails.send({
+      from: env.EMAIL_FROM,
+      to: payload.email,
+      replyTo: env.RESERVATIONS_INBOX_EMAIL,
+      subject,
+      html,
+      text,
+    })
+  );
+}
+
 // Recipients for the internal booking notification. Prefer the DB-managed list
 // (editable at /admin/notifications); fall back to the RESERVATIONS_INBOX_EMAIL
 // env var (comma-separated) whenever the list is empty or unreadable, so alerts

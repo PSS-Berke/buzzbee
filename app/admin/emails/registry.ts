@@ -1,6 +1,7 @@
 import 'server-only';
 import {
   renderAdminReservationEmail,
+  renderUserReminderEmail,
   renderUserReservationEmail,
   renderUserSleepGuideEmail,
 } from '@/lib/email';
@@ -31,6 +32,14 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     recipient: 'Reservation submitter',
     trigger: 'POST /api/reserve',
     render: () => renderUserReservationEmail(SAMPLE_RESERVATION),
+  },
+  'user-reminder': {
+    title: 'User — day-of reminder',
+    description:
+      'Short reminder sent the morning of the visit with the time, address, and a call/directions button.',
+    recipient: 'Reservation submitter',
+    trigger: 'GET /api/cron/reminders (daily, 8am Central)',
+    render: () => renderUserReminderEmail(SAMPLE_RESERVATION),
   },
   'admin-reservation': {
     title: 'Internal — new booking notification',
