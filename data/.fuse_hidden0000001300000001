@@ -44,7 +44,7 @@ export const elmhurstStore: StoreLocation = {
   phone: '(844) 886-1640',
   phoneE164: '+18448861640',
   email: 'showroom@mybusby.com',
-  hours: 'By appointment',
+  hours: 'Open 24/7 · self-serve',
   openingHours: [
     { day: 'Monday', opens: '00:00', closes: '23:59' },
     { day: 'Tuesday', opens: '00:00', closes: '23:59' },

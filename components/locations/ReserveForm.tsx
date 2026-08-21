@@ -37,6 +37,27 @@ export default function ReserveForm() {
   const [slot, setSlot] = useState('');
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [availabilityState, setAvailabilityState] = useState<'idle' | 'loading' | 'error'>('idle');
+  // Held in a ref, not state: it is never rendered, only read at submit time.
+  const gclidRef = useRef('');
+
+  // Capture the Google Ads click id so every booking can be traced back to the
+  // exact campaign / keyword that produced it. Persisted for the session so it
+  // survives navigation away from the ad landing URL.
+  useEffect(() => {
+    const KEY = 'bb_gclid';
+    try {
+      const fromUrl = new URLSearchParams(window.location.search).get('gclid');
+      if (fromUrl) {
+        sessionStorage.setItem(KEY, fromUrl);
+        gclidRef.current = fromUrl;
+        return;
+      }
+      const stored = sessionStorage.getItem(KEY);
+      if (stored) gclidRef.current = stored;
+    } catch {
+      /* sessionStorage unavailable — attribution is best effort */
+    }
+  }, []);
 
   const fetchAvailability = async (forDate: string) => {
     if (!forDate) {
@@ -68,9 +89,10 @@ export default function ReserveForm() {
     setSlot('');
   }, [date]);
 
-  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const phoneInputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,14 +101,20 @@ export default function ReserveForm() {
 
     const name = data.get('name')?.toString().trim() || '';
     const email = data.get('email')?.toString().trim() || '';
-    const errors: { name?: string; email?: string } = {};
+    const phone = data.get('phone')?.toString().trim() || '';
+    const errors: { name?: string; email?: string; phone?: string } = {};
     if (!name) errors.name = 'Please enter your name.';
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       errors.email = 'Please enter a valid email address.';
     }
+    // Phone is required: it is the only way we can send a reminder before the
+    // visit, and no-shows were the single biggest leak in this funnel.
+    if (phone.replace(/\D/g, '').length < 10) {
+      errors.phone = 'Please enter a phone number so we can text you a reminder.';
+    }
     setFieldErrors(errors);
-    if (errors.name || errors.email) {
-      (errors.name ? nameInputRef : emailInputRef).current?.focus();
+    if (errors.name || errors.email || errors.phone) {
+      (errors.name ? nameInputRef : errors.email ? emailInputRef : phoneInputRef).current?.focus();
       return;
     }
 
@@ -96,7 +124,8 @@ export default function ReserveForm() {
     const payload = {
       name,
       email,
-      phone: data.get('phone')?.toString() || '',
+      phone,
+      gclid: gclidRef.current,
       date,
       timeSlot: slot,
       mattresses: data.getAll('mattresses').map((v) => v.toString()),
@@ -210,15 +239,28 @@ export default function ReserveForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <label className="block">
           <span className="block text-sm font-medium text-navy mb-1.5">
-            Phone <span className="text-gray-600 font-normal">(optional)</span>
+            Phone
           </span>
           <input
+            ref={phoneInputRef}
             name="phone"
             type="tel"
+            required
             inputMode="tel"
             autoComplete="tel"
+            aria-invalid={fieldErrors.phone ? true : undefined}
+            aria-describedby={fieldErrors.phone ? 'reserve-phone-error' : 'reserve-phone-hint'}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
+          {fieldErrors.phone ? (
+            <p id="reserve-phone-error" className="mt-1.5 text-sm text-red-600">
+              {fieldErrors.phone}
+            </p>
+          ) : (
+            <p id="reserve-phone-hint" className="mt-1.5 text-sm text-gray-600">
+              So we can text you a reminder before your visit.
+            </p>
+          )}
         </label>
         <label className="block">
           <span className="block text-sm font-medium text-navy mb-1.5">Preferred date</span>
