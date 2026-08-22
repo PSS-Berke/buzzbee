@@ -137,9 +137,9 @@ export default function AppointmentModal() {
                 Book a <span className="text-gold">Sleep Guide</span> in person.
               </h2>
               <p className="hidden lg:block text-gray-300 leading-relaxed mb-6">
-                The Elmhurst showroom is open 24/7 and self-serve. Pick a time and
-                one of our guides will meet you there — to walk you through the
-                lineup and help you narrow the choice.
+                The Elmhurst showroom is by appointment 9 AM–7 PM daily (and
+                staffed Mon–Thu, 10 AM–2 PM). Pick a time and one of our guides
+                will meet you there to walk you through the lineup.
               </p>
               <ul className="hidden lg:block space-y-3">
                 {perks.map((perk) => (

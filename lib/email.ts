@@ -282,7 +282,7 @@ export function renderUserSleepGuideEmail(toEmail: string): {
           <!-- Closing -->
           <tr>
             <td class="px" style="padding:0 40px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:18px;line-height:1.6;color:#203552;">
-              That's the guide. If you want to talk through any of it, hit reply — we read every message. And if you want to feel the difference, the Elmhurst showroom is open 24/7.
+              That's the guide. If you want to talk through any of it, hit reply — we read every message. And if you want to feel the difference, book a visit to the Elmhurst showroom — 9 AM–7 PM daily, or walk in Mon–Thu, 10 AM–2 PM.
             </td>
           </tr>
 
@@ -368,7 +368,7 @@ export function renderUserSleepGuideEmail(toEmail: string): {
     'In-bed readers — Edge support matters more than for anyone else.',
     '',
     "That's the guide. Reply to this email if you want to talk through any of it.",
-    'And if you want to feel the difference, the Elmhurst showroom is open 24/7: https://mybusby.com/appointment',
+    'And if you want to feel the difference, book a visit to the Elmhurst showroom — 9 AM–7 PM daily, or walk in Mon–Thu, 10 AM–2 PM: https://mybusby.com/appointment',
     '',
     '— The Busby team',
     '',

@@ -93,7 +93,7 @@ export default function AccessibilityPage() {
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-navy mb-3">Prefer to shop in person?</h2>
           <p className="text-gray-700 leading-relaxed">
-            Our Elmhurst showroom is open 24/7, and our team is happy to help by phone or to{' '}
+            Our Elmhurst showroom is staffed Mon–Thu, 10 AM–2 PM and open by appointment 9 AM–7 PM daily. Our team is happy to help by phone or to{' '}
             <Link
               href="/appointment"
               className="text-navy underline hover:text-gold-dark transition-colors"

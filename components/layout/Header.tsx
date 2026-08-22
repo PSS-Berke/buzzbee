@@ -19,8 +19,8 @@ const shopNav = {
     },
     {
       icon: DoorOpen,
-      name: 'Visit Anytime',
-      sublabel: 'Open 24/7 · self-serve showroom',
+      name: 'Visit the Showroom',
+      sublabel: 'Staffed Mon–Thu 10–2 · by appointment 9–7 daily',
       href: `/locations/${elmhurstStore.slug}`,
     },
   ],

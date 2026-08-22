@@ -3,8 +3,8 @@ import { Clock, Layers, MonitorSmartphone, Tag, Moon, CalendarCheck } from 'luci
 const tiles = [
   {
     icon: Clock,
-    title: 'Open whenever you are',
-    body: 'The showroom is unlocked 24/7. Stop in at 11 a.m. or 11 p.m. — no hours, no waiting room, no salespeople hovering.',
+    title: 'Two ways to visit',
+    body: 'Walk in Monday through Thursday, 10 AM–2 PM, when we’re staffed. Or book any day, 9 AM–7 PM, and a Sleep Guide will meet you at the door.',
   },
   {
     icon: Layers,
