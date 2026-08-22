@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { canonicalizeEmail, isValidEmail } from '@/lib/submissions';
+import { canonicalizeEmail, isValidEmail, normalizePhone } from '@/lib/submissions';
 import { elmhurstStore } from '@/data/store';
 import { insertReservation, SlotTakenError } from '@/lib/db';
 import { sendAdminReservationEmail, sendUserReservationEmail } from '@/lib/email';
@@ -113,6 +113,13 @@ export async function POST(req: NextRequest) {
     return bad('Name and a valid email are required.');
   }
 
+  // Phone is required — it's how the showroom chases no-shows and reaches
+  // someone who's running late. Stored E.164 so it's dialable as-is.
+  const normalizedPhone = normalizePhone(phone ?? '');
+  if (!normalizedPhone) {
+    return bad('Please enter a valid 10-digit US phone number.');
+  }
+
   // Date and slot are REQUIRED and validated here. They can't be optional: the
   // unique index that prevents double-booking is partial (only non-null
   // date+slot collide), so a null/invalid pair would insert an unconstrained row
@@ -136,10 +143,9 @@ export async function POST(req: NextRequest) {
     if (!isOpenSlot(date, timeSlot)) {
       return bad('That time isn’t available on the selected date. Please choose an open slot.');
     }
-  } else if (!phone || phone.replace(/\D/g, '').length < 10) {
-    // A callback request is worthless without a number to call.
-    return bad('Please enter a phone number so we can reach you.');
   }
+  // (request-visit rows carry no date/slot; the phone check above is what makes
+  // a callback request actionable.)
 
   // Stash the Google Ads click id alongside the notes. The reservations table
   // has a fixed column set, so folding it in here gives us per-lead attribution
@@ -157,7 +163,7 @@ export async function POST(req: NextRequest) {
   const record = {
     name: name.trim(),
     email: normalizedEmail,
-    phone: phone?.trim() || null,
+    phone: normalizedPhone,
     preferred_date: isRequest ? null : date ?? null,
     time_slot: isRequest ? null : timeSlot ?? null,
     mattresses: mattresses ?? [],

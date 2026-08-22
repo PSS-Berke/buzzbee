@@ -4,7 +4,12 @@ import { env } from './env';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot } from './slots';
 import { listNotificationRecipients } from './db';
-import { isValidEmail } from './submissions';
+import { formatPhone, isValidEmail } from './submissions';
+import { buildIcs, googleCalendarUrl, outlookCalendarUrl, type CalendarEvent } from './calendar';
+
+// Absolute origin for images referenced in email. Mail clients have no page
+// context, so every asset URL must be fully qualified.
+const SITE_ORIGIN = (process.env.NEXT_PUBLIC_SITE_URL || 'https://mybusby.com').replace(/\/$/, '');
 
 let _resend: Resend | null = null;
 
@@ -428,42 +433,20 @@ function formatPreferredDate(input: string | null): { full: string; short: strin
   return { full, short };
 }
 
-function googleCalendarUrl(
-  title: string,
-  locationText: string,
-  preferredDate: string | null,
-  timeSlot: string | null
-): string | null {
-  if (!preferredDate) return null;
-  const [y, m, d] = preferredDate.split('-').map(Number);
-  if (!y || !m || !d) return null;
-
-  // Default to noon if no slot specified. Block out 1 hour for the visit.
-  let startH = 12;
-  let startM = 0;
-  if (timeSlot) {
-    const [h, mn] = timeSlot.split(':').map(Number);
-    if (Number.isFinite(h) && Number.isFinite(mn)) {
-      startH = h;
-      startM = mn;
-    }
-  }
-  const endTotal = startH * 60 + startM + 60;
-  const endH = Math.floor(endTotal / 60);
-  const endM = endTotal % 60;
-
-  const pad = (n: number) => n.toString().padStart(2, '0');
-  const start = `${y}${pad(m)}${pad(d)}T${pad(startH)}${pad(startM)}00`;
-  const end = `${y}${pad(m)}${pad(d)}T${pad(endH)}${pad(endM)}00`;
-  const params = new URLSearchParams({
-    action: 'TEMPLATE',
-    text: title,
-    dates: `${start}/${end}`,
-    location: locationText,
-    details: 'Looking forward to seeing you. Reply to your confirmation email to change anything.',
-    ctz: 'America/Chicago',
-  });
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+/**
+ * The calendar event for a booking, or null when the reservation lacks a usable
+ * date/slot pair (legacy rows — the reserve route requires both now).
+ */
+function calendarEventFor(payload: ReservationPayload): CalendarEvent | null {
+  if (!payload.preferred_date || !payload.time_slot) return null;
+  return {
+    title: 'Busby showroom visit',
+    description:
+      'Looking forward to seeing you. Reply to your confirmation email to change anything.',
+    location: `${elmhurstStore.name}, ${formatAddress(elmhurstStore.address)}`,
+    date: payload.preferred_date,
+    timeSlot: payload.time_slot,
+  };
 }
 
 export function renderUserReservationEmail(payload: ReservationPayload): {
@@ -475,12 +458,9 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
   const addressText = formatAddress(store.address);
   const date = formatPreferredDate(payload.preferred_date);
   const slotPretty = payload.time_slot ? formatSlot(payload.time_slot) : null;
-  const calendarUrl = googleCalendarUrl(
-    'Busby showroom visit',
-    `${store.name}, ${addressText}`,
-    payload.preferred_date,
-    payload.time_slot
-  );
+  const calEvent = calendarEventFor(payload);
+  const googleUrl = calEvent ? googleCalendarUrl(calEvent) : null;
+  const outlookUrl = calEvent ? outlookCalendarUrl(calEvent) : null;
 
   const preheader = date
     ? `You're booked for ${date.full}${slotPretty ? ` at ${slotPretty}` : ''} — here are the details.`
@@ -518,15 +498,60 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
             </tr>`
     : '';
 
-  const calendarBtn = calendarUrl
-    ? `
-                  <td class="btn" align="center" style="border-radius:999px;background:#203552;mso-padding-alt:14px 28px;">
-                    <a href="${calendarUrl}" target="_blank" rel="noopener" style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#faf8f5;text-decoration:none;border-radius:999px;">
-                      Add to calendar
-                    </a>
+  // Add-to-calendar is the single highest-value action in this email — a booking
+  // on the customer's calendar is the one that gets shown up for. So it gets its
+  // own card above the details rather than a button sharing a row with
+  // "directions", with the provider logos to make it scannable.
+  //
+  // Logos are remote images: Outlook desktop blocks those by default, so each
+  // button must still read correctly as text alone. Hence the label carries the
+  // meaning and the logo is decorative (alt="" ), not load-bearing.
+  const calendarCard =
+    googleUrl || outlookUrl
+      ? `
+          <tr>
+            <td class="px" style="padding:28px 40px 0 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:14px;border:2px solid #F3A51D;">
+                <tr>
+                  <td style="padding:24px 24px 22px 24px;" align="center">
+                    <div style="font-family:Georgia,'Times New Roman',serif;color:#203552;font-size:18px;font-weight:700;">
+                      Put it on your calendar
+                    </div>
+                    <div style="margin-top:6px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#5a6577;font-size:14px;line-height:1.5;">
+                      One tap so it's waiting for you with a reminder.
+                    </div>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="cal-row" style="margin-top:18px;">
+                      <tr>
+                        ${
+                          googleUrl
+                            ? `<td class="cal-btn" align="center" style="border-radius:10px;border:1.5px solid #dadce0;background:#ffffff;mso-padding-alt:12px 18px;">
+                          <a href="${googleUrl}" target="_blank" rel="noopener" style="display:inline-block;padding:11px 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;color:#203552;text-decoration:none;">
+                            <img src="${SITE_ORIGIN}/email/google-calendar.png" width="20" height="20" alt="" style="vertical-align:middle;border:0;margin-right:9px;" />Google Calendar
+                          </a>
+                        </td>
+                        <td class="cal-spacer" style="width:10px;font-size:0;line-height:0;">&nbsp;</td>`
+                            : ''
+                        }
+                        ${
+                          outlookUrl
+                            ? `<td class="cal-btn" align="center" style="border-radius:10px;border:1.5px solid #dadce0;background:#ffffff;mso-padding-alt:12px 18px;">
+                          <a href="${outlookUrl}" target="_blank" rel="noopener" style="display:inline-block;padding:11px 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:600;color:#203552;text-decoration:none;">
+                            <img src="${SITE_ORIGIN}/email/outlook.png" width="20" height="20" alt="" style="vertical-align:middle;border:0;margin-right:9px;" />Outlook
+                          </a>
+                        </td>`
+                            : ''
+                        }
+                      </tr>
+                    </table>
+                    <div style="margin-top:14px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#8a8174;font-size:12.5px;line-height:1.5;">
+                      Apple Calendar or something else? Open the <strong style="color:#5a6577;">.ics</strong> file attached to this email.
+                    </div>
                   </td>
-                  <td style="width:12px;font-size:0;line-height:0;">&nbsp;</td>`
-    : '';
+                </tr>
+              </table>
+            </td>
+          </tr>`
+      : '';
 
   const html = `<!doctype html>
 <html lang="en">
@@ -547,6 +572,11 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
     .btn-spacer { display:none !important; }
     .btn-row td { display:block !important; width:100% !important; }
     .btn-row td + td { margin-top:12px !important; }
+    /* Calendar buttons stack on narrow screens; the spacer cell would otherwise
+       become a full-width empty row between them. */
+    .cal-row, .cal-row tr, .cal-btn { display:block !important; width:100% !important; }
+    .cal-btn { margin-bottom:10px !important; }
+    .cal-spacer { display:none !important; }
   }
 </style>
 </head>
@@ -576,8 +606,9 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
             </td>
           </tr>
           ${datePill}
+          ${calendarCard}
           <tr>
-            <td class="px" style="padding:32px 40px 0 40px;">
+            <td class="px" style="padding:24px 40px 0 40px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border-radius:14px;border:1px solid #e6dccd;">
                 <tr>
                   <td style="padding:28px 28px 24px 28px;">
@@ -618,12 +649,13 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
           <tr>
             <td class="px" style="padding:24px 40px 0 40px;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btn-row">
-                ${calendarBtn}
-                <td class="btn" align="center" style="border-radius:999px;border:1.5px solid #203552;mso-padding-alt:13px 28px;">
-                  <a href="${store.mapsLink}" target="_blank" rel="noopener" style="display:inline-block;padding:12px 26px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#203552;text-decoration:none;border-radius:999px;">
-                    Get directions
-                  </a>
-                </td>
+                <tr>
+                  <td class="btn" align="center" style="border-radius:999px;border:1.5px solid #203552;mso-padding-alt:13px 28px;">
+                    <a href="${store.mapsLink}" target="_blank" rel="noopener" style="display:inline-block;padding:12px 26px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#203552;text-decoration:none;border-radius:999px;">
+                      Get directions
+                    </a>
+                  </td>
+                </tr>
               </table>
             </td>
           </tr>
@@ -673,7 +705,17 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
     `PHONE`,
     `${store.phone} (tel:${store.phoneE164})`,
     payload.mattresses.length ? `\nON YOUR LIST\n${payload.mattresses.join(', ')}` : '',
-    calendarUrl ? `\nAdd to calendar: ${calendarUrl}` : '',
+    googleUrl || outlookUrl
+      ? [
+          '',
+          'PUT IT ON YOUR CALENDAR',
+          googleUrl ? `Google Calendar: ${googleUrl}` : '',
+          outlookUrl ? `Outlook: ${outlookUrl}` : '',
+          'Apple Calendar or anything else: open the .ics file attached to this email.',
+        ]
+          .filter(Boolean)
+          .join('\n')
+      : '',
     '',
     `Anything change — different time, more questions, can't make it — just reply to this email.`,
     '',
@@ -695,6 +737,12 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
 
 export async function sendUserReservationEmail(payload: ReservationPayload): Promise<void> {
   const { subject, html, text } = renderUserReservationEmail(payload);
+
+  // The .ics covers every client the two URL buttons can't — Apple Calendar,
+  // Outlook desktop, and the default calendar on both mobile platforms.
+  const calEvent = calendarEventFor(payload);
+  const ics = calEvent ? buildIcs(calEvent, `${payload.email}|${payload.preferred_date}|${payload.time_slot}`) : null;
+
   assertSent(
     await client().emails.send({
       from: env.EMAIL_FROM,
@@ -703,6 +751,17 @@ export async function sendUserReservationEmail(payload: ReservationPayload): Pro
       subject,
       html,
       text,
+      ...(ics
+        ? {
+            attachments: [
+              {
+                filename: 'busby-showroom-visit.ics',
+                content: Buffer.from(ics, 'utf8').toString('base64'),
+                contentType: 'text/calendar; charset=utf-8; method=PUBLISH',
+              },
+            ],
+          }
+        : {}),
     })
   );
 }
@@ -933,6 +992,160 @@ export async function sendUserReminderEmail(payload: ReservationPayload): Promis
   );
 }
 
+/**
+ * The final nudge, sent minutes before the visit. Deliberately the shortest
+ * template we send: it's read on a phone, probably in a car, so it carries the
+ * time, the address, and two tap targets — directions and the showroom's number
+ * — and nothing else.
+ */
+export function renderUserStartingSoonEmail(payload: ReservationPayload): {
+  subject: string;
+  html: string;
+  text: string;
+} {
+  const store = elmhurstStore;
+  const addressText = formatAddress(store.address);
+  const slotPretty = payload.time_slot ? formatSlot(payload.time_slot) : null;
+  const firstName = payload.name.trim().split(/\s+/)[0] || payload.name;
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="x-apple-disable-message-reformatting" />
+<meta name="color-scheme" content="light only" />
+<meta name="supported-color-schemes" content="light only" />
+<title>Your Busby visit starts soon</title>
+<style>
+  :root { color-scheme: light only; supported-color-schemes: light only; }
+  @media only screen and (max-width: 600px) {
+    .container { width:100% !important; }
+    .px { padding-left:24px !important; padding-right:24px !important; }
+    .h1 { font-size:30px !important; }
+    .btn-row, .btn-row tr, .btn { display:block !important; width:100% !important; }
+    .btn { margin-bottom:10px !important; }
+    .btn-spacer { display:none !important; }
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#faf8f5;">
+  <div style="display:none;visibility:hidden;mso-hide:all;height:0;width:0;overflow:hidden;font-size:1px;line-height:1px;color:#faf8f5;opacity:0;">
+    ${escapeHtml(`${store.address.street}, ${store.address.city}. See you in a few minutes.`)}
+  </div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#faf8f5;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" class="container" style="width:600px;max-width:600px;">
+          <tr>
+            <td class="px" style="padding:0 40px 8px 40px;">
+              <div style="font-family:Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:0.32em;font-size:14px;color:#203552;">BUSBY</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:28px 40px 0 40px;">
+              <h1 class="h1" style="margin:0;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:34px;line-height:1.1;color:#203552;letter-spacing:-0.01em;">
+                See you in a few minutes, ${escapeHtml(firstName)}.
+              </h1>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:20px 40px 0 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background:#F3A51D;border-radius:999px;padding:9px 18px;font-family:Georgia,'Times New Roman',serif;color:#203552;font-size:14px;font-weight:700;letter-spacing:0.1em;">
+                    ${slotPretty ? escapeHtml(`STARTS AT ${slotPretty.toUpperCase()}`) : 'STARTING SOON'}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:24px 40px 0 40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:17px;line-height:1.55;">
+              <strong>${escapeHtml(store.address.street)}</strong><br/>
+              ${escapeHtml(store.address.city)}, ${escapeHtml(store.address.state)} ${escapeHtml(store.address.zip)}
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:24px 40px 0 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btn-row">
+                <tr>
+                  <td class="btn" align="center" style="border-radius:999px;background:#203552;mso-padding-alt:14px 28px;">
+                    <a href="${store.mapsLink}" target="_blank" rel="noopener" style="display:inline-block;padding:14px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;color:#faf8f5;text-decoration:none;border-radius:999px;">
+                      Directions
+                    </a>
+                  </td>
+                  <td class="btn-spacer" style="width:12px;font-size:0;line-height:0;">&nbsp;</td>
+                  <td class="btn" align="center" style="border-radius:999px;border:1.5px solid #203552;mso-padding-alt:13px 28px;">
+                    <a href="tel:${escapeHtml(store.phoneE164)}" style="display:inline-block;padding:13px 26px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;color:#203552;text-decoration:none;border-radius:999px;">
+                      Call ${escapeHtml(store.phone)}
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:28px 40px 0 40px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:16px;line-height:1.6;color:#203552;">
+              Running behind? Give us a call — we'll hold your spot.
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:32px 40px 0 40px;">
+              <div style="height:1px;background:#e6dccd;line-height:0;font-size:0;">&nbsp;</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="px" style="padding:16px 40px 32px 40px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:#8a8174;">
+              ${escapeHtml(store.name)} · ${escapeHtml(addressText)}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
+  const text = [
+    `See you in a few minutes, ${firstName}.`,
+    '',
+    slotPretty ? `Your visit starts at ${slotPretty}.` : 'Your visit starts shortly.',
+    '',
+    store.address.street,
+    `${store.address.city}, ${store.address.state} ${store.address.zip}`,
+    `Directions: ${store.mapsLink}`,
+    `Call: ${store.phone} (tel:${store.phoneE164})`,
+    '',
+    "Running behind? Give us a call — we'll hold your spot.",
+    '',
+    '---',
+    `${store.name} · ${addressText}`,
+  ].join('\n');
+
+  return {
+    subject: slotPretty
+      ? `Starting soon — your ${slotPretty} visit at Busby.`
+      : 'Starting soon — your visit at Busby.',
+    html,
+    text,
+  };
+}
+
+export async function sendUserStartingSoonEmail(payload: ReservationPayload): Promise<void> {
+  const { subject, html, text } = renderUserStartingSoonEmail(payload);
+  assertSent(
+    await client().emails.send({
+      from: env.EMAIL_FROM,
+      to: payload.email,
+      replyTo: env.RESERVATIONS_INBOX_EMAIL,
+      subject,
+      html,
+      text,
+    })
+  );
+}
+
 // Recipients for the internal booking notification. Prefer the DB-managed list
 // (editable at /admin/notifications); fall back to the RESERVATIONS_INBOX_EMAIL
 // env var (comma-separated) whenever the list is empty or unreadable, so alerts
@@ -980,7 +1193,7 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
   if (payload.phone) {
     rows.push([
       'Phone',
-      `<a href="tel:${escapeHtml(payload.phone)}" style="color:#203552;">${escapeHtml(payload.phone)}</a>`,
+      `<a href="tel:${escapeHtml(payload.phone)}" style="color:#203552;">${escapeHtml(formatPhone(payload.phone))}</a>`,
     ]);
   }
   if (payload.mattresses.length) {
@@ -1040,7 +1253,7 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
     `When:       ${whenText}`,
     `Name:       ${payload.name}`,
     `Email:      ${payload.email}`,
-    payload.phone ? `Phone:      ${payload.phone}` : '',
+    payload.phone ? `Phone:      ${formatPhone(payload.phone)}` : '',
     payload.mattresses.length ? `Mattresses: ${payload.mattresses.join(', ')}` : '',
     payload.notes ? `Notes:      ${payload.notes}` : '',
     `Location:   ${store.name}`,

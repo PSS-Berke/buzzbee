@@ -180,6 +180,48 @@ export async function releaseReminderClaim(id: number): Promise<void> {
 }
 
 /**
+ * Claim reservations starting within the next `windowMinutes` for the final
+ * "starting soon" nudge.
+ *
+ * The timezone math deliberately runs in Postgres, not JS. `preferred_date +
+ * time_slot::time` is a naive local timestamp; `at time zone 'America/Chicago'`
+ * resolves it to a real instant using the zone rules in force on that date, so
+ * the comparison stays correct across both DST transitions without any offset
+ * arithmetic here.
+ *
+ * Lower bound is `now()` so an appointment is never nudged after it has already
+ * started, and a delayed or skipped cron run still catches it late rather than
+ * skipping it entirely.
+ *
+ * Bookings created inside `minAgeMinutes` are excluded: someone who books at
+ * 1:50 for a 2:00 slot already has the confirmation in hand, and a "starting
+ * soon" email seconds later reads as a glitch.
+ */
+export async function claimStartingSoon(
+  windowMinutes: number,
+  minAgeMinutes: number
+): Promise<ReminderClaim[]> {
+  return (await sql()`
+    update reservations
+       set final_reminder_sent_at = now()
+     where final_reminder_sent_at is null
+       and preferred_date is not null
+       and time_slot is not null
+       and created_at < now() - make_interval(mins => ${minAgeMinutes})
+       and ((preferred_date + time_slot::time) at time zone 'America/Chicago')
+             between now() and now() + make_interval(mins => ${windowMinutes})
+    returning id, name, email, phone,
+              to_char(preferred_date, 'YYYY-MM-DD') as preferred_date,
+              time_slot, mattresses, notes, source, location
+  `) as ReminderClaim[];
+}
+
+/** Undo a starting-soon claim so the next run retries that reservation. */
+export async function releaseStartingSoonClaim(id: number): Promise<void> {
+  await sql()`update reservations set final_reminder_sent_at = null where id = ${id}`;
+}
+
+/**
  * Atomic fixed-window rate-limit counter, backed by Postgres so the limit holds
  * across serverless instances (in-memory counters reset per cold start and are
  * useless on Vercel).

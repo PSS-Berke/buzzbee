@@ -36,12 +36,16 @@ const statements = [
     source         text        not null default 'reserve-elmhurst',
     location       text        not null,
     created_at     timestamptz not null default now(),
-    reminder_sent_at timestamptz
+    reminder_sent_at       timestamptz,
+    final_reminder_sent_at timestamptz
   )`,
   `create index if not exists reservations_created_at_idx on reservations (created_at desc)`,
   `create index if not exists reservations_reminder_pending_idx
      on reservations (preferred_date)
      where reminder_sent_at is null`,
+  `create index if not exists reservations_final_reminder_pending_idx
+     on reservations (preferred_date, time_slot)
+     where final_reminder_sent_at is null`,
   `create unique index if not exists reservations_date_slot_uniq
      on reservations (preferred_date, time_slot)
      where preferred_date is not null and time_slot is not null`,

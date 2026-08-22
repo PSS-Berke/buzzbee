@@ -5,7 +5,6 @@ import {
   Clock,
   MapPin,
   Phone,
-  MessageSquare,
   ArrowRight,
   CheckCircle,
   ExternalLink,
@@ -17,7 +16,7 @@ import ReserveForm from '@/components/locations/ReserveForm';
 export const metadata: Metadata = {
   title: 'Book a Free Mattress Fitting | Busby Elmhurst Showroom',
   description:
-    'Try every Busby mattress in private at our Elmhurst showroom. Visits are by appointment — text, call, or pick a time and a Sleep Guide meets you at the door.',
+    'Try every Busby mattress in private at our Elmhurst showroom. Visits are by appointment — pick a time online and a Sleep Guide meets you at the door.',
   alternates: { canonical: '/appointment' },
   openGraph: {
     title: 'Book a Free Mattress Fitting | Busby Elmhurst Showroom',
@@ -67,29 +66,18 @@ export default function AppointmentPage() {
             door, then you have the whole place to yourself to try every bed we make.
           </p>
 
-          {/* Fastest path: text or call */}
+          {/* Primary path: book online */}
           <div className="mt-8">
-            <p className="text-sm uppercase tracking-wide text-gold-light/80 mb-3">
-              Fastest way to book
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <a
-                href={`sms:${elmhurstStore.phoneE164}`}
-                className="inline-flex items-center justify-center gap-2 bg-gold text-navy font-semibold rounded-full px-7 py-3.5 hover:bg-gold-light transition-colors"
-              >
-                <MessageSquare className="w-5 h-5" />
-                Text us a time
-              </a>
-              <a
-                href={`tel:${elmhurstStore.phoneE164}`}
-                className="inline-flex items-center justify-center gap-2 border-2 border-white/30 text-white font-semibold rounded-full px-7 py-3.5 hover:bg-white/10 transition-colors"
-              >
-                <Phone className="w-5 h-5" />
-                Call {elmhurstStore.phone}
-              </a>
-            </div>
+            <a
+              href="#book"
+              className="inline-flex items-center justify-center gap-2 bg-gold text-navy font-semibold rounded-full px-8 py-4 text-lg hover:bg-gold-light transition-colors"
+            >
+              <CalendarCheck className="w-5 h-5" />
+              Book an appointment
+              <ArrowRight className="w-5 h-5" />
+            </a>
             <p className="text-sm text-gray-400 mt-3">
-              Tell us roughly when suits you and we will open up. Or pick a slot below.
+              Takes about a minute. Instant confirmation by email.
             </p>
           </div>
         </div>
@@ -99,8 +87,8 @@ export default function AppointmentPage() {
       <section className="py-16 md:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* Left half: pick a time */}
-          <div>
-            <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">Or pick a time</h2>
+          <div id="book" className="scroll-mt-28">
+            <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">Pick a time</h2>
             <p className="text-gray-600 mb-5 leading-relaxed">
               Choose a date and slot and we&rsquo;ll have a Sleep Guide waiting. You&rsquo;ll get a
               confirmation by email and a text reminder before your visit.
@@ -191,27 +179,27 @@ export default function AppointmentPage() {
         </div>
       </section>
 
-      {/* Not ready to book */}
+      {/* Final CTA */}
       <section className="py-16 border-t border-gold/10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 bg-navy/5 rounded-full px-4 py-2 text-sm text-navy mb-5">
-            <MessageSquare className="w-4 h-4 text-gold-dark" />
-            <span>Not ready to book?</span>
+            <CalendarCheck className="w-4 h-4 text-gold-dark" />
+            <span>Free, no obligation</span>
           </div>
           <h2 className="text-2xl md:text-3xl font-serif text-navy mb-3">
-            Text us a question instead.
+            Ready to try them in person?
           </h2>
           <p className="text-gray-600 mb-6 leading-relaxed">
-            Ask us anything about the beds, the trial, or what to expect. No appointment needed and
-            no one will chase you.
+            Pick a time that suits you and we&rsquo;ll have a Sleep Guide waiting. Questions first?
+            Give us a call at {elmhurstStore.phone}.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <a
-              href={`sms:${elmhurstStore.phoneE164}`}
+              href="#book"
               className="inline-flex items-center gap-2 bg-navy text-white font-semibold rounded-full px-7 py-3.5 hover:bg-navy/90 transition-colors"
             >
-              <MessageSquare className="w-5 h-5" />
-              Text {elmhurstStore.phone}
+              <CalendarCheck className="w-5 h-5" />
+              Book an appointment
             </a>
             <Link
               href={`/locations/${elmhurstStore.slug}`}

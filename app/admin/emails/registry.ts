@@ -4,6 +4,7 @@ import {
   renderUserReminderEmail,
   renderUserReservationEmail,
   renderUserSleepGuideEmail,
+  renderUserStartingSoonEmail,
 } from '@/lib/email';
 import {
   SAMPLE_RESERVATION,
@@ -40,6 +41,14 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     recipient: 'Reservation submitter',
     trigger: 'GET /api/cron/reminders (daily, 8am Central)',
     render: () => renderUserReminderEmail(SAMPLE_RESERVATION),
+  },
+  'user-starting-soon': {
+    title: 'User — starting soon (final nudge)',
+    description:
+      'Sent ~15 minutes before the appointment. Deliberately minimal: time, address, directions, and a tap-to-call button.',
+    recipient: 'Reservation submitter',
+    trigger: 'GET /api/cron/reminders-soon (every 5 min)',
+    render: () => renderUserStartingSoonEmail(SAMPLE_RESERVATION),
   },
   'admin-reservation': {
     title: 'Internal — new booking notification',

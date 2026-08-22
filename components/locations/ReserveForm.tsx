@@ -89,7 +89,11 @@ export default function ReserveForm() {
     setSlot('');
   }, [date]);
 
-  const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{
+    name?: string;
+    email?: string;
+    phone?: string;
+  }>({});
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const phoneInputRef = useRef<HTMLInputElement>(null);
@@ -107,10 +111,14 @@ export default function ReserveForm() {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       errors.email = 'Please enter a valid email address.';
     }
-    // Phone is required: it is the only way we can send a reminder before the
-    // visit, and no-shows were the single biggest leak in this funnel.
-    if (phone.replace(/\D/g, '').length < 10) {
-      errors.phone = 'Please enter a phone number so we can text you a reminder.';
+    // Mirrors normalizePhone() on the server — 10 NANP digits, optional +1.
+    const phoneDigits = phone.replace(/\D/g, '');
+    const phoneNational =
+      phoneDigits.length === 11 && phoneDigits.startsWith('1') ? phoneDigits.slice(1) : phoneDigits;
+    if (!phone) {
+      errors.phone = 'Please enter a phone number.';
+    } else if (!/^[2-9]\d{2}[2-9]\d{6}$/.test(phoneNational)) {
+      errors.phone = 'Please enter a valid 10-digit US phone number.';
     }
     setFieldErrors(errors);
     if (errors.name || errors.email || errors.phone) {
@@ -238,9 +246,7 @@ export default function ReserveForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <label className="block">
-          <span className="block text-sm font-medium text-navy mb-1.5">
-            Phone
-          </span>
+          <span className="block text-sm font-medium text-navy mb-1.5">Phone</span>
           <input
             ref={phoneInputRef}
             name="phone"
@@ -248,17 +254,14 @@ export default function ReserveForm() {
             required
             inputMode="tel"
             autoComplete="tel"
+            placeholder="(630) 555-0142"
             aria-invalid={fieldErrors.phone ? true : undefined}
-            aria-describedby={fieldErrors.phone ? 'reserve-phone-error' : 'reserve-phone-hint'}
+            aria-describedby={fieldErrors.phone ? 'reserve-phone-error' : undefined}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
-          {fieldErrors.phone ? (
+          {fieldErrors.phone && (
             <p id="reserve-phone-error" className="mt-1.5 text-sm text-red-600">
               {fieldErrors.phone}
-            </p>
-          ) : (
-            <p id="reserve-phone-hint" className="mt-1.5 text-sm text-gray-600">
-              So we can text you a reminder before your visit.
             </p>
           )}
         </label>
