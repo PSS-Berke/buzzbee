@@ -90,8 +90,9 @@ export default function AppointmentPage() {
           <div id="book" className="scroll-mt-28">
             <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">Pick a time</h2>
             <p className="text-gray-600 mb-5 leading-relaxed">
-              Choose a date and slot and we&rsquo;ll have a Sleep Guide waiting. You&rsquo;ll get a
-              confirmation by email and a text reminder before your visit.
+              Come to the showroom and try every bed, or start with fifteen minutes on video if
+              you&rsquo;d rather not make the drive yet. Either way you&rsquo;ll get a confirmation
+              by email straight away, and a reminder before your time.
             </p>
             <ReserveForm />
           </div>

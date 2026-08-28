@@ -7,6 +7,7 @@ import { SITE_URL } from '@/lib/site';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductInfo from '@/components/product/ProductInfo';
 import ProductTabs from '@/components/product/ProductTabs';
+import ProductVideo from '@/components/product/ProductVideo';
 import StudioSpecSheet from '@/components/product/StudioSpecSheet';
 import FitsAnyBed from '@/components/product/FitsAnyBed';
 import FitsAnyCrib from '@/components/product/FitsAnyCrib';
@@ -169,6 +170,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
         {/* Fits any bed / crib section */}
         {slug === 'nest' ? <FitsAnyCrib /> : <FitsAnyBed />}
       </section>
+
+      {/* Explainer video, for the beds that have one */}
+      {product.video && (
+        <ProductVideo
+          src={product.video.src}
+          poster={product.video.poster}
+          productName={product.name}
+        />
+      )}
 
       {/* FAK Cosmos charity mission */}
       {slug === 'fak-cosmos' && <FAKMission />}

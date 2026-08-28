@@ -21,13 +21,13 @@ const trustPoints = [
 const steps = [
   {
     n: '1',
-    title: 'Tell us roughly when',
-    body: 'No calendar to wrestle with. Pick a rough window and leave your number.',
+    title: 'Pick your time',
+    body: 'Choose a day and a slot. Confirmation and a calendar invite land straight away.',
   },
   {
     n: '2',
-    title: 'We text you back',
-    body: 'Usually within one business day, to agree an exact time that works for you.',
+    title: 'We get the beds ready',
+    body: 'Tell us what you want to try and they are made up and waiting when you arrive.',
   },
   {
     n: '3',
@@ -66,23 +66,26 @@ export default function BookAFittingPage() {
         />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-16 md:pt-20 md:pb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
-            {/* Left: the pitch */}
-            <div className="lg:pt-6">
-              <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-[auto_1fr] gap-6 lg:gap-x-14 lg:gap-y-8 items-start">
+            {/* Headline. First thing on every screen size. */}
+            <div className="lg:col-start-1 lg:row-start-1 lg:pt-6">
+              <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-5">
                 <MapPin className="w-4 h-4" />
                 <span>Elmhurst, IL</span>
               </div>
 
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif leading-tight mb-5">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif leading-tight mb-4">
                 Book a Free <span className="text-gold">Mattress Fitting</span>.
               </h1>
 
-              <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
+              <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
                 Our Elmhurst showroom is by appointment, so when you come the whole place is yours.
                 Try every bed we make with nobody hovering and no pressure to buy.
               </p>
+            </div>
 
+            {/* Proof. Below the form on a phone — it is reassurance, not the ask. */}
+            <div className="lg:col-start-1 lg:row-start-2 order-last lg:order-none">
               <ul className="space-y-3 mb-8">
                 {trustPoints.map((t) => {
                   const Icon = t.icon;
@@ -100,14 +103,14 @@ export default function BookAFittingPage() {
               <div className="flex flex-col sm:flex-row gap-3 text-sm">
                 <a
                   href={`tel:${elmhurstStore.phoneE164}`}
-                  className="inline-flex items-center gap-2 text-gold-light hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 py-2 text-gold-light hover:text-white transition-colors"
                 >
                   <Phone className="w-4 h-4" />
                   Prefer to call? {elmhurstStore.phone}
                 </a>
                 <a
                   href={`sms:${elmhurstStore.phoneE164}`}
-                  className="inline-flex items-center gap-2 text-gold-light hover:text-white transition-colors"
+                  className="inline-flex items-center gap-2 py-2 text-gold-light hover:text-white transition-colors"
                 >
                   <MessageSquare className="w-4 h-4" />
                   Or text us
@@ -115,14 +118,14 @@ export default function BookAFittingPage() {
               </div>
             </div>
 
-            {/* Right: the form */}
-            <div>
+            {/* The form. Second on a phone, right-hand column on desktop. */}
+            <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <div className="mb-4">
                 <p className="text-2xl md:text-3xl font-serif text-white mb-1">
                   Request your fitting
                 </p>
                 <p className="text-gray-400">
-                  Takes about twenty seconds. We&rsquo;ll do the scheduling.
+                  Takes about a minute. Pick your time and it&rsquo;s confirmed.
                 </p>
               </div>
               <FittingForm />
@@ -204,7 +207,7 @@ export default function BookAFittingPage() {
               href="#top"
               className="inline-flex items-center gap-2 bg-navy text-white font-semibold rounded-full px-8 py-4 hover:bg-navy/90 transition-colors"
             >
-              Request my fitting
+              Book my fitting
             </a>
           </div>
 

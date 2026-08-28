@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { QuizResult as QuizResultType, productDetails } from '@/lib/quiz-logic';
+import QuizEmailCapture from './QuizEmailCapture';
 
 interface QuizResultProps {
   result: QuizResultType;
@@ -95,6 +96,13 @@ export default function QuizResult({ result, onRetake }: QuizResultProps) {
           </div>
         </div>
       </div>
+
+      <QuizEmailCapture
+        productSlug={result.product}
+        productName={product.name}
+        firmness={result.recommendedFirmness}
+        headline={result.headline}
+      />
 
       <button
         onClick={onRetake}

@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { env } from './env';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot } from './slots';
+import { isVirtualSource } from './consult';
 import { listNotificationRecipients } from './db';
 import { formatPhone, isValidEmail } from './submissions';
 import { buildIcs, googleCalendarUrl, outlookCalendarUrl, type CalendarEvent } from './calendar';
@@ -389,6 +390,110 @@ export function renderUserSleepGuideEmail(toEmail: string): {
   };
 }
 
+// --- Quiz match --------------------------------------------------------------
+
+export interface QuizMatchPayload {
+  email: string;
+  productName: string;
+  productSlug: string;
+  firmness: string;
+  headline: string;
+}
+
+/**
+ * The email a quiz-taker actually asked for: their result, not a generic PDF.
+ * The quiz is the best-engaged page on the site (36s average against 3s on the
+ * gated guide), so the result IS the lead magnet — and unlike a download it
+ * points at a bed rather than a folder.
+ */
+export function renderUserQuizMatchEmail(payload: QuizMatchPayload): {
+  subject: string;
+  html: string;
+  text: string;
+  headers: Record<string, string>;
+} {
+  const unsubscribeMailto = `mailto:${env.LEADS_INBOX_EMAIL}?subject=Unsubscribe&body=Please%20remove%20${encodeURIComponent(payload.email)}%20from%20the%20list.`;
+  const productUrl = `${SITE_ORIGIN}/products/${encodeURIComponent(payload.productSlug)}?firmness=${encodeURIComponent(payload.firmness)}`;
+  const fittingUrl = `${SITE_ORIGIN}/book-a-fitting`;
+  const name = escapeHtml(payload.productName);
+  const firmness = escapeHtml(payload.firmness);
+
+  const html = `<!doctype html>
+<html><body style="margin:0;padding:0;background:#faf8f5;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your match: ${name}, ${firmness}.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#faf8f5;">
+    <tr><td align="center" style="padding:32px 16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#ffffff;border:1px solid #e6dccd;border-radius:14px;">
+        <tr><td style="padding:36px 36px 8px 36px;font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Your match</td></tr>
+        <tr><td style="padding:8px 36px 0 36px;font-family:Georgia,'Times New Roman',serif;color:#203552;font-size:28px;line-height:1.25;">${name}</td></tr>
+        <tr><td style="padding:10px 36px 0 36px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:16px;line-height:1.6;">
+          Recommended firmness: <strong>${firmness}</strong>.<br/>${escapeHtml(payload.headline)}
+        </td></tr>
+        <tr><td style="padding:26px 36px 0 36px;">
+          <a href="${productUrl}" style="display:inline-block;padding:13px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:600;color:#203552;background:#F3A51D;text-decoration:none;border-radius:999px;">See the ${name}</a>
+        </td></tr>
+        <tr><td style="padding:26px 36px 36px 36px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#5c5c5c;font-size:15px;line-height:1.6;border-top:1px solid #f0e9dd;margin-top:20px;">
+          A quiz can only get you close. If you are near Chicago we will have this one made up and
+          ready when you come in, plus the two it was closest to, so you can feel the difference.
+          <br/><br/>
+          <a href="${fittingUrl}" style="color:#203552;border-bottom:1px solid #F3A51D;text-decoration:none;">Book a free fitting</a>
+          &nbsp;·&nbsp; Or just reply to this email with a question. A person reads it.
+        </td></tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+        <tr><td style="padding:18px 36px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#8a8174;font-size:12px;line-height:1.6;">
+          You are receiving this because you took the quiz at mybusby.com.
+          <a href="${unsubscribeMailto}" style="color:#8a8174;">Unsubscribe</a>.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+
+  const text = [
+    `Your match: ${payload.productName}`,
+    '',
+    `Recommended firmness: ${payload.firmness}`,
+    payload.headline,
+    '',
+    `See it: ${productUrl}`,
+    '',
+    'A quiz can only get you close. If you are near Chicago we will have this one made up',
+    'and ready when you come in, plus the two it was closest to, so you can feel the difference.',
+    `Book a free fitting: ${fittingUrl}`,
+    '',
+    'Or just reply to this email with a question. A person reads it.',
+    '',
+    '---',
+    'You are receiving this because you took the quiz at mybusby.com.',
+    `Unsubscribe: ${unsubscribeMailto}`,
+  ].join('\n');
+
+  return {
+    subject: `Your match: ${payload.productName}.`,
+    html,
+    text,
+    headers: {
+      'List-Unsubscribe': `<${unsubscribeMailto}>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
+  };
+}
+
+export async function sendUserQuizMatchEmail(payload: QuizMatchPayload): Promise<void> {
+  const { subject, html, text, headers } = renderUserQuizMatchEmail(payload);
+  assertSent(
+    await client().emails.send({
+      from: env.EMAIL_FROM,
+      to: payload.email,
+      subject,
+      html,
+      text,
+      headers,
+    })
+  );
+}
+
 export async function sendUserSleepGuideEmail(toEmail: string): Promise<void> {
   const { subject, html, text, headers } = renderUserSleepGuideEmail(toEmail);
   assertSent(
@@ -439,6 +544,18 @@ function formatPreferredDate(input: string | null): { full: string; short: strin
  */
 function calendarEventFor(payload: ReservationPayload): CalendarEvent | null {
   if (!payload.preferred_date || !payload.time_slot) return null;
+  // Same calendar block either way, but a video call must not put the showroom
+  // address in the location field: the invitee would drive to Elmhurst.
+  if (isVirtualSource(payload.source)) {
+    return {
+      title: 'Busby video consultation',
+      description:
+        'Your join link arrives by email before the call. Reply to your confirmation email to change anything.',
+      location: 'Video call',
+      date: payload.preferred_date,
+      timeSlot: payload.time_slot,
+    };
+  }
   return {
     title: 'Busby showroom visit',
     description:
@@ -456,15 +573,20 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
 } {
   const store = elmhurstStore;
   const addressText = formatAddress(store.address);
+  // A video booking has no address and no showroom hours. Everything else about
+  // the email — the date pill, the calendar attachment, the reply-to-us line —
+  // is identical, so only the location block and the wording change.
+  const virtual = isVirtualSource(payload.source);
   const date = formatPreferredDate(payload.preferred_date);
   const slotPretty = payload.time_slot ? formatSlot(payload.time_slot) : null;
   const calEvent = calendarEventFor(payload);
   const googleUrl = calEvent ? googleCalendarUrl(calEvent) : null;
   const outlookUrl = calEvent ? outlookCalendarUrl(calEvent) : null;
 
+  const noun = virtual ? 'call' : 'visit';
   const preheader = date
     ? `You're booked for ${date.full}${slotPretty ? ` at ${slotPretty}` : ''} — here are the details.`
-    : `Your visit is booked — here are the details.`;
+    : `Your ${noun} is booked — here are the details.`;
 
   const datePill = date
     ? `
@@ -614,23 +736,31 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
                   <td style="padding:28px 28px 24px 28px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       <tr>
-                        <td style="font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Address</td>
+                        <td style="font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">${virtual ? 'How to join' : 'Address'}</td>
                       </tr>
                       <tr>
                         <td style="padding:6px 0 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:16px;line-height:1.5;">
-                          ${escapeHtml(store.address.street)}<br/>
+                          ${
+                            virtual
+                              ? `Rob will email you a link before your call. It opens in your browser, so there is nothing to download.`
+                              : `${escapeHtml(store.address.street)}<br/>
                           ${escapeHtml(store.address.city)}, ${escapeHtml(store.address.state)} ${escapeHtml(store.address.zip)}<br/>
-                          <a href="${store.mapsLink}" target="_blank" rel="noopener" style="color:#203552;text-decoration:none;border-bottom:1px solid #F3A51D;">Get directions</a>
+                          <a href="${store.mapsLink}" target="_blank" rel="noopener" style="color:#203552;text-decoration:none;border-bottom:1px solid #F3A51D;">Get directions</a>`
+                          }
                         </td>
                       </tr>
-                      <tr>
+                      ${
+                        virtual
+                          ? ''
+                          : `<tr>
                         <td style="padding:18px 0 0 0;font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Hours</td>
                       </tr>
                       <tr>
                         <td style="padding:6px 0 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:16px;line-height:1.5;">
                           ${escapeHtml(store.hours)}
                         </td>
-                      </tr>
+                      </tr>`
+                      }
                       <tr>
                         <td style="padding:18px 0 0 0;font-family:Georgia,'Times New Roman',serif;color:#D4792C;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Phone</td>
                       </tr>
@@ -692,15 +822,23 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
     '',
     date
       ? `You're booked for ${date.full}${slotPretty ? ` at ${slotPretty}` : ''}.`
-      : `Your visit is booked.`,
+      : `Your ${noun} is booked.`,
     '',
-    'ADDRESS',
-    store.address.street,
-    `${store.address.city}, ${store.address.state} ${store.address.zip}`,
-    `Directions: ${store.mapsLink}`,
-    '',
-    `HOURS`,
-    store.hours,
+    ...(virtual
+      ? [
+          'HOW TO JOIN',
+          'Rob will email you a link before your call. It opens in your browser,',
+          'so there is nothing to download.',
+        ]
+      : [
+          'ADDRESS',
+          store.address.street,
+          `${store.address.city}, ${store.address.state} ${store.address.zip}`,
+          `Directions: ${store.mapsLink}`,
+          '',
+          `HOURS`,
+          store.hours,
+        ]),
     '',
     `PHONE`,
     `${store.phone} (tel:${store.phoneE164})`,
@@ -729,7 +867,7 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
     .join('\n');
 
   return {
-    subject: 'Your Busby showroom visit is booked.',
+    subject: virtual ? 'Your Busby video call is booked.' : 'Your Busby showroom visit is booked.',
     html,
     text,
   };
@@ -1178,11 +1316,17 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
     ? `${date.full}${slotPretty ? ` at ${slotPretty}` : ''}`
     : (slotPretty ?? 'No date specified');
 
-  const subject = `New booking — ${payload.name}${date ? `, ${date.full}` : ''}${
-    slotPretty ? ` at ${slotPretty}` : ''
-  }`;
+  // A video booking needs a human action the in-person one doesn't: somebody has
+  // to send the join link. Put it in the subject so it survives a phone's
+  // notification preview, and at the top of the body so it can't be scrolled past.
+  const virtual = isVirtualSource(payload.source);
+
+  const subject = `${virtual ? 'VIDEO CALL — send join link — ' : 'New booking — '}${payload.name}${
+    date ? `, ${date.full}` : ''
+  }${slotPretty ? ` at ${slotPretty}` : ''}`;
 
   const rows: Array<[string, string]> = [
+    ['Type', virtual ? '<strong>Video call — send the join link</strong>' : 'In-person fitting'],
     ['When', escapeHtml(whenText)],
     ['Name', escapeHtml(payload.name)],
     [
@@ -1248,8 +1392,9 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
 </html>`;
 
   const text = [
-    'New showroom booking',
+    virtual ? 'NEW VIDEO CALL — someone must send the join link' : 'New showroom booking',
     '',
+    `Type:       ${virtual ? 'Video call' : 'In-person fitting'}`,
     `When:       ${whenText}`,
     `Name:       ${payload.name}`,
     `Email:      ${payload.email}`,

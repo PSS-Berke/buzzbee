@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot, isValidSlot } from '@/lib/slots';
+import { parseMode } from '@/lib/consult';
+import { Video } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Your consultation is booked | Busby Elmhurst Showroom',
@@ -33,22 +35,32 @@ function formatBookedDate(iso: string): string | null {
   });
 }
 
-const nextSteps = [
+const inPersonSteps = [
   'A confirmation email is on its way with your time and the showroom address.',
-  'Your Sleep Guide will meet you at the door — the showroom is self-serve, so they come specifically for you.',
+  'Your Sleep Guide will meet you at the door and the showroom is yours. No other customers, nobody hovering.',
   'Nothing to bring. Wear what you would sleep in if you like; you will be lying down.',
   'Need to move it? Reply to the confirmation email or call the showroom.',
+];
+
+const virtualSteps = [
+  'A confirmation email is on its way with your time.',
+  'Rob will email you a link to join before your call. Nothing to install.',
+  'Bring your questions. How you sleep, what hurts, what you have already tried.',
+  'If you want to feel the beds afterwards, you can book a visit at the end of the call.',
+  'Need to move it? Reply to the confirmation email or call us.',
 ];
 
 export default async function AppointmentConfirmedPage({
   searchParams,
 }: {
-  searchParams: Promise<{ date?: string; slot?: string }>;
+  searchParams: Promise<{ date?: string; slot?: string; mode?: string }>;
 }) {
-  const { date, slot } = await searchParams;
+  const { date, slot, mode } = await searchParams;
 
   const prettyDate = date ? formatBookedDate(date) : null;
   const prettySlot = slot && isValidSlot(slot) ? formatSlot(slot) : null;
+  const isVirtual = parseMode(mode) === 'virtual';
+  const nextSteps = isVirtual ? virtualSteps : inPersonSteps;
 
   return (
     <div className="min-h-screen bg-[#faf8f5] linen-texture relative">
@@ -86,14 +98,36 @@ export default async function AppointmentConfirmedPage({
               </>
             ) : (
               <>
-                Your consultation is confirmed. A confirmation is on its way to your inbox with the
-                details.
+                Your {isVirtual ? 'call' : 'visit'} is confirmed. A confirmation is on its way to
+                your inbox with the details.
               </>
             )}
           </p>
         </div>
 
-        {/* ── Where to go ── */}
+        {/* ── Where to go / how to join ── */}
+        {isVirtual ? (
+          <div className="border-2 border-gold/20 rounded-3xl bg-white shadow-sm shadow-gold/5 p-8 mb-8">
+            <h2 className="text-xl font-serif text-navy mb-6">How to join</h2>
+            <div className="flex items-start gap-4">
+              <Video className="w-5 h-5 text-gold-dark mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-semibold text-navy text-sm mb-1">A link is coming by email</p>
+                <p className="text-gray-600 text-sm">
+                  Rob sends it before your call. It opens in your browser, so there is nothing to
+                  download and nothing to set up. If it has not arrived an hour beforehand, email{' '}
+                  <a
+                    href={`mailto:${elmhurstStore.email}`}
+                    className="text-gold-dark underline underline-offset-2 hover:text-navy transition-colors"
+                  >
+                    {elmhurstStore.email}
+                  </a>{' '}
+                  and we will resend it.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
         <div className="border-2 border-gold/20 rounded-3xl bg-white shadow-sm shadow-gold/5 p-8 mb-8">
           <h2 className="text-xl font-serif text-navy mb-6">Where to go</h2>
 
@@ -126,6 +160,7 @@ export default async function AppointmentConfirmedPage({
             </div>
           </div>
         </div>
+        )}
 
         {/* ── What happens next ── */}
         <div className="border-2 border-gold/20 rounded-3xl bg-white shadow-sm shadow-gold/5 p-8 mb-8">

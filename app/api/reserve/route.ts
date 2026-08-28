@@ -94,13 +94,14 @@ export async function POST(req: NextRequest) {
   const { name, email, phone, date, timeSlot, mattresses, notes, source, gclid, preferredTime } =
     payload;
 
-  // Two ways in. 'slot' bookings claim a specific date+time and are guarded by
-  // the partial unique index. 'request-visit' leads come from the paid landing
-  // page — they give us a name, phone and a rough preference, and a human calls
-  // back to agree a time. Those rows deliberately carry a null date/slot, which
-  // the schema allows. The flood risk that originally forced date+slot to be
-  // required is now covered by lib/rate-limit.ts plus the honeypot above.
-  const isRequest = source === 'request-visit';
+  // Every booking claims a specific date+time and is guarded by the partial
+  // unique index, whichever page it came from. `source` only records which page
+  // that was, for attribution.
+  // Every booking now claims a real date + slot, whichever page it came from —
+  // showroom, paid landing page or the national video consult. That is what
+  // makes the confirmation carry a calendar invite and the reminder emails fire
+  // without a human in the loop. Historical 'request-visit' rows still hold a
+  // null date/slot; the partial unique index tolerates them.
   const normalizedEmail = email?.trim().toLowerCase() ?? '';
 
   // Invalid input → 400 (JSON) or back to the page with an error flag (no-JS form).
@@ -124,28 +125,24 @@ export async function POST(req: NextRequest) {
   // unique index that prevents double-booking is partial (only non-null
   // date+slot collide), so a null/invalid pair would insert an unconstrained row
   // on every request — previously an unlimited booking + confirmation-email flood.
-  if (!isRequest) {
-    if (!date || !DATE_RE.test(date) || !isRealDate(date)) {
-      return bad('Please choose a valid date.');
-    }
-    if (date < chicagoToday()) {
-      return bad('Please choose a date that is not in the past.');
-    }
-    if (date > latestBookingDate()) {
-      return bad(`Please choose a date within the next ${MAX_BOOKING_DAYS_AHEAD} days.`);
-    }
-    if (!isValidSlot(timeSlot)) {
-      return bad('Please choose a valid time slot.');
-    }
-    // The slot must also be one the showroom is open for on that date (schedule
-    // layer, separate from double-booking). Guards against stale forms and direct
-    // POSTs to a closed time.
-    if (!isOpenSlot(date, timeSlot)) {
-      return bad('That time isn’t available on the selected date. Please choose an open slot.');
-    }
+  if (!date || !DATE_RE.test(date) || !isRealDate(date)) {
+    return bad('Please choose a valid date.');
   }
-  // (request-visit rows carry no date/slot; the phone check above is what makes
-  // a callback request actionable.)
+  if (date < chicagoToday()) {
+    return bad('Please choose a date that is not in the past.');
+  }
+  if (date > latestBookingDate()) {
+    return bad(`Please choose a date within the next ${MAX_BOOKING_DAYS_AHEAD} days.`);
+  }
+  if (!isValidSlot(timeSlot)) {
+    return bad('Please choose a valid time slot.');
+  }
+  // The slot must also be one the showroom is open for on that date (schedule
+  // layer, separate from double-booking). Guards against stale forms, direct
+  // POSTs to a closed time, and dates closed after someone loaded the page.
+  if (!isOpenSlot(date, timeSlot)) {
+    return bad('That time isn’t available on the selected date. Please choose an open slot.');
+  }
 
   // Stash the Google Ads click id alongside the notes. The reservations table
   // has a fixed column set, so folding it in here gives us per-lead attribution
@@ -164,8 +161,8 @@ export async function POST(req: NextRequest) {
     name: name.trim(),
     email: normalizedEmail,
     phone: normalizedPhone,
-    preferred_date: isRequest ? null : date ?? null,
-    time_slot: isRequest ? null : timeSlot ?? null,
+    preferred_date: date,
+    time_slot: timeSlot,
     mattresses: mattresses ?? [],
     notes: notesWithAttribution || null,
     source: source || 'reserve-elmhurst',

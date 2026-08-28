@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { localISOPlusDays, todayLocalISO, useAvailability } from '@/hooks/useAvailability';
 
 declare global {
   interface Window {
@@ -10,16 +12,6 @@ declare global {
 }
 
 type Status = 'idle' | 'submitting' | 'error';
-
-// Rough windows instead of a calendar. A cold visitor will tap a chip; far
-// fewer will commit to an exact date and slot before they have spoken to anyone.
-const TIME_WINDOWS = [
-  'As soon as possible',
-  'Weekday mornings',
-  'Weekday evenings',
-  'Saturday',
-  'Sunday',
-];
 
 interface FieldErrors {
   name?: string;
@@ -30,7 +22,9 @@ interface FieldErrors {
 export default function FittingForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const [window_, setWindow_] = useState<string>(TIME_WINDOWS[0]);
+  const [date, setDate] = useState('');
+  const [slot, setSlot] = useState('');
+  const { openSlots, booked, state: availability, refresh } = useAvailability(date);
   // Held in a ref, not state: it is never rendered, only read at submit time.
   const gclidRef = useRef('');
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -86,10 +80,11 @@ export default function FittingForm() {
       name,
       email,
       phone,
-      preferredTime: window_,
+      date,
+      timeSlot: slot,
       notes: data.get('notes')?.toString() || '',
       bb_check: data.get('bb_check')?.toString() || '',
-      source: 'request-visit',
+      source: 'book-a-fitting',
       gclid: gclidRef.current,
     };
 
@@ -99,18 +94,27 @@ export default function FittingForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const json = (await res.json()) as { ok: boolean; error?: string };
+      const json = (await res.json()) as { ok: boolean; error?: string; code?: string };
       if (!json.ok) {
+        if (res.status === 409 || json.code === 'slot_taken') {
+          // Someone booked it between page load and submit. Refresh so the
+          // picker greys it out, and make the visitor choose again.
+          await refresh(date);
+          setSlot('');
+        }
         setStatus('error');
         setErrorMsg(
-          json.error || 'Something went wrong on our end. Try once more, or call (844) 886-1640.'
+          res.status === 409 || json.code === 'slot_taken'
+            ? 'That time was just taken. Your selection was cleared, please pick another.'
+            : json.error || 'Something went wrong on our end. Try once more, or call (844) 886-1640.'
         );
         return;
       }
       window.gtag?.('event', 'fitting_request_submit');
       // Full page load, not a client-side push, so gtag.js re-runs and the
       // URL-based Google Ads conversion on /appointment/confirmed actually fires.
-      globalThis.location.assign('/appointment/confirmed');
+      const params = new URLSearchParams({ date, slot });
+      globalThis.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
       setErrorMsg('We couldn’t reach the server. Try once more, or call (844) 886-1640.');
@@ -180,7 +184,7 @@ export default function FittingForm() {
             </p>
           ) : (
             <p id="fit-phone-hint" className="mt-1.5 text-xs text-gray-600">
-              We text to confirm your time.
+              So we can reach you if plans change.
             </p>
           )}
         </div>
@@ -208,30 +212,69 @@ export default function FittingForm() {
         </div>
       </div>
 
+      <div>
+        <label htmlFor="fit-date" className="block text-sm font-medium text-navy mb-1.5">
+          Pick a day
+        </label>
+        <input
+          id="fit-date"
+          name="date"
+          type="date"
+          required
+          min={todayLocalISO()}
+          max={localISOPlusDays(MAX_BOOKING_DAYS_AHEAD)}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className={inputClass}
+        />
+      </div>
+
       <fieldset>
-        <legend className="block text-sm font-medium text-navy mb-2">
-          When suits you best?
-        </legend>
-        <div className="flex flex-wrap gap-2">
-          {TIME_WINDOWS.map((w) => {
-            const selected = window_ === w;
-            return (
-              <button
-                key={w}
-                type="button"
-                onClick={() => setWindow_(w)}
-                aria-pressed={selected}
-                className={`px-4 py-2.5 rounded-full text-sm font-medium border-2 transition-colors ${
-                  selected
-                    ? 'bg-navy text-white border-navy'
-                    : 'bg-white text-navy border-gray-200 hover:border-gold'
-                }`}
-              >
-                {w}
-              </button>
-            );
-          })}
-        </div>
+        <legend className="block text-sm font-medium text-navy mb-2">Pick a time</legend>
+
+        {!date && <p className="text-sm text-gray-600">Choose a day above to see open times.</p>}
+        {date && availability === 'loading' && (
+          <p className="text-sm text-gray-600">Loading times…</p>
+        )}
+        {date && availability === 'error' && openSlots.length > 0 && (
+          <p className="text-sm text-red-600">
+            Couldn&rsquo;t load availability. Pick a time anyway and we&rsquo;ll confirm by email if
+            there&rsquo;s a clash.
+          </p>
+        )}
+        {date && availability !== 'loading' && openSlots.length === 0 && (
+          <p className="text-sm text-gray-600">
+            The showroom is closed that day. Please choose another.
+          </p>
+        )}
+
+        {date && openSlots.length > 0 && (
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            {openSlots.map((s) => {
+              const taken = booked.includes(s);
+              const selected = slot === s;
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  disabled={taken}
+                  aria-pressed={selected}
+                  onClick={() => setSlot(s)}
+                  className={[
+                    'min-h-11 px-3 py-2.5 rounded-full border-2 text-sm transition-colors',
+                    taken
+                      ? 'border-gray-100 bg-gray-50 text-gray-300 line-through cursor-not-allowed'
+                      : selected
+                        ? 'bg-navy border-navy text-white'
+                        : 'border-gray-200 text-gray-700 hover:border-navy',
+                  ].join(' ')}
+                >
+                  {formatSlot(s)}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </fieldset>
 
       <div>
@@ -256,15 +299,22 @@ export default function FittingForm() {
 
       <button
         type="submit"
-        disabled={status === 'submitting'}
-        className="w-full inline-flex items-center justify-center gap-2 bg-gold text-navy font-semibold rounded-full px-8 py-4 text-lg hover:bg-gold-light transition-colors disabled:opacity-60"
+        disabled={status === 'submitting' || !date || !slot}
+        className="w-full inline-flex items-center justify-center gap-2 bg-gold text-navy font-semibold rounded-full px-8 py-4 text-lg hover:bg-gold-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {status === 'submitting' && <Loader2 className="w-5 h-5 animate-spin" />}
-        {status === 'submitting' ? 'Sending…' : 'Request my fitting'}
+        {status === 'submitting'
+          ? 'Sending…'
+          : !date
+            ? 'Pick a day first'
+            : !slot
+              ? 'Pick a time'
+              : 'Book my fitting'}
       </button>
 
       <p className="text-xs text-gray-600 text-center leading-relaxed">
-        No cost, no obligation. We&rsquo;ll text you within one business day to lock in a time.
+        Free, no obligation. You&rsquo;ll get a confirmation email with a calendar invite straight
+        away.
       </p>
     </form>
   );

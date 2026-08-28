@@ -1,9 +1,10 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, Store, Video } from 'lucide-react';
 import { formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
+import { type ConsultMode, SOURCE_IN_PERSON, SOURCE_VIRTUAL } from '@/lib/consult';
 
 declare global {
   interface Window {
@@ -12,6 +13,26 @@ declare global {
 }
 
 const mattressOptions = ['Dream', 'Slumber', 'Nod', 'Doze', 'Not sure yet'];
+
+const MODES: {
+  value: ConsultMode;
+  label: string;
+  blurb: string;
+  icon: typeof Store;
+}[] = [
+  {
+    value: 'in-person',
+    label: 'Come to the showroom',
+    blurb: 'Lie on every bed. The place is yours for the hour.',
+    icon: Store,
+  },
+  {
+    value: 'virtual',
+    label: 'Talk by video first',
+    blurb: 'Fifteen minutes with Rob. No drive, no commitment.',
+    icon: Video,
+  },
+];
 
 // No 'success' state — a booking redirects to /appointment/confirmed, so the
 // form stays in 'submitting' until the browser leaves the page.
@@ -31,6 +52,11 @@ function localISOPlusDays(days: number): string {
 }
 
 export default function ReserveForm() {
+  // In-person is the default: the showroom is the thing we actually have, and
+  // walking in is what has produced sales. Video is the lower-friction fallback
+  // for someone who won't commit to a drive.
+  const [mode, setMode] = useState<ConsultMode>('in-person');
+  const isVirtual = mode === 'virtual';
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const [date, setDate] = useState('');
@@ -139,7 +165,7 @@ export default function ReserveForm() {
       mattresses: data.getAll('mattresses').map((v) => v.toString()),
       notes: data.get('notes')?.toString() || '',
       bb_check: data.get('bb_check')?.toString() || '',
-      source: 'reserve-elmhurst',
+      source: isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON,
     };
 
     try {
@@ -165,13 +191,17 @@ export default function ReserveForm() {
         );
         return;
       }
-      window.gtag?.('event', 'store_reserve_submit');
+      window.gtag?.('event', isVirtual ? 'virtual_consult_submit' : 'store_reserve_submit');
       // Full page load (not router.push) so gtag.js re-runs and fires a page_view
       // for /appointment/confirmed. The tag only configures on initial document
       // load, so a client-side navigation would leave the Google Ads URL-based
       // conversion trigger unfired. Date and slot ride along to personalise the
       // page; email deliberately does not — it is PII and would land in GA.
-      const params = new URLSearchParams({ date: payload.date, slot: payload.timeSlot });
+      const params = new URLSearchParams({
+        date: payload.date,
+        slot: payload.timeSlot,
+        mode,
+      });
       window.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
@@ -195,7 +225,7 @@ export default function ReserveForm() {
       aria-live="polite"
       noValidate
     >
-      <input type="hidden" name="source" value="reserve-elmhurst" />
+      <input type="hidden" name="source" value={isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON} />
       <input
         type="checkbox"
         name="bb_check"
@@ -203,6 +233,44 @@ export default function ReserveForm() {
         aria-hidden="true"
         style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
       />
+
+      <fieldset>
+        <legend className="block text-sm font-medium text-navy mb-2">
+          How would you like to do this?
+        </legend>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {MODES.map((m) => {
+            const selected = mode === m.value;
+            return (
+              <button
+                key={m.value}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setMode(m.value)}
+                className={[
+                  'min-h-11 text-left rounded-xl border-2 px-4 py-3 transition-colors',
+                  selected
+                    ? 'border-navy bg-navy/[0.03]'
+                    : 'border-gray-200 hover:border-navy/40',
+                ].join(' ')}
+              >
+                <span className="flex items-center gap-2 text-sm font-semibold text-navy">
+                  <m.icon className="w-4 h-4 text-gold-dark" aria-hidden="true" />
+                  {m.label}
+                </span>
+                <span className="mt-1 block text-xs leading-relaxed text-gray-600">{m.blurb}</span>
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      {isVirtual && (
+        <p className="text-xs leading-relaxed text-gray-600">
+          Rob will email you a link to join before your call. If you decide you want to feel the
+          beds afterwards, you can book a visit then.
+        </p>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <label className="block">
@@ -311,7 +379,7 @@ export default function ReserveForm() {
                   aria-pressed={selected}
                   onClick={() => setSlot(s)}
                   className={[
-                    'px-3 py-2 rounded-full border-2 text-sm transition-colors',
+                    'min-h-11 px-3 py-2.5 rounded-full border-2 text-sm transition-colors',
                     taken
                       ? 'border-gray-100 bg-gray-50 text-gray-300 line-through cursor-not-allowed'
                       : selected
@@ -329,13 +397,13 @@ export default function ReserveForm() {
 
       <fieldset>
         <legend className="block text-sm font-medium text-navy mb-2">
-          Mattresses you’d like to try
+          {isVirtual ? 'Mattresses you’d like to talk through' : 'Mattresses you’d like to try'}
         </legend>
         <div className="flex flex-wrap gap-2">
           {mattressOptions.map((m) => (
             <label
               key={m}
-              className="inline-flex cursor-pointer items-center gap-1.5 px-4 py-2 rounded-full border-2 border-gray-200 text-sm text-gray-700 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold has-[:checked]:text-navy has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-navy has-[:focus-visible]:ring-offset-2"
+              className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 px-4 py-2.5 rounded-full border-2 border-gray-200 text-sm text-gray-700 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold has-[:checked]:text-navy has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-navy has-[:focus-visible]:ring-offset-2"
             >
               <input type="checkbox" name="mattresses" value={m} className="peer sr-only" />
               <Check className="hidden w-4 h-4 peer-checked:inline-block" aria-hidden="true" />
@@ -371,7 +439,15 @@ export default function ReserveForm() {
         disabled={!canSubmit}
         className="w-full bg-gold hover:bg-gold-light disabled:bg-gold/60 disabled:cursor-not-allowed text-navy font-semibold px-8 py-4 rounded-full transition-colors"
       >
-        {status === 'submitting' ? 'Sending…' : !date ? 'Pick a date first' : !slot ? 'Pick a time' : 'Reserve my visit'}
+        {status === 'submitting'
+          ? 'Sending…'
+          : !date
+            ? 'Pick a date first'
+            : !slot
+              ? 'Pick a time'
+              : isVirtual
+                ? 'Book my video call'
+                : 'Reserve my visit'}
       </button>
     </form>
   );

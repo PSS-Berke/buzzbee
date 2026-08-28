@@ -58,6 +58,8 @@ export interface Product {
   bestFor: string[];
   components: ComponentDetail[];
   materials: Material[];
+  /** Product explainer video. Optional — only some beds have one shot. */
+  video?: { src: string; poster: string };
 }
 
 export type ProductLine = 'artisan' | 'studio';
@@ -375,6 +377,10 @@ export const homeLineProducts: Product[] = [
     images: [
       '/images/products/studio/studio-10.webp',
     ],
+    video: {
+      src: '/Videos/studio-10-explainer.mp4',
+      poster: '/Videos/studio-10-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 848, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 898, inStock: true },
@@ -425,6 +431,10 @@ export const homeLineProducts: Product[] = [
     images: [
       '/images/products/studio/studio-12.webp',
     ],
+    video: {
+      src: '/Videos/studio-12-explainer.mp4',
+      poster: '/Videos/studio-12-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1348, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 1548, inStock: true },
