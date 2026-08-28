@@ -10,8 +10,17 @@
 
 import { ALL_SLOTS } from '@/lib/slots';
 
+const CLOSED: readonly string[] = [];
+
 // Keyed by YYYY-MM-DD in the showroom's local calendar.
-const WEEK_OVERRIDE: Record<string, readonly string[]> = {};
+// Entries in the past are harmless (the form's min date hides them) but clean
+// them out when rolling forward so this stays readable.
+const WEEK_OVERRIDE: Record<string, readonly string[]> = {
+  // Weekend of Aug 29–30, 2026: showroom closed, no appointments (per Robert).
+  // No reservations existed on these dates when they were closed.
+  '2026-08-29': CLOSED, // Sat
+  '2026-08-30': CLOSED, // Sun
+};
 
 /** Slots offered on `date` (YYYY-MM-DD). Dates with no override get all slots. */
 export function openSlotsForDate(date: string): readonly string[] {

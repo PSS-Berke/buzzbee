@@ -4,6 +4,8 @@ export interface Announcement {
   version: number;
   copy: string;
   href: string;
+  /** Last day (YYYY-MM-DD, showroom local) the notice shows. Omit for evergreen. */
+  until?: string;
 }
 
 const phaseCopy: Record<LaunchPhase, (city: string, date: string | null) => string> = {
@@ -31,3 +33,22 @@ export const announcement: Announcement = {
   ),
   href: `/locations/${elmhurstStore.slug}`,
 };
+
+// Temporary notice. While `until` hasn't passed it replaces the evergreen pill
+// above; afterwards the site falls back to `announcement` on its own. Keep the
+// dates in sync with WEEK_OVERRIDE in lib/availability.ts, and bump `version`
+// so people who dismissed the previous pill see this one.
+export const temporaryNotice: Announcement | null = {
+  version: 3,
+  copy: 'Showroom closed Sat–Sun, Aug 29–30 · Book a weekday visit →',
+  href: '/appointment',
+  until: '2026-08-30',
+};
+
+/** The announcement to show on `todayISO` (YYYY-MM-DD, local). */
+export function activeAnnouncement(todayISO: string): Announcement {
+  if (temporaryNotice && (!temporaryNotice.until || todayISO <= temporaryNotice.until)) {
+    return temporaryNotice;
+  }
+  return announcement;
+}

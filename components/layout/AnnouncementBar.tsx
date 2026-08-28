@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { X, ArrowRight } from 'lucide-react';
-import { announcement } from '@/data/announcements';
+import { activeAnnouncement, announcement as defaultAnnouncement, type Announcement } from '@/data/announcements';
 
 const STORAGE_KEY = 'busby-announcement-dismissed';
 const DISMISS_DAYS = 7;
@@ -19,12 +19,19 @@ export default function AnnouncementBar() {
   const pathname = usePathname();
   const [hidden, setHidden] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [announcement, setAnnouncement] = useState<Announcement>(defaultAnnouncement);
 
   useEffect(() => {
     // Hydration-safe reveal: localStorage is only readable client-side, so the
     // initial render must stay hidden and flip in this mount effect.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
+    // Resolve which notice applies using the visitor's local date. Done here
+    // rather than at module scope so server and client can't disagree.
+    const now = new Date();
+    const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const active = activeAnnouncement(todayISO);
+    setAnnouncement(active);
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (!raw) {
@@ -32,7 +39,7 @@ export default function AnnouncementBar() {
         return;
       }
       const { v, until } = JSON.parse(raw) as { v: number; until: number };
-      if (v !== announcement.version || Date.now() > until) {
+      if (v !== active.version || Date.now() > until) {
         window.localStorage.removeItem(STORAGE_KEY);
         setHidden(false);
         return;
