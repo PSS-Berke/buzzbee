@@ -33,7 +33,9 @@ const bedTypes = [
 
 export default function FitsAnyBed() {
   return (
-    <section className="mt-4 py-16 md:py-20 bg-[#f5f7f9]">
+    // overflow-x-clip: the scaled-up adjustable-base image is wider than a
+    // phone screen and would otherwise make the whole page scroll sideways
+    <section className="mt-4 py-16 md:py-20 bg-[#f5f7f9] overflow-x-clip">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 md:mb-16">

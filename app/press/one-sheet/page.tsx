@@ -1,11 +1,28 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useState, type CSSProperties } from 'react';
 import './print.css';
 
+const SHEET_WIDTH_PX = 816; // 8.5in
+const WRAP_GUTTER_PX = 32;
+
 export default function OneSheetPage() {
+  // Shrink the letter-size preview to fit narrow screens; print is unaffected
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const fit = () =>
+      setScale(Math.min(1, (window.innerWidth - WRAP_GUTTER_PX) / SHEET_WIDTH_PX));
+    fit();
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, []);
+
   return (
-    <div className="os-screen-wrapper">
+    <div
+      className="os-screen-wrapper"
+      style={{ '--os-scale': scale } as CSSProperties}
+    >
       {/* ── Screen-only toolbar ── */}
       <div className="os-toolbar">
         <div>
@@ -30,7 +47,7 @@ export default function OneSheetPage() {
 
       {/* ── Document wrapper ── */}
       <div className="os-doc-wrap">
-        <div className="one-sheet">
+        <div className="one-sheet os-fit">
 
           {/* ══ 1. Top bar ══ */}
           <div

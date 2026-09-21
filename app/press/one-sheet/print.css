@@ -24,7 +24,11 @@
 .os-doc-wrap {
   padding: 32px 16px 48px;
   display: flex;
-  justify-content: center;
+  /* safe: never push the sheet's left edge off-screen; clip: the sheet must
+     not widen the mobile layout viewport (the fit-to-screen scale is
+     measured from it) */
+  justify-content: safe center;
+  overflow-x: clip;
   width: 100%;
   box-sizing: border-box;
 }
@@ -40,6 +44,12 @@
   overflow: hidden;
   font-family: var(--font-lato), system-ui, -apple-system, sans-serif;
   flex-shrink: 0;
+}
+
+@media screen {
+  .os-fit {
+    zoom: var(--os-scale, 1);
+  }
 }
 
 /* ── Print ── */

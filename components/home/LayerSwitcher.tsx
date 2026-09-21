@@ -10,11 +10,13 @@ function LayerVisualization({
   layers,
   svgHeights,
   svgLabels,
+  isMobile,
 }: {
   activeIndex: number;
   layers: MattressLayer[];
   svgHeights: number[];
   svgLabels: string[];
+  isMobile: boolean;
 }) {
   const layer = layers[activeIndex];
 
@@ -29,7 +31,7 @@ function LayerVisualization({
   const totalHeight = currentY - GAP;
 
   return (
-    <div className="relative flex flex-col items-center justify-center p-8 lg:p-12 h-full">
+    <div className="relative flex flex-col items-center justify-center px-4 py-3 sm:p-8 lg:p-12 h-full">
       {/* Ghost layer number watermark */}
       <div
         aria-hidden="true"
@@ -47,7 +49,11 @@ function LayerVisualization({
         {/* SVG Mattress Cross-Section */}
         <svg
           viewBox={`0 0 320 ${totalHeight}`}
-          className="w-full"
+          // Taller diagrams (Artisan hybrids) scale down to fit the phone
+          // panel instead of pushing the stat callout out of view; on very
+          // short screens the diagram drops out and the stat carries it.
+          className="w-full max-lg:[@media(max-height:640px)]:hidden"
+          style={isMobile ? { maxHeight: 'clamp(80px, 100svh - 600px, 22svh)' } : undefined}
           role="img"
           aria-label={`Mattress layer diagram — ${layer.title} highlighted`}
         >
@@ -104,11 +110,11 @@ function LayerVisualization({
         </svg>
 
         {/* Stat callout */}
-        <div className="mt-8 text-center">
+        <div className="mt-3 sm:mt-8 text-center">
           <div
             className="font-serif leading-none"
             style={{
-              fontSize: 'clamp(36px, 6vw, 56px)',
+              fontSize: 'clamp(32px, 6vw, 56px)',
               color: 'white',
               transition: 'color 700ms cubic-bezier(0.4,0,0.2,1)',
             }}
@@ -131,7 +137,7 @@ function LayerVisualization({
 function ContentInner({ layer }: { layer: MattressLayer }) {
   const Icon = layer.icon;
   return (
-    <div className="space-y-6 px-4 lg:px-0">
+    <div className="space-y-4 sm:space-y-6 px-4 lg:px-0">
       {/* Layer badge */}
       <div className="flex items-center gap-3">
         <span style={{ color: layer.accentColor }}>
@@ -149,7 +155,7 @@ function ContentInner({ layer }: { layer: MattressLayer }) {
       <div>
         <h2
           className="font-serif leading-tight mb-2"
-          style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', color: 'white' }}
+          style={{ fontSize: 'clamp(28px, 4.5vw, 52px)', color: 'white' }}
         >
           {layer.title}
         </h2>
@@ -173,7 +179,7 @@ function ContentInner({ layer }: { layer: MattressLayer }) {
 
       {/* Body copy */}
       <p
-        className="font-sans text-base lg:text-lg leading-relaxed max-w-md"
+        className="font-sans text-[15px] sm:text-base lg:text-lg leading-relaxed max-w-md"
         style={{ color: 'rgba(255,255,255,0.75)' }}
       >
         {layer.body}
@@ -216,9 +222,11 @@ function LayerContent({
             </div>
           );
         })}
-        {/* Invisible spacer */}
+        {/* Invisible spacer — sized by the longest copy so no layer overflows */}
         <div className="invisible pointer-events-none">
-          <ContentInner layer={layers[0]} />
+          <ContentInner
+            layer={layers.reduce((a, b) => (b.body.length > a.body.length ? b : a))}
+          />
         </div>
       </div>
     </div>
@@ -354,10 +362,15 @@ export default function LayerSwitcher({ slug }: { slug?: string }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const isScrollingRef = useRef(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+      // The sticky site header overlays the top of the sticky panel
+      setHeaderHeight(document.querySelector('header')?.offsetHeight ?? 0);
+    };
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -415,7 +428,9 @@ export default function LayerSwitcher({ slug }: { slug?: string }) {
       aria-label={`Explore the ${layers.length} mattress layers`}
     >
       {/* Sticky viewport panel */}
-      <div className="sticky top-0 overflow-hidden" style={{ height: '100vh' }}>
+      {/* svh = the viewport with iOS Safari's toolbars showing, so nothing
+          sits behind them */}
+      <div className="sticky top-0 overflow-hidden h-screen h-svh">
         {/* Animated background */}
         <div
           className="absolute inset-0"
@@ -439,23 +454,26 @@ export default function LayerSwitcher({ slug }: { slug?: string }) {
           style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+            // Mobile: clear the sticky site header on top and the progress
+            // dots at the bottom, and stack the two halves tightly.
+            gridTemplateRows: isMobile ? 'auto auto' : undefined,
+            alignContent: isMobile ? 'center' : undefined,
             alignItems: 'center',
             height: '100%',
+            paddingTop: isMobile ? `${headerHeight + 8}px` : undefined,
+            paddingBottom: isMobile ? '56px' : undefined,
           }}
         >
           {/* Left / Top: SVG Visualization */}
           <div
-            style={{
-              order: isMobile ? 1 : 0,
-              maxHeight: isMobile ? '40vh' : 'none',
-              overflow: 'hidden',
-            }}
+            style={{ order: isMobile ? 1 : 0 }}
           >
             <LayerVisualization
               activeIndex={activeIndex}
               layers={layers}
               svgHeights={svgHeights}
               svgLabels={svgLabels}
+              isMobile={isMobile}
             />
           </div>
 

@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { Play } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Pause, Play } from 'lucide-react';
 
 interface ProductVideoProps {
   src: string;
@@ -12,20 +12,54 @@ interface ProductVideoProps {
 /**
  * The per-mattress explainer.
  *
- * Unlike the homepage hero this does NOT autoplay: it carries a voiceover, and
- * a video that starts talking at someone reading a product page is hostile. It
- * sits on its poster frame until they press play, which also means the file is
- * never fetched for the majority who don't watch it (`preload="none"`).
+ * Plays muted on a loop, like the homepage hero, but only while it is on
+ * screen: it starts when scrolled into view and pauses when scrolled away, so
+ * the file is never fetched for visitors who don't reach it
+ * (`preload="none"`). Visitors who prefer reduced motion get the poster frame
+ * and start it themselves. The pause button satisfies WCAG 2.2.2.
  */
 export default function ProductVideo({ src, poster, productName }: ProductVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [started, setStarted] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  // Once the visitor pauses, scrolling back into view must not restart it
+  const userPausedRef = useRef(false);
 
-  const start = () => {
-    setStarted(true);
-    // The element only gets a source once the poster overlay is dismissed, so
-    // the first play() has to wait a tick for React to attach it.
-    requestAnimationFrame(() => void videoRef.current?.play());
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    // iOS only autoplays inline video that is muted; set the property as well
+    // as the attribute, since React doesn't reliably render the attribute
+    video.muted = true;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      userPausedRef.current = true;
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!userPausedRef.current) void video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  const toggle = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      userPausedRef.current = false;
+      void video.play();
+    } else {
+      userPausedRef.current = true;
+      video.pause();
+    }
   };
 
   return (
@@ -41,28 +75,30 @@ export default function ProductVideo({ src, poster, productName }: ProductVideoP
         <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-navy shadow-lg">
           <video
             ref={videoRef}
-            src={started ? src : undefined}
+            src={src}
             poster={poster}
-            controls={started}
-            preload="none"
+            muted
+            loop
             playsInline
+            preload="none"
+            aria-label={`${productName} video`}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
             className="w-full h-full object-cover"
-          >
-            <track kind="captions" />
-          </video>
+          />
 
-          {!started && (
-            <button
-              type="button"
-              onClick={start}
-              aria-label={`Play the ${productName} video`}
-              className="absolute inset-0 flex items-center justify-center bg-navy/20 transition-colors hover:bg-navy/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-gold"
-            >
-              <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-lg transition-transform hover:scale-105">
-                <Play className="w-6 h-6 text-navy translate-x-0.5" aria-hidden="true" />
-              </span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={playing ? `Pause the ${productName} video` : `Play the ${productName} video`}
+            className="absolute top-3 right-3 flex h-11 w-11 items-center justify-center rounded-full bg-navy/70 text-white transition-colors hover:bg-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          >
+            {playing ? (
+              <Pause className="w-4 h-4" aria-hidden="true" />
+            ) : (
+              <Play className="w-4 h-4 translate-x-px" aria-hidden="true" />
+            )}
+          </button>
         </div>
       </div>
     </section>
