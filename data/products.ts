@@ -112,6 +112,10 @@ export const homeLineProducts: Product[] = [
       '/images/products/Nod/nod.svg',
       '/images/products/Nod/nod-room.png',
     ],
+    video: {
+      src: '/Videos/nod-explainer.mp4',
+      poster: '/Videos/nod-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1199, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1299, inStock: true },
@@ -163,6 +167,10 @@ export const homeLineProducts: Product[] = [
       '/images/products/Doze/doze.svg',
       '/images/products/Doze/doze-room.png',
     ],
+    video: {
+      src: '/Videos/doze-explainer.mp4',
+      poster: '/Videos/doze-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 999, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1099, inStock: true },
@@ -216,6 +224,10 @@ export const homeLineProducts: Product[] = [
       '/images/products/Slumber/slumber.svg',
       '/images/products/Slumber/slumber-room.png',
     ],
+    video: {
+      src: '/Videos/slumber-explainer.mp4',
+      poster: '/Videos/slumber-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1299, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1499, inStock: true },
@@ -485,6 +497,10 @@ export const homeLineProducts: Product[] = [
     images: [
       '/images/products/studio/studio-hybrid.webp',
     ],
+    video: {
+      src: '/Videos/studio-hybrid-explainer.mp4',
+      poster: '/Videos/studio-hybrid-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1348, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 1828, inStock: true },
@@ -542,6 +558,10 @@ export const homeLineProducts: Product[] = [
     images: [
       '/images/products/studio/studio-hybrid-firm.webp',
     ],
+    video: {
+      src: '/Videos/studio-hybrid-firm-explainer.mp4',
+      poster: '/Videos/studio-hybrid-firm-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1348, inStock: true },
       { name: 'Twin XL', dimensions: '38" x 80"', price: 1828, inStock: true },
