@@ -26,7 +26,7 @@ const companyLinks = [
 
 export default function Footer() {
   const pathname = usePathname();
-  if (pathname?.startsWith('/sleep-guide')) {
+  if (pathname?.startsWith('/sleep-guide') || pathname === '/linkinbio') {
     return null;
   }
   return (

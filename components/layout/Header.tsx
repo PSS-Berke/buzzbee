@@ -43,7 +43,7 @@ export default function Header() {
   const isCurrentPage = (href: string) =>
     pathname === href || (href !== '/' && pathname?.startsWith(`${href}/`));
 
-  if (pathname?.startsWith('/sleep-guide')) {
+  if (pathname?.startsWith('/sleep-guide') || pathname === '/linkinbio') {
     return null;
   }
 
