@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 // Re-render hourly so the giveaway button tracks the current giveaway.
 export const revalidate = 3600;
 
-// TODO: paste the public Yelp listing URL (yelp.com/biz/...) — the button stays hidden until set.
-const YELP_URL: string | null = null;
+// Set to null to hide the Yelp button.
+const YELP_URL: string | null = 'https://www.yelp.com/biz/busby-elmhurst';
 
 // Tag every outbound click so Instagram bio traffic is separable in analytics.
 const utm = (path: string) => `${path}${path.includes('?') ? '&' : '?'}utm_source=instagram&utm_medium=social&utm_campaign=bio`;
