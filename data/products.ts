@@ -283,6 +283,10 @@ export const homeLineProducts: Product[] = [
       '/images/products/Dream/dream.svg',
       '/images/products/Dream/dream-room.png',
     ],
+    video: {
+      src: '/Videos/dream-explainer.mp4',
+      poster: '/Videos/dream-poster.jpg',
+    },
     sizes: [
       { name: 'Twin', dimensions: '38" x 75"', price: 1599, inStock: true },
       { name: 'Full', dimensions: '54" x 75"', price: 1799, inStock: true },
