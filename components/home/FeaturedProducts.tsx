@@ -175,7 +175,7 @@ export default function FeaturedProducts() {
         <div className="text-center">
           <Link href="/shop/mattresses" className="inline-flex items-center gap-3 group">
             <span className="text-navy font-medium group-hover:text-gold-dark transition-colors duration-300">
-              Explore the Busby Home Line
+              Explore the Artisan Line
             </span>
             <span className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gold/30 group-hover:border-gold group-hover:bg-gold transition-all duration-300">
               <ArrowRight className="w-4 h-4 text-gold-dark group-hover:text-navy transition-colors duration-300" />
