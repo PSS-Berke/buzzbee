@@ -1,10 +1,33 @@
+'use client';
+
+import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CalendarCheck, ChevronDown } from 'lucide-react';
 import HeroVideo from './HeroVideo';
+import QuickBook from './QuickBook';
 
 export default function Hero() {
+  const [open, setOpen] = useState(false);
+  // QuickBook mounts on first open (that's when it fetches availability) and then
+  // stays mounted, so closing animates the real content instead of an empty box.
+  const [mounted, setMounted] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    if (!next) return;
+    setMounted(true);
+    // Let the panel start expanding, then bring it into view and move focus to it.
+    requestAnimationFrame(() => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      panelRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      document.getElementById('quick-book-heading')?.focus({ preventScroll: true });
+    });
+  };
+
   return (
-    <section className="relative overflow-hidden pt-4 pb-20 md:pt-8 md:pb-24">
+    <section className="relative overflow-clip pt-4 pb-20 md:pt-8 md:pb-24">
       {/* Organic blob shapes */}
       <div className="absolute top-0 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
       <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
@@ -30,18 +53,26 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/shop/mattresses"
+              <button
+                type="button"
+                onClick={toggle}
+                aria-expanded={open}
+                aria-controls="quick-book"
                 className="inline-flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all hover:scale-105"
               >
-                Shop Mattresses
-                <ArrowRight className="w-5 h-5" />
-              </Link>
+                <CalendarCheck className="w-5 h-5" aria-hidden="true" />
+                Quick Appointment
+                <ChevronDown
+                  className={`w-5 h-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
               <Link
-                href="/quiz"
+                href="/products"
                 className="inline-flex items-center justify-center gap-2 bg-white border-2 border-navy/20 hover:border-gold text-navy font-semibold px-8 py-4 rounded-full transition-all"
               >
-                Take the Sleep Quiz
+                Shop Mattresses
+                <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </Link>
             </div>
           </div>
@@ -61,6 +92,25 @@ export default function Hero() {
               <p className="text-sm font-semibold text-navy">10 Year Warranty</p>
               <p className="text-xs text-gray-600">Built to last</p>
             </div>
+          </div>
+        </div>
+
+        {/* Quick-book drawer: grid-rows 0fr -> 1fr animates to the content's real
+            height, pushing the trust bar down. inert keeps it out of the tab
+            order while closed. */}
+        <div
+          id="quick-book"
+          ref={panelRef}
+          inert={!open}
+          // The wrapper's top edge never moves (spacing lives inside the animated
+          // box), so scrollIntoView targets a stable position mid-animation.
+          // scroll-mt = sticky header height + a little air - the pt-12 below.
+          className={`grid scroll-mt-20 lg:scroll-mt-24 transition-[grid-template-rows,opacity] duration-500 ease-out motion-reduce:transition-none ${
+            open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="pt-12">{mounted && <QuickBook />}</div>
           </div>
         </div>
       </div>
