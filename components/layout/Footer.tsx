@@ -8,6 +8,7 @@ import EmailCaptureForm from '@/components/forms/EmailCaptureForm';
 import { elmhurstStore, formatAddress } from '@/data/store';
 
 const shopLinks = [
+  { name: 'All Mattresses', href: '/products' },
   { name: 'Artisan Collection', href: '/shop/mattresses' },
   { name: 'Studio Collection', href: '/studio' },
   { name: 'Shop by Feel', href: '/shop-by-feel' },

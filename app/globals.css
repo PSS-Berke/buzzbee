@@ -176,8 +176,9 @@ body:has([data-page="quiz"]) .quilted-wave-overlay {
   opacity: 0.08;
 }
 
-/* Suppress the warm quilted overlay on full Studio routes (cool, flat paper) */
-body:has([data-line="studio"]) .quilted-wave-overlay {
+/* Suppress the warm quilted overlay on full Studio routes (cool, flat paper).
+   Studio sections embedded in an Artisan page (data-embed) keep it. */
+body:has([data-line="studio"]:not([data-embed])) .quilted-wave-overlay {
   display: none;
 }
 

@@ -5,6 +5,7 @@ import FinancingBanner from '@/components/home/FinancingBanner';
 import TheDifference from '@/components/home/TheDifference';
 import SixComponents from '@/components/home/SixComponents';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
+import StudioShowcase from '@/components/home/StudioShowcase';
 import SleepQuizCTA from '@/components/home/SleepQuizCTA';
 import OurStoryTeaser from '@/components/home/OurStoryTeaser';
 import ElmhurstAnnouncement from '@/components/home/ElmhurstAnnouncement';
@@ -42,6 +43,7 @@ export default function Home() {
           <Hero />
           <TrustBar />
           <FeaturedProducts />
+          <StudioShowcase />
           <ElmhurstAnnouncement />
           <FinancingBanner />
           <SixComponents />

@@ -15,7 +15,7 @@ export default function StudioSpecCard({
   return (
     <Link
       href={`/products/${product.slug}`}
-      className="group block bg-paper p-8 relative hover:bg-putty/30 transition-colors"
+      className="group block h-full bg-paper p-8 relative hover:bg-putty/30 transition-colors"
     >
       {/* Ghost index number — the 01–04 spec motif */}
       <span aria-hidden="true" className="font-sans text-6xl font-light text-clay/30 leading-none block mb-4">

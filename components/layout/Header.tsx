@@ -25,6 +25,7 @@ const shopNav = {
     },
   ],
   online: [
+    { name: 'All Mattresses', href: '/products' },
     { name: 'Artisan Collection', href: '/shop/mattresses' },
     { name: 'Studio Collection', href: '/studio' },
     { name: 'Shop by Feel', href: '/shop-by-feel' },
@@ -194,7 +195,7 @@ export default function Header() {
           {/* CTA button and Cart */}
           <div className="hidden lg:flex items-center gap-4">
             <Link
-              href="/shop/mattresses"
+              href="/products"
               className="bg-gold hover:bg-gold-light text-navy font-semibold px-6 py-2.5 rounded-full transition-colors"
             >
               Shop Now
@@ -309,7 +310,7 @@ export default function Header() {
             </div>
             <div className="pt-4 space-y-3">
               <Link
-                href="/shop/mattresses"
+                href="/products"
                 className="block w-full bg-gold hover:bg-gold-light text-navy font-semibold px-6 py-3 rounded-full text-center transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
