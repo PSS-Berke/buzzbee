@@ -18,7 +18,7 @@ export default function StudioSpecCard({
       className="group block h-full bg-paper p-8 relative hover:bg-putty/30 transition-colors"
     >
       {/* Ghost index number — the 01–04 spec motif */}
-      <span aria-hidden="true" className="font-sans text-6xl font-light text-clay/30 leading-none block mb-4">
+      <span aria-hidden="true" className="font-sans text-6xl font-light text-clay-deep/80 leading-none block mb-4">
         {String(index).padStart(2, '0')}
       </span>
 
