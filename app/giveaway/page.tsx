@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Gift, CalendarCheck, Instagram, MessageCircle, Users } from 'lucide-react';
 import { SITE_URL } from '@/lib/site';
+import { elmhurstStore, formatAddress } from '@/data/store';
 import { getGiveawayStatus, formatDeadline, formatDay, type Giveaway } from '@/data/giveaways';
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ function OfficialRules({ giveaway }: { giveaway: Giveaway }) {
         No purchase necessary. Must be 18+ and a U.S. resident. One entry per person. Follow @My_Busby, answer the
         question, and tag 2 friends to enter. Giveaway ends {formatDeadline(giveaway.endsAt)}. Winner selected at
         random and announced {giveaway.announceDate}. Not sponsored, endorsed, or administered by Instagram, Facebook,
-        or Meta.
+        or Meta. Sponsored by LR3 Logistics DBA Busby, {formatAddress(elmhurstStore.address)}.
       </p>
     </section>
   );
