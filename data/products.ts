@@ -109,8 +109,7 @@ export const homeLineProducts: Product[] = [
     rating: 4.7,
     reviewCount: 0,
     images: [
-      '/images/products/Nod/nod.svg',
-      '/images/products/Nod/nod-room.png',
+      '/images/products/Nod/nod-bed.webp',
     ],
     video: {
       src: '/Videos/nod-explainer.mp4',
@@ -164,8 +163,7 @@ export const homeLineProducts: Product[] = [
     rating: 4.8,
     reviewCount: 0,
     images: [
-      '/images/products/Doze/doze.svg',
-      '/images/products/Doze/doze-room.png',
+      '/images/products/Doze/doze-bed.webp',
     ],
     video: {
       src: '/Videos/doze-explainer.mp4',
@@ -221,8 +219,7 @@ export const homeLineProducts: Product[] = [
     rating: 4.8,
     reviewCount: 0,
     images: [
-      '/images/products/Slumber/slumber.svg',
-      '/images/products/Slumber/slumber-room.png',
+      '/images/products/Slumber/slumber-bed.webp',
     ],
     video: {
       src: '/Videos/slumber-explainer.mp4',
@@ -280,8 +277,7 @@ export const homeLineProducts: Product[] = [
     rating: 4.9,
     reviewCount: 0,
     images: [
-      '/images/products/Dream/dream.svg',
-      '/images/products/Dream/dream-room.png',
+      '/images/products/Dream/dream-bed.webp',
     ],
     video: {
       src: '/Videos/dream-explainer.mp4',
