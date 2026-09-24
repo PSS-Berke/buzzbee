@@ -182,6 +182,12 @@ body:has([data-line="studio"]:not([data-embed])) .quilted-wave-overlay {
   display: none;
 }
 
+/* The /products compare tray docks to the bottom edge; hide the floating
+   announcement pill while it's open so the two don't stack. */
+body:has([data-compare-tray]) [aria-label='Site announcement'] {
+  display: none;
+}
+
 /* Studio blueprint grid — the cool counterpart to .linen-texture (Artisan) */
 .blueprint-grid {
   background-image:
