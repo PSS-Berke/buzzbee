@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { homeLineProducts } from '@/data/products';
+import { homeLineProducts, getProductsByLine } from '@/data/products';
 import { SITE_URL } from '@/lib/site';
+import StudioDesignIndex from '@/components/studio/StudioDesignIndex';
 
 export const metadata = {
-  title: 'Busby Mattresses | American-Made Hybrid Mattresses',
+  title: 'All Mattresses | Busby',
   description:
-    'Shop Busby mattresses — premium American-made hybrids. From the essential Nod to the luxury Dream pillowtop.',
+    'Shop every Busby mattress in one place — the handcrafted Artisan line and the modern Studio line. American-made, from essential foam to luxury pillowtop.',
   alternates: { canonical: '/products' },
 };
 
@@ -37,6 +38,8 @@ const productsWithBenefits = homeLineProducts.filter((p) => p.line === 'artisan'
     p.slug === 'dream' ? 7 : p.slug === 'slumber' ? 6 : p.slug === 'doze' ? 5 : 5,
 }));
 
+const studioProducts = getProductsByLine('studio');
+
 const flagship = productsWithBenefits.find((p) => p.slug === 'dream')!;
 const supportingProducts = productsWithBenefits.filter((p) => p.slug !== 'dream');
 
@@ -65,13 +68,13 @@ export default function ProductsPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Busby Collection
+            Artisan &amp; Studio
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy mb-6">
-            Busby <span className="wavy-underline">Collection</span>
+            All <span className="wavy-underline">Mattresses</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Handcrafted in America. Premium hybrid mattresses for every sleeper.
+            Every Busby bed in one place. Two lines, one promise — American-made comfort for every sleeper.
           </p>
 
           {/* Trust badges */}
@@ -104,9 +107,18 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* Products Grid */}
-      <section className="py-24 relative overflow-hidden z-10">
+      {/* Artisan line */}
+      <section aria-labelledby="artisan-heading" className="py-24 relative overflow-hidden z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-12">
+            <span className="inline-block text-gold-dark font-medium text-sm mb-4">
+              The Artisan Line
+            </span>
+            <h2 id="artisan-heading" className="text-3xl md:text-4xl font-serif text-navy">
+              Handcrafted hybrids, layered for the perfect night.
+            </h2>
+          </div>
+
           {/* Flagship Hero Card */}
           <div className="mb-12">
             <Link
@@ -136,9 +148,9 @@ export default function ProductsPage() {
                   <span className="text-gold-dark font-medium text-sm mb-4">
                     Our Best
                   </span>
-                  <h2 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
+                  <h3 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
                     Dream <span className="font-semibold">Pillowtop</span>
-                  </h2>
+                  </h3>
                   <p className="text-xl text-gray-600 mb-4">{flagship.tagline}</p>
                   <p className="text-gray-600 leading-relaxed mb-8 max-w-md">{flagship.description}</p>
 
@@ -228,8 +240,38 @@ export default function ProductsPage() {
               </Link>
             ))}
           </div>
+
+          <div className="text-center mt-12">
+            <Link href="/shop/mattresses" className="inline-flex items-center gap-3 group">
+              <span className="text-navy font-medium group-hover:text-gold-dark transition-colors duration-300">
+                Explore the Artisan Line
+              </span>
+              <span className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gold/30 group-hover:border-gold group-hover:bg-gold transition-all duration-300">
+                <ArrowRight className="w-4 h-4 text-gold-dark group-hover:text-navy transition-colors duration-300" />
+              </span>
+            </Link>
+          </div>
         </div>
       </section>
+
+      {/* Studio line */}
+      <div className="bg-paper border-y border-grid relative z-10">
+        <StudioDesignIndex
+          products={studioProducts}
+          eyebrow="The Studio Line"
+          title="Comfort, engineered by the numbers."
+          subtitle="Our modern line. Four builds, from essential foam to a pocketed-coil hybrid — each with the spec right on the label."
+        >
+          <div className="text-center mt-12">
+            <Link
+              href="/studio"
+              className="inline-flex items-center gap-3 bg-navy hover:bg-navy-dark text-white font-medium px-7 py-3.5 rounded-sm transition-colors"
+            >
+              Explore the Studio Line <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </StudioDesignIndex>
+      </div>
 
       {/* Help Me Choose CTA */}
       <section className="py-20 relative overflow-hidden z-10">

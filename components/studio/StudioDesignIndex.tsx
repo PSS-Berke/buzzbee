@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { Product } from '@/data/products';
 import StudioSpecCard from './StudioSpecCard';
 
@@ -10,21 +11,35 @@ const studioSpecLines: Record<string, string> = {
     'The same pocketed-coil build as the Studio Hybrid, with a firmer comfort top for a flatter, more supportive surface.',
 };
 
-export default function StudioDesignIndex({ products }: { products: Product[] }) {
+export default function StudioDesignIndex({
+  products,
+  eyebrow = 'The Collection',
+  title = 'Four builds, indexed.',
+  subtitle = 'Every Studio bed reads the same way — a number, a profile, and a spec you can trust.',
+  headingLevel = 'h2',
+  children,
+}: {
+  products: Product[];
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  headingLevel?: 'h2' | 'h3';
+  /** Optional content (e.g. a CTA) rendered under the grid. */
+  children?: ReactNode;
+}) {
+  const Heading = headingLevel;
   return (
     <section className="py-24 relative">
       <div className="absolute inset-0 blueprint-grid opacity-[0.25] pointer-events-none" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center mb-12">
           <span className="inline-block text-clay-deep text-xs font-medium tracking-[0.2em] uppercase mb-3">
-            The Collection
+            {eyebrow}
           </span>
-          <h2 className="font-sans text-3xl md:text-4xl font-semibold text-navy tracking-tight">
-            Four builds, indexed.
-          </h2>
-          <p className="text-navy/70 mt-4 max-w-xl mx-auto">
-            Every Studio bed reads the same way — a number, a profile, and a spec you can trust.
-          </p>
+          <Heading className="font-sans text-3xl md:text-4xl font-semibold text-navy tracking-tight">
+            {title}
+          </Heading>
+          <p className="text-navy/70 mt-4 max-w-xl mx-auto">{subtitle}</p>
         </div>
 
         {/* Hairline blueprint grid — gap-px over bg-grid draws 1px dividers between cards */}
@@ -39,6 +54,8 @@ export default function StudioDesignIndex({ products }: { products: Product[] })
             </li>
           ))}
         </ul>
+
+        {children}
       </div>
     </section>
   );

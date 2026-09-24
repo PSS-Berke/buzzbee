@@ -25,6 +25,7 @@ const shopNav = {
     },
   ],
   online: [
+    { name: 'All Mattresses', href: '/products' },
     { name: 'Artisan Collection', href: '/shop/mattresses' },
     { name: 'Studio Collection', href: '/studio' },
     { name: 'Shop by Feel', href: '/shop-by-feel' },
