@@ -18,10 +18,14 @@ export default function Hero() {
     setOpen(next);
     if (!next) return;
     setMounted(true);
-    // Let the panel start expanding, then bring it into view and move focus to it.
+    // Let the panel start expanding and move focus to it. Only scroll on stacked
+    // (below lg) layouts, where the hero video pushes the panel off-screen; on
+    // desktop it opens in place with no page jump.
     requestAnimationFrame(() => {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      panelRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      if (!window.matchMedia('(min-width: 1024px)').matches) {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        panelRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
       document.getElementById('quick-book-heading')?.focus({ preventScroll: true });
     });
   };
