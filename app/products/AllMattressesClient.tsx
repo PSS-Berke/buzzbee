@@ -37,12 +37,6 @@ const LINE_CHIPS: ProductLine[] = ['artisan', 'studio'];
 
 const MAX_COMPARE = 4;
 
-// Room shot when there is one (Artisan's first image is a flat illustration), so
-// every card in the mixed grid uses the same kind of photo.
-function cardImage(p: Product) {
-  return p.images.find((src) => src.includes('-room')) ?? p.images[0];
-}
-
 // "Best for" line — skips the generic "… comfort seekers" entries.
 function bestFor(p: Product) {
   return p.bestFor
@@ -216,7 +210,7 @@ export default function AllMattressesClient({ products }: { products: Product[] 
           {visible.map((p, i) => {
             const checked = compare.includes(p.slug);
             const atLimit = !checked && compare.length >= MAX_COMPARE;
-            const image = cardImage(p);
+            const image = p.images[0];
             return (
               <Fragment key={p.slug}>
                 {i === tileAfter && <ShowroomTile />}
