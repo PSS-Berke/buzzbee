@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { homeLineProducts } from '@/data/products';
+import { getProductsByLine, productLines } from '@/data/products';
 import { SITE_URL } from '@/lib/site';
+import AllMattressesClient from './AllMattressesClient';
 
 export const metadata = {
-  title: 'Busby Mattresses | American-Made Hybrid Mattresses',
+  title: 'All Busby Mattresses | Artisan & Studio Lines',
   description:
-    'Shop Busby mattresses — premium American-made hybrids. From the essential Nod to the luxury Dream pillowtop.',
+    'Shop every Busby mattress. The handcrafted Artisan hybrids and the design-led Studio line, side by side. American-made.',
   alternates: { canonical: '/products' },
 };
 
@@ -20,25 +20,7 @@ const breadcrumbSchema = {
   ],
 };
 
-// Add key benefits to products
-const productsWithBenefits = homeLineProducts.filter((p) => p.line === 'artisan').map((p) => ({
-  ...p,
-  keyBenefit:
-    p.slug === 'dream'
-      ? 'Luxury Pillowtop Comfort'
-      : p.slug === 'slumber'
-        ? 'Natural Latex + Coil'
-        : p.slug === 'doze'
-          ? 'XPlush Comfort'
-          : p.slug === 'nod'
-            ? 'Dependable Hybrid'
-            : 'Safe Infant Sleep',
-  layers:
-    p.slug === 'dream' ? 7 : p.slug === 'slumber' ? 6 : p.slug === 'doze' ? 5 : 5,
-}));
-
-const flagship = productsWithBenefits.find((p) => p.slug === 'dream')!;
-const supportingProducts = productsWithBenefits.filter((p) => p.slug !== 'dream');
+const mattresses = [...getProductsByLine('artisan'), ...getProductsByLine('studio')];
 
 export default function ProductsPage() {
   return (
@@ -65,13 +47,14 @@ export default function ProductsPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Busby Collection
+            All Mattresses
           </span>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-navy mb-6">
-            Busby <span className="wavy-underline">Collection</span>
+            Every Busby, <span className="wavy-underline">side by side.</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Handcrafted in America. Premium hybrid mattresses for every sleeper.
+            Eight American-made mattresses across our handcrafted Artisan and design-led Studio lines. Filter,
+            sort, and compare to find yours.
           </p>
 
           {/* Trust badges */}
@@ -101,132 +84,43 @@ export default function ProductsPage() {
               10 Year Warranty
             </span>
           </div>
+
         </div>
       </section>
 
-      {/* Products Grid */}
-      <section className="py-24 relative overflow-hidden z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          {/* Flagship Hero Card */}
-          <div className="mb-12">
-            <Link
-              href={`/products/${flagship.slug}`}
-              className="group block relative bg-white border-2 border-gold/30 rounded-3xl overflow-hidden shadow-xl shadow-gold/5 hover:shadow-2xl hover:shadow-gold/10 transition-all duration-500"
-            >
-              <div className="grid lg:grid-cols-2 lg:min-h-[500px]">
-                {/* Image Side */}
-                <div className="relative overflow-hidden min-h-[260px] sm:min-h-[320px] lg:min-h-0">
-                  {flagship.images[0] ? (
-                    <Image
-                      src={flagship.images[0]}
-                      alt={`${flagship.name} ${flagship.type} mattress`}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                      <span className="text-gray-600 text-sm">Image Coming Soon</span>
-                    </div>
-                  )}
-                </div>
+      {/* All mattresses */}
+      <section aria-label="All mattresses" className="pb-24 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AllMattressesClient products={mattresses} />
+        </div>
+      </section>
 
-                {/* Content Side */}
-                <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
-                  <span className="text-gold-dark font-medium text-sm mb-4">
-                    Our Best
-                  </span>
-                  <h2 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
-                    Dream <span className="font-semibold">Pillowtop</span>
-                  </h2>
-                  <p className="text-xl text-gray-600 mb-4">{flagship.tagline}</p>
-                  <p className="text-gray-600 leading-relaxed mb-8 max-w-md">{flagship.description}</p>
-
-                  {/* Feature Pills */}
-                  <div className="flex flex-wrap gap-3 mb-8">
-                    <span className="px-4 py-2 bg-gold/10 text-gold-dark rounded-full text-sm">
-                      {flagship.layers} Layers
-                    </span>
-                    <span className="px-4 py-2 bg-gold/10 text-gold-dark rounded-full text-sm">
-                      {flagship.keyBenefit}
-                    </span>
-                    <span className="px-4 py-2 bg-gold/10 text-gold-dark rounded-full text-sm">
-                      Made in USA
-                    </span>
-                  </div>
-
-                  {/* Price */}
-                  <div className="flex items-center gap-4 mb-8">
-                    <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}</span>
-                    <span className="text-gray-600 text-sm">Queen</span>
-                  </div>
-
-                  {/* CTA */}
-                  <div className="inline-flex items-center gap-3 text-gold-dark group-hover:gap-5 transition-all duration-500">
-                    <span className="font-medium">Discover the Dream</span>
-                    <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-500" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
-
-          {/* Supporting Collection */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {supportingProducts.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.slug}`}
-                className="group relative bg-white/80 rounded-3xl overflow-hidden border-2 border-transparent hover:border-gold/30 hover:shadow-xl hover:shadow-gold/5 transition-all duration-500"
-              >
-                {/* Image Container */}
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  {product.images[0] ? (
-                    <Image
-                      src={product.images[0]}
-                      alt={`${product.name} ${product.type} mattress`}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-                      <span className="text-gray-600 text-sm">Image Coming Soon</span>
-                    </div>
-                  )}
-
-                  {/* Type badge */}
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1.5 bg-white text-gold-dark text-xs font-medium rounded-full shadow-sm">
-                      {product.type}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-navy mb-2 group-hover:text-gold-dark transition-colors duration-300">
-                    {product.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {product.tagline}
-                  </p>
-
-                  {/* Key benefit */}
-                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                    <span className="w-2 h-2 bg-gold rounded-full" />
-                    <span>{product.keyBenefit}</span>
-                  </div>
-
-                  {/* Price and arrow */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-medium text-navy">
-                      From ${product.price.toLocaleString()}
-                    </span>
-                    <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-navy group-hover:translate-x-1 transition-all duration-300" />
-                  </div>
-                </div>
+      {/* Two lines, explained */}
+      <section aria-labelledby="lines-heading" className="py-20 relative z-10 border-t border-gray-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 id="lines-heading" className="text-center text-3xl md:text-4xl font-serif text-navy mb-10">
+            Two lines, one Busby promise
+          </h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-3xl bg-white p-8 ring-1 ring-gold/30">
+              <p className="text-sm font-medium text-gold-dark">The Artisan Line</p>
+              <h3 className="mt-2 text-2xl font-serif text-navy">{productLines.artisan.tagline}</h3>
+              <p className="mt-3 text-gray-600 leading-relaxed">{productLines.artisan.description}</p>
+              <Link href="/shop/mattresses" className="mt-6 inline-flex items-center gap-2 font-medium text-gold-dark hover:gap-3 transition-all">
+                Explore the Artisan Line <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
-            ))}
+            </div>
+            <div data-line="studio" data-embed className="relative overflow-hidden bg-paper border border-grid p-8">
+              <div className="absolute inset-0 blueprint-grid opacity-[0.25] pointer-events-none" />
+              <div className="relative">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-clay-deep">The Studio Line</p>
+                <h3 className="mt-2 font-sans text-2xl font-semibold tracking-tight text-navy">{productLines.studio.tagline}</h3>
+                <p className="mt-3 text-navy/70 leading-relaxed">{productLines.studio.description}</p>
+                <Link href="/studio" className="mt-6 inline-flex items-center gap-2 font-medium text-clay-deep hover:gap-3 transition-all">
+                  Explore the Studio Line <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

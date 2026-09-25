@@ -57,7 +57,7 @@ export default function FeaturedProducts() {
         {/* Editorial Header */}
         <div className="text-center mb-16">
           <span className="inline-block text-gold-dark font-medium text-sm mb-4">
-            Busby Home Line
+            The Artisan Line
           </span>
           <h2 className="text-4xl md:text-5xl font-serif text-navy mb-6">
             Handcrafted for <span className="wavy-underline">Perfect Sleep</span>
