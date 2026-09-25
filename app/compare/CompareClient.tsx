@@ -1,63 +1,22 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ArrowRight, Check, Plus, X } from 'lucide-react';
+import { ArrowRight, CalendarCheck, Check, Plus, ShoppingBag, X } from 'lucide-react';
 import { productLines, type Product, type ProductLine } from '@/data/products';
 import { comparableProducts, compareHref, MAX_COMPARE, parseCompareParam } from '@/lib/compare';
-import LineTag from '@/components/product/LineTag';
-
-// Key benefits for each product (both lines).
-const keyBenefits: Record<string, string> = {
-  nod: 'Dependable Comfort',
-  doze: 'Plush Comfort, Built to Last.',
-  slumber: 'Rich, Plush Experience',
-  dream: 'Engineered for Luxury Performance.',
-  'studio-10': 'Essential Comfort',
-  'studio-12': 'Motion Isolation',
-  'studio-hybrid': 'Balanced Hybrid Feel',
-  'studio-hybrid-firm': 'Same Build, Firmer Feel',
-};
+import { useCart } from '@/contexts/CartContext';
+import { ROWS, SIZE_ORDER, sizePrice, type RowContext } from './compareRows';
 
 // Shown when someone lands on /compare with nothing picked: each line's flagship.
 const DEFAULT_PICKS = ['dream', 'studio-hybrid'];
 
 const LINES: ProductLine[] = ['artisan', 'studio'];
 
-function sizeRange(p: Product) {
-  const prices = p.sizes.map((s) => s.price);
-  return `$${Math.min(...prices).toLocaleString()}–$${Math.max(...prices).toLocaleString()}`;
-}
-
-const ROWS: { label: string; value: (p: Product) => React.ReactNode }[] = [
-  { label: 'Line', value: (p) => <LineTag line={p.line} /> },
-  { label: 'Type', value: (p) => (p.type === 'Foam' ? 'All-foam' : p.type) },
-  {
-    label: 'Construction',
-    value: (p) => (
-      <>
-        <span className="text-2xl font-light text-navy">{p.components.length}</span>
-        <span className="ml-1 text-sm text-gray-600">layers</span>
-      </>
-    ),
-  },
-  { label: 'Key benefit', value: (p) => keyBenefits[p.slug] ?? p.tagline },
-  {
-    label: 'Best for',
-    value: (p) => (
-      <span className="flex flex-wrap gap-1.5">
-        {p.bestFor.slice(0, 3).map((tag) => (
-          <span key={tag} className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-navy">
-            {tag}
-          </span>
-        ))}
-      </span>
-    ),
-  },
-  { label: 'Queen', value: (p) => <span className="text-lg font-semibold text-navy">${p.price.toLocaleString()}</span> },
-  { label: 'Twin to King', value: sizeRange },
-];
+// Name as the booking form lists it ("Busby Dream" -> "Dream").
+const shortName = (p: Product) => p.name.replace(/^Busby /, '');
 
 export default function CompareClient() {
   const router = useRouter();
@@ -69,6 +28,41 @@ export default function CompareClient() {
     .map((slug) => comparableProducts.find((p) => p.slug === slug))
     .filter((p): p is Product => !!p);
   const atMax = selected.length >= MAX_COMPARE;
+  const { addItem, openCartDrawer } = useCart();
+  const [size, setSize] = useState('Queen');
+  const [diffOnly, setDiffOnly] = useState(false);
+  const [video, setVideo] = useState<Product | null>(null);
+  const videoDialog = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (video) videoDialog.current?.showModal();
+  }, [video]);
+
+  const sizes = SIZE_ORDER.filter((name) => picked.some((p) => sizePrice(p, name)));
+  const ctx: RowContext = { size, onWatch: setVideo };
+  const rows = ROWS.filter(
+    (row) => !diffOnly || !row.key || picked.length < 2 || new Set(picked.map((p) => row.key!(p, ctx))).size > 1,
+  );
+  const hiddenRows = ROWS.length - rows.length;
+
+  const addToCart = (p: Product) => {
+    const s = sizePrice(p, size);
+    if (!s) return;
+    // Same line item shape as the product page's Add to Cart (ProductInfo).
+    addItem({
+      productId: p.id,
+      productSlug: p.slug,
+      productName: p.name,
+      productType: p.type,
+      size: s.name,
+      sizeDimensions: s.dimensions,
+      price: s.price,
+      originalPrice: p.originalPrice,
+      quantity: 1,
+      image: p.images[0] || '',
+    });
+    openCartDrawer();
+  };
 
   // The URL is the state, so a comparison can be bookmarked or shared.
   const setSelected = (next: string[]) => {
@@ -159,6 +153,49 @@ export default function CompareClient() {
             </p>
           )}
           {picked.length > 0 && (
+            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <fieldset>
+                <legend className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-600">Size</legend>
+                <div className="flex flex-wrap gap-2">
+                  {sizes.map((name) => (
+                    <button
+                      key={name}
+                      type="button"
+                      aria-pressed={size === name}
+                      onClick={() => setSize(name)}
+                      className={`min-h-11 rounded-full border px-4 text-sm font-medium transition-colors ${
+                        size === name ? 'border-navy bg-navy text-white' : 'border-gray-300 bg-white text-navy hover:border-navy'
+                      }`}
+                    >
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+              {picked.length > 1 && (
+                <label className="inline-flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium text-navy">
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={diffOnly}
+                    aria-labelledby="diff-label"
+                    onClick={() => setDiffOnly((d) => !d)}
+                    className={`relative h-7 w-12 flex-shrink-0 rounded-full transition-colors ${diffOnly ? 'bg-navy' : 'bg-gray-400'}`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all ${diffOnly ? 'left-6' : 'left-1'}`}
+                    />
+                  </button>
+                  <span id="diff-label">
+                    Show only differences
+                    {diffOnly && hiddenRows > 0 && <span className="ml-1 text-gray-600">({hiddenRows} hidden)</span>}
+                  </span>
+                </label>
+              )}
+            </div>
+          )}
+          {picked.length > 0 && (
             // Scrolls sideways inside its own box on small screens, never the page.
             // `relative` makes this the containing block for the sr-only (absolute)
             // labels inside, so they can't escape the scroller and widen the page.
@@ -197,17 +234,17 @@ export default function CompareClient() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {ROWS.map((row) => (
-                    <tr key={row.label}>
+                  {rows.map((row) => (
+                    <tr key={row.label({ ...ctx, size: '' })}>
                       <th
                         scope="row"
-                        className="sticky left-0 z-10 bg-white p-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-600"
+                        className="sticky left-0 z-10 bg-white p-4 text-left align-top text-xs font-semibold uppercase tracking-wider text-gray-600"
                       >
-                        {row.label}
+                        {row.label(ctx)}
                       </th>
                       {picked.map((p) => (
-                        <td key={p.slug} className="p-4 align-middle text-navy">
-                          {row.value(p)}
+                        <td key={p.slug} className="p-4 align-top text-navy">
+                          {row.render(p, ctx)}
                         </td>
                       ))}
                     </tr>
@@ -215,7 +252,19 @@ export default function CompareClient() {
                   <tr>
                     <td className="sticky left-0 z-10 bg-white" />
                     {picked.map((p) => (
-                      <td key={p.slug} className="p-4">
+                      <td key={p.slug} className="space-y-2 p-4">
+                        {sizePrice(p, size) ? (
+                          <button
+                            type="button"
+                            onClick={() => addToCart(p)}
+                            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-gold px-4 font-semibold text-navy hover:bg-gold-light"
+                          >
+                            <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                            Add {size}<span className="sr-only"> {p.name} to cart</span>
+                          </button>
+                        ) : (
+                          <p className="py-2.5 text-center text-sm text-gray-600">Not offered in {size}</p>
+                        )}
                         <Link
                           href={`/products/${p.slug}`}
                           className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-navy px-4 font-medium text-white hover:bg-navy-light"
@@ -230,8 +279,57 @@ export default function CompareClient() {
               </table>
             </div>
           )}
+
+          {picked.length > 0 && (
+            <div className="mt-8 flex flex-col gap-4 rounded-3xl bg-navy p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
+              <div>
+                <p className="font-heading text-sm font-semibold uppercase tracking-widest text-gold">Elmhurst showroom</p>
+                <p className="mt-1 text-xl font-semibold">Feel the difference in person.</p>
+                <p className="mt-1 text-white/80">
+                  Try {picked.map(shortName).join(', ')} side by side. Free, private, by appointment.
+                </p>
+              </div>
+              <Link
+                href={`/appointment?try=${encodeURIComponent(picked.map(shortName).join(','))}#book`}
+                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 font-semibold text-navy hover:bg-gold-light"
+              >
+                <CalendarCheck className="h-5 w-5" aria-hidden="true" />
+                Try these in the showroom
+              </Link>
+            </div>
+          )}
         </div>
       </section>
+
+      {/* Explainer video */}
+      <dialog
+        ref={videoDialog}
+        onClose={() => setVideo(null)}
+        aria-label={video ? `${video.name} explainer video` : undefined}
+        className="m-auto w-[min(92vw,56rem)] rounded-3xl bg-black p-0 backdrop:bg-navy/70"
+      >
+        {video?.video && (
+          <div className="relative">
+            <video
+              src={video.video.src}
+              poster={video.video.poster}
+              controls
+              autoPlay
+              playsInline
+              className="aspect-video w-full"
+            >
+              {/* Same as ShowroomPlayer: no caption files exist for the explainers yet */}
+              <track kind="captions" />
+            </video>
+            <form method="dialog" className="absolute right-3 top-3">
+              <button className="flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-navy hover:bg-white">
+                <X className="h-5 w-5" aria-hidden="true" />
+                <span className="sr-only">Close video</span>
+              </button>
+            </form>
+          </div>
+        )}
+      </dialog>
 
       {/* Help Section */}
       <section className="py-16 relative z-10">

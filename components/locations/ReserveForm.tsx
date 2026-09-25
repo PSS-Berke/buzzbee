@@ -12,7 +12,17 @@ declare global {
   }
 }
 
-const mattressOptions = ['Dream', 'Slumber', 'Nod', 'Doze', 'Not sure yet'];
+const mattressOptions = [
+  'Dream',
+  'Slumber',
+  'Nod',
+  'Doze',
+  'Studio 10',
+  'Studio 12',
+  'Studio Hybrid',
+  'Studio Hybrid Firm',
+  'Not sure yet',
+];
 
 const MODES: {
   value: ConsultMode;
@@ -63,8 +73,18 @@ export default function ReserveForm() {
   const [slot, setSlot] = useState('');
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [availabilityState, setAvailabilityState] = useState<'idle' | 'loading' | 'error'>('idle');
+  // Mattresses to try. ?try=Dream,Studio%20Hybrid (from /compare) pre-checks them.
+  const [toTry, setToTry] = useState<string[]>([]);
   // Held in a ref, not state: it is never rendered, only read at submit time.
   const gclidRef = useRef('');
+
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('try');
+    if (!requested) return;
+    const picks = requested.split(',').filter((m) => mattressOptions.includes(m));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (picks.length) setToTry(picks);
+  }, []);
 
   // Capture the Google Ads click id so every booking can be traced back to the
   // exact campaign / keyword that produced it. Persisted for the session so it
@@ -162,7 +182,7 @@ export default function ReserveForm() {
       gclid: gclidRef.current,
       date,
       timeSlot: slot,
-      mattresses: data.getAll('mattresses').map((v) => v.toString()),
+      mattresses: toTry,
       notes: data.get('notes')?.toString() || '',
       bb_check: data.get('bb_check')?.toString() || '',
       source: isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON,
@@ -405,7 +425,16 @@ export default function ReserveForm() {
               key={m}
               className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 px-4 py-2.5 rounded-full border-2 border-gray-200 text-sm text-gray-700 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold has-[:checked]:text-navy has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-navy has-[:focus-visible]:ring-offset-2"
             >
-              <input type="checkbox" name="mattresses" value={m} className="peer sr-only" />
+              <input
+                type="checkbox"
+                name="mattresses"
+                value={m}
+                checked={toTry.includes(m)}
+                onChange={(e) =>
+                  setToTry((t) => (e.target.checked ? [...t, m] : t.filter((x) => x !== m)))
+                }
+                className="peer sr-only"
+              />
               <Check className="hidden w-4 h-4 peer-checked:inline-block" aria-hidden="true" />
               {m}
             </label>
