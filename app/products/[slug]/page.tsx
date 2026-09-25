@@ -2,7 +2,14 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { getProductBySlug, getAllProductSlugs, homeLineProducts, isAdjustableBase } from '@/data/products';
+import {
+  getProductBySlug,
+  getAllProductSlugs,
+  homeLineProducts,
+  isAdjustableBase,
+  isTopper,
+  usesAccessoryLayout,
+} from '@/data/products';
 import { SITE_URL } from '@/lib/site';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductInfo from '@/components/product/ProductInfo';
@@ -12,8 +19,8 @@ import StudioSpecSheet from '@/components/product/StudioSpecSheet';
 import FitsAnyBed from '@/components/product/FitsAnyBed';
 import FitsAnyCrib from '@/components/product/FitsAnyCrib';
 import FAKMission from '@/components/product/FAKMission';
-import BaseSpecSheet from '@/components/product/BaseSpecSheet';
-import PairWithBase from '@/components/product/PairWithBase';
+import AccessorySpecSheet from '@/components/product/AccessorySpecSheet';
+import CompleteYourSetup from '@/components/product/CompleteYourSetup';
 import LayerSwitcher from '@/components/home/LayerSwitcher';
 import { Check } from 'lucide-react';
 
@@ -38,12 +45,15 @@ export async function generateMetadata({ params }: ProductPageProps) {
     };
   }
 
-  if (isAdjustableBase(product)) {
-    const title = `${product.name} | Adjustable Bed Base | Busby`;
+  if (usesAccessoryLayout(product)) {
+    const base = isAdjustableBase(product);
+    const title = `${product.name} | ${base ? 'Adjustable Bed Base' : 'Mattress Topper'} | Busby`;
     return {
       title,
       description: product.description,
-      keywords: [product.name, 'adjustable base', 'adjustable bed frame', 'BedTech', ...product.bestFor],
+      keywords: base
+        ? [product.name, 'adjustable base', 'adjustable bed frame', 'BedTech', ...product.bestFor]
+        : [product.name, 'mattress topper', 'plush mattress topper', 'Busby', ...product.bestFor],
       alternates: { canonical: `/products/${slug}` },
       openGraph: {
         title,
@@ -88,8 +98,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   const isStudio = product.line === 'studio';
   const isBase = isAdjustableBase(product);
-  // BedTech base cross-sell goes on adult mattress pages only (not cribs, accessories, or the bases themselves)
-  const showBaseCrossSell = !isBase && product.firmness.length > 0 && product.type !== 'Crib Mattress';
+  const isTopperProduct = isTopper(product);
+  const isAccessoryLayout = usesAccessoryLayout(product);
+  // Accessory cross-sell (topper + BedTech bases) goes on adult mattress pages only (not cribs or accessories)
+  const showSetupCrossSell = !isAccessoryLayout && product.firmness.length > 0 && product.type !== 'Crib Mattress';
 
   // Get related products from the same line (excluding current product)
   const productPool = homeLineProducts.filter((p) => p.line === product.line);
@@ -137,7 +149,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-      isBase
+      isAccessoryLayout
         ? { '@type': 'ListItem', position: 2, name: 'Sleep Accessories', item: `${SITE_URL}/shop/sleep-accessories` }
         : { '@type': 'ListItem', position: 2, name: 'Mattresses', item: `${SITE_URL}/products` },
       { '@type': 'ListItem', position: 3, name: product.name, item: `${SITE_URL}/products/${product.slug}` },
@@ -177,7 +189,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <ImageGallery
               images={product.images}
               productName={product.name}
-              productAlt={isBase ? product.name : `${product.name} ${product.type} mattress`}
+              productAlt={isAccessoryLayout ? product.name : `${product.name} ${product.type} mattress`}
             />
           </div>
 
@@ -188,8 +200,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Tabs section — Studio gets the spec-sheet layout; Artisan keeps the classic tabs; bases get their own spec sheet */}
-        {isBase ? (
-          <BaseSpecSheet product={product} />
+        {isAccessoryLayout ? (
+          <AccessorySpecSheet product={product} />
         ) : isStudio ? (
           <StudioSpecSheet product={product} />
         ) : (
@@ -197,11 +209,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
         )}
 
         {/* Fits any bed / crib section (mattresses only) */}
-        {!isBase && (slug === 'nest' ? <FitsAnyCrib /> : <FitsAnyBed />)}
+        {!isAccessoryLayout && (slug === 'nest' ? <FitsAnyCrib /> : <FitsAnyBed />)}
       </section>
 
-      {/* "You may also want" — BedTech adjustable bases */}
-      {showBaseCrossSell && <PairWithBase productName={product.name} />}
+      {/* "You may also want" — Busby topper + BedTech adjustable bases */}
+      {showSetupCrossSell && <CompleteYourSetup productName={product.name} />}
 
       {/* Explainer video, for the beds that have one */}
       {product.video && (
@@ -230,7 +242,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <ul className="max-w-md mx-auto space-y-3">
               {(isBase
                 ? ['20-year limited BedTech warranty', 'Tool-free setup in minutes']
-                : [
+                : isTopperProduct
+                  ? ['One price for every size, Twin through King', 'See it on the beds in our Elmhurst showroom']
+                  : [
                     '100% fiberglass-free construction',
                     ...(product.firmness.length > 0 ? ['10-year warranty'] : []),
                     'Ships to all 50 states',

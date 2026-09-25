@@ -653,6 +653,48 @@ export const accessoryProducts: Product[] = [
       { name: 'SecureZZZip® Closure', source: 'USA', certification: 'Certified', description: 'Patented zipper system for complete 360° encasement.' },
     ],
   },
+  {
+    id: 'acc-2',
+    slug: 'mattress-topper',
+    name: 'Busby Mattress Topper',
+    brand: 'busby',
+    line: 'artisan',
+    type: 'Mattress Topper',
+    tagline: 'A plush new top layer for the bed you already have.',
+    // TODO(topper): add Tag-confirmed specs (thickness, fill, cover, care, origin).
+    description:
+      'The Busby Mattress Topper adds a soft, wave-quilted comfort layer to the top of your bed. It\'s the same plush surface you\'ll find on the beds in our Elmhurst showroom, and an easy way to soften a mattress that feels too firm or bring new life to one you already own.',
+    price: 399.99,
+    originalPrice: 399.99,
+    rating: 0,
+    reviewCount: 0,
+    images: [
+      '/images/products/MattressTopper/topper-hero.webp',
+      '/images/products/MattressTopper/topper-texture.webp',
+      '/images/products/MattressTopper/topper-profile.webp',
+      '/images/products/MattressTopper/topper-surface.webp',
+    ],
+    // One price for every size, per Tag (2026-09-25).
+    sizes: [
+      { name: 'Twin', dimensions: '38" x 75"', price: 399.99, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 399.99, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 399.99, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 399.99, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 399.99, inStock: true },
+    ],
+    firmness: [],
+    selectedFirmness: '',
+    features: [
+      'Plush wave-quilted comfort layer',
+      'Elastic corner straps keep it in place',
+      'Softens a mattress that feels too firm',
+      'Refreshes the feel of the bed you already own',
+      'Twin through King, one price for every size',
+    ],
+    bestFor: ['Side sleepers', 'Softening a firm mattress', 'Pressure relief seekers', 'Guest rooms'],
+    components: [],
+    materials: [],
+  },
 ];
 
 // BedTech adjustable bases — sold through Busby as a brand partnership.
@@ -786,6 +828,17 @@ export const allProducts: Product[] = [...homeLineProducts, ...accessoryProducts
 export function isAdjustableBase(product: Pick<Product, 'type'>): boolean {
   return product.type === 'Adjustable Base';
 }
+
+export function isTopper(product: Pick<Product, 'type'>): boolean {
+  return product.type === 'Mattress Topper';
+}
+
+/** Sleep accessories that use the spec-sheet product layout (not the mattress tabs). */
+export function usesAccessoryLayout(product: Pick<Product, 'type'>): boolean {
+  return isAdjustableBase(product) || isTopper(product);
+}
+
+export const mattressTopper = accessoryProducts.find((p) => p.slug === 'mattress-topper');
 
 export function getProductBySlug(slug: string): Product | undefined {
   return allProducts.find((p) => p.slug === slug);

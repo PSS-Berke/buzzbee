@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { isAdjustableBase, type Product, type Size } from '@/data/products';
+import { isAdjustableBase, isTopper, usesAccessoryLayout, type Product, type Size } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 
 interface ProductInfoProps {
@@ -14,10 +14,14 @@ export default function ProductInfo({ product }: ProductInfoProps) {
   const { addItem, openCartDrawer } = useCart();
   const isStudio = product.line === 'studio';
   const isBase = isAdjustableBase(product);
+  const isAccessoryLayout = usesAccessoryLayout(product);
   const capacity = product.specs?.find((s) => s.label === 'Weight capacity')?.value;
   const trustBadges = isBase
     ? ['Financing Available', '20-Year Limited Warranty', ...(capacity ? [`${capacity} Capacity`] : []), 'Tool-Free Setup']
-    : ['Financing Available', 'Free Doorstep Delivery', 'Free Returns', '100 Night Guarantee', '10 Year Warranty'];
+    : isTopper(product)
+      ? ['Financing Available', 'One Price, Every Size', 'On Display in Elmhurst']
+      : ['Financing Available', 'Free Doorstep Delivery', 'Free Returns', '100 Night Guarantee', '10 Year Warranty'];
+  const badgeCols: Record<number, string> = { 3: 'md:grid-cols-3', 4: 'md:grid-cols-4', 5: 'md:grid-cols-5' };
   const [selectedSize, setSelectedSize] = useState<Size>(
     product.sizes.find((s) => s.name === 'Queen') || product.sizes[0]
   );
@@ -69,7 +73,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <span aria-hidden="true" className="mx-2">/</span>
           </li>
           <li className="flex items-center">
-            {isBase ? (
+            {isAccessoryLayout ? (
               <Link href="/shop/sleep-accessories" className="hover:text-navy transition-colors">Sleep Accessories</Link>
             ) : (
               <Link href="/products" className="hover:text-navy transition-colors">Mattresses</Link>
@@ -171,7 +175,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       {/* Trust Badges - Single Elegant Line */}
       <div
         className={`grid grid-cols-2 sm:grid-cols-3 gap-3 py-6 px-4 bg-[var(--accent)]/5 rounded-2xl text-sm text-gray-600 ${
-          trustBadges.length === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4'
+          badgeCols[trustBadges.length] ?? 'md:grid-cols-4'
         }`}
       >
         {trustBadges.map((badge) => (

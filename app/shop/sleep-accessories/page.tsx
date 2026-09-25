@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
-import { accessoryProducts, adjustableBaseProducts } from '@/data/products';
+import { ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { accessoryProducts, adjustableBaseProducts, mattressTopper } from '@/data/products';
 
 export const metadata = {
   title: 'Shop Sleep Accessories | Busby',
   description:
-    'Complete your sleep setup with Busby sleep accessories — certified mattress protection and BedTech adjustable bases, chosen to keep your mattress performing its best.',
+    'Complete your sleep setup with Busby sleep accessories — a plush mattress topper, certified mattress protection, and BedTech adjustable bases, chosen to keep your mattress performing its best.',
   alternates: { canonical: '/shop/sleep-accessories' },
 };
 
@@ -108,6 +108,61 @@ export default function SleepAccessoriesPage() {
                   {/* CTA */}
                   <div className="inline-flex items-center gap-3 text-gold-dark group-hover:gap-5 transition-all duration-500">
                     <span className="font-medium">Shop the Encasement</span>
+                    <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-500" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Mattress Topper */}
+      {mattressTopper && (
+        <section className="py-16 relative overflow-hidden z-10" aria-labelledby="topper-heading">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Link
+              href={`/products/${mattressTopper.slug}`}
+              className="group block relative bg-white border-2 border-gold/30 rounded-3xl overflow-hidden shadow-xl shadow-gold/5 hover:shadow-2xl hover:shadow-gold/10 transition-all duration-500"
+            >
+              <div className="grid lg:grid-cols-2 lg:min-h-[500px]">
+                {/* Image Side (right on desktop, mirrors the encasement card) */}
+                <div className="relative overflow-hidden min-h-[260px] sm:min-h-[320px] lg:min-h-0 bg-[#f5f2ee] lg:order-2">
+                  <Image
+                    src={mattressTopper.images[0]}
+                    alt={mattressTopper.name}
+                    fill
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                </div>
+
+                {/* Content Side */}
+                <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
+                  <span className="text-gold-dark font-medium text-sm mb-4">New Accessory</span>
+                  <h2 id="topper-heading" className="text-3xl lg:text-4xl font-serif text-navy mb-2">
+                    {mattressTopper.name}
+                  </h2>
+                  <p className="text-xl text-gray-600 mb-6 italic">{mattressTopper.tagline}</p>
+
+                  <ul className="space-y-2.5 mb-8">
+                    {mattressTopper.features.map((feature) => (
+                      <li key={feature} className="flex items-center gap-3 text-sm text-gray-600">
+                        <div className="w-5 h-5 bg-gold/15 rounded-full flex items-center justify-center shrink-0">
+                          <Sparkles className="w-3 h-3 text-gold-dark" aria-hidden="true" />
+                        </div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="flex items-center gap-4 mb-8">
+                    <span className="text-3xl text-navy">${mattressTopper.price.toLocaleString()}</span>
+                    <span className="text-sm text-gray-600">any size</span>
+                  </div>
+
+                  <div className="inline-flex items-center gap-3 text-gold-dark group-hover:gap-5 transition-all duration-500">
+                    <span className="font-medium">Shop the Topper</span>
                     <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform duration-500" />
                   </div>
                 </div>

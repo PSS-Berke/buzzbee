@@ -179,10 +179,12 @@ export default function QuickBook() {
         </Link>
       </div>
 
-      {/* Days */}
-      <fieldset className="mt-6">
+      {/* Days — a swipeable strip on phones, a 7-up grid from sm. min-w-0 matters:
+          a <fieldset> defaults to min-inline-size: min-content, which stretches it
+          to the strip's full width so the strip never scrolls (it just gets clipped). */}
+      <fieldset className="mt-6 min-w-0">
         <legend className="sr-only">Day</legend>
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:grid sm:grid-cols-7 sm:overflow-visible">
+        <div className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-2 overflow-x-auto overscroll-x-contain px-5 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-7 sm:overflow-visible sm:px-0">
           {days.map((d) => {
             const { weekday, day, long } = dayParts(d);
             const slots = slotsFor(d);
@@ -199,7 +201,7 @@ export default function QuickBook() {
                   setDate(d);
                   setSlot('');
                 }}
-                className={`flex min-h-11 w-[4.5rem] shrink-0 sm:w-auto flex-col items-center rounded-2xl border-2 py-2 transition-colors ${
+                className={`flex min-h-11 w-[4.5rem] shrink-0 snap-start sm:w-auto flex-col items-center rounded-2xl border-2 py-2 transition-colors ${
                   selected ? 'border-navy bg-navy text-white' : 'border-gray-200 bg-white text-navy hover:border-navy/40'
                 }`}
               >
@@ -213,7 +215,7 @@ export default function QuickBook() {
       </fieldset>
 
       {/* Times */}
-      <fieldset className="mt-5">
+      <fieldset className="mt-5 min-w-0">
         <legend className="mb-2 text-sm font-medium text-navy">
           {date ? dayParts(date).long : 'Loading times…'}
         </legend>
