@@ -6,6 +6,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, CalendarCheck, Check, X } from 'lucide-react';
 import { productLines, type Product, type ProductLine } from '@/data/products';
+import { MAX_COMPARE } from '@/lib/compare';
+import LineTag from '@/components/product/LineTag';
 
 type Construction = 'Hybrid' | 'Foam';
 type SortKey = 'recommended' | 'price-asc' | 'price-desc';
@@ -35,7 +37,6 @@ const TYPE_CHIPS: { value: Construction; label: string }[] = [
 
 const LINE_CHIPS: ProductLine[] = ['artisan', 'studio'];
 
-const MAX_COMPARE = 4;
 
 // "Best for" line — skips the generic "… comfort seekers" entries.
 function bestFor(p: Product) {
@@ -47,18 +48,6 @@ function bestFor(p: Product) {
 
 function typeLabel(p: Product) {
   return p.type === 'Foam' ? 'All-foam' : p.type;
-}
-
-function LineTag({ line }: { line: ProductLine }) {
-  return line === 'studio' ? (
-    <span className="inline-block bg-paper text-clay-deep text-[11px] font-semibold tracking-[0.15em] uppercase px-2.5 py-1 border border-grid">
-      Studio
-    </span>
-  ) : (
-    <span className="inline-block bg-white text-gold-dark text-xs font-semibold px-3 py-1 rounded-full shadow-sm">
-      Artisan
-    </span>
-  );
 }
 
 function Chip({

@@ -182,8 +182,8 @@ body:has([data-line="studio"]:not([data-embed])) .quilted-wave-overlay {
   display: none;
 }
 
-/* The /products compare tray docks to the bottom edge; hide the floating
-   announcement pill while it's open so the two don't stack. */
+/* Bottom compare trays (/products, Shop by Feel) dock to the bottom edge; hide
+   the floating announcement pill while one is open so the two don't stack. */
 body:has([data-compare-tray]) [aria-label='Site announcement'] {
   display: none;
 }
@@ -279,10 +279,4 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Bottom compare trays (Shop by Feel, /products) dock to the bottom edge; hide
-   the floating announcement pill while one is open so the two don't stack. */
-body:has([data-compare-tray]) [aria-label='Site announcement'] {
-  display: none;
 }
