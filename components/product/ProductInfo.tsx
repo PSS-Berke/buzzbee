@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import type { Product, Size } from '@/data/products';
+import { isAdjustableBase, type Product, type Size } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 
 interface ProductInfoProps {
@@ -13,6 +13,11 @@ interface ProductInfoProps {
 export default function ProductInfo({ product }: ProductInfoProps) {
   const { addItem, openCartDrawer } = useCart();
   const isStudio = product.line === 'studio';
+  const isBase = isAdjustableBase(product);
+  const capacity = product.specs?.find((s) => s.label === 'Weight capacity')?.value;
+  const trustBadges = isBase
+    ? ['Financing Available', '20-Year Limited Warranty', ...(capacity ? [`${capacity} Capacity`] : []), 'Tool-Free Setup']
+    : ['Financing Available', 'Free Doorstep Delivery', 'Free Returns', '100 Night Guarantee', '10 Year Warranty'];
   const [selectedSize, setSelectedSize] = useState<Size>(
     product.sizes.find((s) => s.name === 'Queen') || product.sizes[0]
   );
@@ -64,7 +69,11 @@ export default function ProductInfo({ product }: ProductInfoProps) {
             <span aria-hidden="true" className="mx-2">/</span>
           </li>
           <li className="flex items-center">
-            <Link href="/products" className="hover:text-navy transition-colors">Mattresses</Link>
+            {isBase ? (
+              <Link href="/shop/sleep-accessories" className="hover:text-navy transition-colors">Sleep Accessories</Link>
+            ) : (
+              <Link href="/products" className="hover:text-navy transition-colors">Mattresses</Link>
+            )}
             <span aria-hidden="true" className="mx-2">/</span>
           </li>
           <li aria-current="page" className="text-navy">
@@ -76,7 +85,13 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       {/* Title Section - Editorial */}
       <div>
         <span className="inline-block text-[var(--accent-strong)] font-medium text-sm mb-3">
-          {product.line === 'studio' ? 'Studio' : product.brand === 'abt' ? 'abt Exclusive' : 'Busby'}
+          {product.brand === 'bedtech'
+            ? 'BedTech × Busby'
+            : product.line === 'studio'
+              ? 'Studio'
+              : product.brand === 'abt'
+                ? 'abt Exclusive'
+                : 'Busby'}
         </span>
         <h1 className={`text-3xl md:text-4xl lg:text-5xl text-navy mb-3 ${isStudio ? 'font-sans' : 'font-serif'}`}>
           The <span className="font-semibold">{product.name}</span>
@@ -154,27 +169,17 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       </button>
 
       {/* Trust Badges - Single Elegant Line */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 py-6 px-4 bg-[var(--accent)]/5 rounded-2xl text-sm text-gray-600">
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
-          Financing Available
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
-          Free Doorstep Delivery
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
-          Free Returns
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
-          100 Night Guarantee
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
-          10 Year Warranty
-        </span>
+      <div
+        className={`grid grid-cols-2 sm:grid-cols-3 gap-3 py-6 px-4 bg-[var(--accent)]/5 rounded-2xl text-sm text-gray-600 ${
+          trustBadges.length === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4'
+        }`}
+      >
+        {trustBadges.map((badge) => (
+          <span key={badge} className="flex items-center gap-2">
+            <span className="w-2 h-2 flex-shrink-0 bg-[var(--accent)] rounded-full" />
+            {badge}
+          </span>
+        ))}
       </div>
     </div>
   );

@@ -203,7 +203,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const itemCount = state.items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const savings = state.items.reduce(
-    (sum, item) => sum + (item.originalPrice - item.price) * item.quantity,
+    // Clamp per line: items with no markdown (or larger sizes priced above the
+    // product's reference price) must not cancel out real savings elsewhere.
+    (sum, item) => sum + Math.max(0, item.originalPrice - item.price) * item.quantity,
     0
   );
 

@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
-import { accessoryProducts } from '@/data/products';
+import { accessoryProducts, adjustableBaseProducts } from '@/data/products';
 
 export const metadata = {
   title: 'Shop Sleep Accessories | Busby',
   description:
-    'Complete your sleep setup with Busby sleep accessories — certified protectors and more to keep your mattress performing its best.',
+    'Complete your sleep setup with Busby sleep accessories — certified mattress protection and BedTech adjustable bases, chosen to keep your mattress performing its best.',
   alternates: { canonical: '/shop/sleep-accessories' },
 };
 
@@ -37,7 +37,7 @@ export default function SleepAccessoriesPage() {
             <span className="wavy-underline">Protect</span> Your Sleep
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Every great mattress deserves great protection. Busby accessories are built to the same standard as our mattresses.
+            Every great mattress deserves great protection and the right foundation. Busby accessories are held to the same standard as our mattresses.
           </p>
 
           {/* Trust badges */}
@@ -113,6 +113,74 @@ export default function SleepAccessoriesPage() {
                 </div>
               </div>
             </Link>
+          </div>
+        </section>
+      )}
+
+      {/* Adjustable Bases — BedTech partnership */}
+      {adjustableBaseProducts.length > 0 && (
+        <section className="py-16 relative z-10" aria-labelledby="adjustable-bases-heading">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <span className="text-gold-dark font-medium text-sm">Adjustable Bases</span>
+                <span className="w-1 h-1 bg-gold rounded-full" aria-hidden="true" />
+                <span className="text-sm text-gray-600">In partnership with</span>
+                <Image
+                  src="/images/partners/bedtech-logo.png"
+                  alt="BedTech"
+                  width={640}
+                  height={120}
+                  className="h-5 w-auto"
+                />
+              </div>
+              <h2 id="adjustable-bases-heading" className="text-3xl md:text-4xl font-serif text-navy mb-4">
+                Raise Your <span className="wavy-underline">Comfort</span>
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Lift your head to read, raise your feet to unwind, and find your perfect position. We&apos;ve
+                partnered with BedTech to bring two of their adjustable bases to Busby.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {adjustableBaseProducts.map((base) => (
+                <Link
+                  key={base.id}
+                  href={`/products/${base.slug}`}
+                  className="group flex flex-col bg-white border-2 border-gold/20 rounded-3xl overflow-hidden shadow-lg shadow-gold/5 hover:border-gold/40 hover:shadow-2xl hover:shadow-gold/10 transition-all duration-500"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-[#f5f2ee]">
+                    <Image
+                      src={base.images[0]}
+                      alt={base.name}
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="flex flex-col flex-1 p-8 md:p-10">
+                    <h3 className="text-2xl lg:text-3xl font-serif text-navy mb-2">{base.name}</h3>
+                    <p className="text-gray-600 mb-6 italic">{base.tagline}</p>
+                    <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
+                      {base.features.slice(0, 6).map((feature) => (
+                        <li key={feature} className="flex items-start gap-3 text-sm text-gray-600">
+                          <span className="w-1.5 h-1.5 bg-gold rounded-full mt-2 shrink-0" aria-hidden="true" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-auto flex items-center justify-between gap-4">
+                      <span className="text-2xl text-navy">From ${base.price.toLocaleString()}</span>
+                      <span className="inline-flex items-center gap-3 text-gold-dark group-hover:gap-5 transition-all duration-500">
+                        <span className="font-medium">Shop the {base.name.replace('BedTech ', '').replace(' Adjustable Base', '')}</span>
+                        <ArrowRight className="w-5 h-5" aria-hidden="true" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
       )}

@@ -41,7 +41,8 @@ export interface Product {
   id: string;
   slug: string;
   name: string;
-  brand: 'abt' | 'busby';
+  /** 'bedtech' = partner product sold through Busby (BedTech brand partnership). */
+  brand: 'abt' | 'busby' | 'bedtech';
   line: 'artisan' | 'studio';
   type: string;
   tagline: string;
@@ -60,6 +61,8 @@ export interface Product {
   materials: Material[];
   /** Product explainer video. Optional — only some beds have one shot. */
   video?: { src: string; poster: string };
+  /** At-a-glance spec rows (label/value). Used by non-mattress products such as adjustable bases. */
+  specs?: { label: string; value: string }[];
 }
 
 export type ProductLine = 'artisan' | 'studio';
@@ -652,7 +655,137 @@ export const accessoryProducts: Product[] = [
   },
 ];
 
-export const allProducts: Product[] = [...homeLineProducts, ...accessoryProducts];
+// BedTech adjustable bases — sold through Busby as a brand partnership.
+// Prices per Tag (Sleep6), 2026-09-25; features/specs from BedTech's retail
+// price cards. Split sizes are intentionally omitted until pricing is confirmed.
+export const adjustableBaseProducts: Product[] = [
+  {
+    id: 'base-btx4',
+    slug: 'bedtech-btx4-adjustable-base',
+    name: 'BedTech BTX4 Adjustable Base',
+    brand: 'bedtech',
+    line: 'artisan',
+    type: 'Adjustable Base',
+    tagline: 'Head and foot lift, set up in minutes — no tools required.',
+    description:
+      'The BedTech BTX4 is a versatile, easy-to-own adjustable base. Independent head and foot adjustment lets you find your spot for reading, watching TV, or simply taking pressure off your back, all from a wireless remote. Its center-folding frame arrives ready to go and sets up in minutes without a single tool.',
+    price: 1049,
+    originalPrice: 1049,
+    rating: 0,
+    reviewCount: 0,
+    images: [
+      '/images/products/BedTech/btx4/btx4-full-queen-001.webp',
+      '/images/products/BedTech/btx4/btx4-001.webp',
+      '/images/products/BedTech/btx4/btx4-full-queen-002.webp',
+      '/images/products/BedTech/btx4/btx4-002.webp',
+      '/images/products/BedTech/btx4/btx4-twin-xl-001.webp',
+      '/images/products/BedTech/btx4/btx4-006.webp',
+      '/images/products/BedTech/btx4/btx4-007.webp',
+      '/images/products/BedTech/btx4/btx4-remote.webp',
+    ],
+    sizes: [
+      { name: 'Twin', dimensions: '38" x 75"', price: 1049, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 1049, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1099, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1099, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 1599, inStock: true },
+    ],
+    firmness: [],
+    selectedFirmness: '',
+    features: [
+      'Head + foot adjustment',
+      'Wireless remote',
+      'Dual 6000N head & foot motors',
+      '850 lb weight capacity',
+      'Center-folding design',
+      'Tool-free setup in minutes',
+      'Upholstered deck with padded plywood platform',
+      '20-year limited warranty',
+    ],
+    bestFor: ['Reading & watching TV in bed', 'Easing back pressure', 'First-time adjustable owners', 'Busby mattress owners'],
+    components: [],
+    materials: [],
+    specs: [
+      { label: 'Adjustment', value: 'Head + foot' },
+      { label: 'Motors', value: '2 × 6000N' },
+      { label: 'Remote', value: 'Wireless' },
+      { label: 'Weight capacity', value: '850 lb' },
+      { label: 'Assembly', value: 'Center-folding, no tools' },
+      { label: 'Deck', value: 'Upholstered woven/non-woven fabric over padded plywood' },
+      { label: 'Warranty', value: '20-year limited' },
+    ],
+  },
+  {
+    id: 'base-bt3000',
+    slug: 'bedtech-bt3000-adjustable-base',
+    name: 'BedTech BT3000 Adjustable Base',
+    brand: 'bedtech',
+    line: 'artisan',
+    type: 'Adjustable Base',
+    tagline: 'Zero gravity, massage, and memory positions at the touch of a button.',
+    description:
+      'The BedTech BT3000 is a fully loaded adjustable base. Save your favorite positions, jump to Zero Gravity, TV, or Lounge with one touch, and unwind with three-level head and foot massage. Built-in USB charging, under-bed lighting, Bluetooth app control, and legs that set to 4", 8", or 12" make it as practical as it is comfortable.',
+    price: 1499,
+    originalPrice: 1499,
+    rating: 0,
+    reviewCount: 0,
+    images: [
+      '/images/products/BedTech/bt3000/bt3000-queen-king-001.webp',
+      '/images/products/BedTech/bt3000/bt3000-001.webp',
+      '/images/products/BedTech/bt3000/bt3000-queen-king-002.webp',
+      '/images/products/BedTech/bt3000/bt3000-base-001.webp',
+      '/images/products/BedTech/bt3000/bt3000-003.webp',
+      '/images/products/BedTech/bt3000/bt3000-twin-xl-001.webp',
+      '/images/products/BedTech/bt3000/bt3000-remote.webp',
+    ],
+    sizes: [
+      { name: 'Twin', dimensions: '38" x 75"', price: 1499, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 1499, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1599, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1599, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2399, inStock: true },
+    ],
+    firmness: [],
+    selectedFirmness: '',
+    features: [
+      'Head + foot adjustment',
+      'Head + foot massage — 3 intensities, 3 modes',
+      'Zero Gravity, TV & Lounge presets',
+      '2 programmable memory positions',
+      'One-touch return to flat',
+      'Bluetooth app control',
+      '2 under-bed USB charging ports',
+      'Under-bed LED lighting',
+      'Remote with built-in flashlight',
+      '3-in-1 adjustable legs (4", 8" or 12")',
+      'Platform friendly — zero clearance',
+      'Emergency battery backup',
+      'Center-folding, tool-free setup',
+      '850 lb weight capacity',
+      '20-year limited warranty',
+    ],
+    bestFor: ['Zero Gravity comfort', 'Couples who read or stream in bed', 'Massage lovers', 'Busby mattress owners'],
+    components: [],
+    materials: [],
+    specs: [
+      { label: 'Adjustment', value: 'Head + foot' },
+      { label: 'Massage', value: 'Head + foot, 3 intensities, 3 modes' },
+      { label: 'Presets', value: 'Zero Gravity, TV, Lounge + 2 memory' },
+      { label: 'Connectivity', value: 'Bluetooth app control' },
+      { label: 'Extras', value: '2 USB ports, under-bed LED, flashlight remote' },
+      { label: 'Leg height', value: '4", 8" or 12" (3-in-1 legs)' },
+      { label: 'Weight capacity', value: '850 lb' },
+      { label: 'Assembly', value: 'Center-folding, no tools' },
+      { label: 'Warranty', value: '20-year limited' },
+    ],
+  },
+];
+
+export const allProducts: Product[] = [...homeLineProducts, ...accessoryProducts, ...adjustableBaseProducts];
+
+export function isAdjustableBase(product: Pick<Product, 'type'>): boolean {
+  return product.type === 'Adjustable Base';
+}
 
 export function getProductBySlug(slug: string): Product | undefined {
   return allProducts.find((p) => p.slug === slug);

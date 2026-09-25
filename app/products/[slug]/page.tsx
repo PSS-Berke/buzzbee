@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { getProductBySlug, getAllProductSlugs, homeLineProducts } from '@/data/products';
+import { getProductBySlug, getAllProductSlugs, homeLineProducts, isAdjustableBase } from '@/data/products';
 import { SITE_URL } from '@/lib/site';
 import ImageGallery from '@/components/product/ImageGallery';
 import ProductInfo from '@/components/product/ProductInfo';
@@ -12,6 +12,8 @@ import StudioSpecSheet from '@/components/product/StudioSpecSheet';
 import FitsAnyBed from '@/components/product/FitsAnyBed';
 import FitsAnyCrib from '@/components/product/FitsAnyCrib';
 import FAKMission from '@/components/product/FAKMission';
+import BaseSpecSheet from '@/components/product/BaseSpecSheet';
+import PairWithBase from '@/components/product/PairWithBase';
 import LayerSwitcher from '@/components/home/LayerSwitcher';
 import { Check } from 'lucide-react';
 
@@ -33,6 +35,22 @@ export async function generateMetadata({ params }: ProductPageProps) {
   if (!product) {
     return {
       title: 'Product Not Found | Busby',
+    };
+  }
+
+  if (isAdjustableBase(product)) {
+    const title = `${product.name} | Adjustable Bed Base | Busby`;
+    return {
+      title,
+      description: product.description,
+      keywords: [product.name, 'adjustable base', 'adjustable bed frame', 'BedTech', ...product.bestFor],
+      alternates: { canonical: `/products/${slug}` },
+      openGraph: {
+        title,
+        description: product.description,
+        url: `${SITE_URL}/products/${slug}`,
+        images: product.images[0] ? [{ url: product.images[0], alt: product.name }] : [],
+      },
     };
   }
 
@@ -69,6 +87,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   const isStudio = product.line === 'studio';
+  const isBase = isAdjustableBase(product);
+  // BedTech base cross-sell goes on adult mattress pages only (not cribs, accessories, or the bases themselves)
+  const showBaseCrossSell = !isBase && product.firmness.length > 0 && product.type !== 'Crib Mattress';
 
   // Get related products from the same line (excluding current product)
   const productPool = homeLineProducts.filter((p) => p.line === product.line);
@@ -92,7 +113,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    brand: { '@type': 'Brand', name: 'Busby' },
+    brand: { '@type': 'Brand', name: isBase ? 'BedTech' : 'Busby' },
     image: product.images,
     url: `${SITE_URL}/products/${product.slug}`,
     aggregateRating: product.reviewCount > 0
@@ -116,7 +137,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: 'Mattresses', item: `${SITE_URL}/products` },
+      isBase
+        ? { '@type': 'ListItem', position: 2, name: 'Sleep Accessories', item: `${SITE_URL}/shop/sleep-accessories` }
+        : { '@type': 'ListItem', position: 2, name: 'Mattresses', item: `${SITE_URL}/products` },
       { '@type': 'ListItem', position: 3, name: product.name, item: `${SITE_URL}/products/${product.slug}` },
     ],
   };
@@ -154,7 +177,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <ImageGallery
               images={product.images}
               productName={product.name}
-              productAlt={`${product.name} ${product.type} mattress`}
+              productAlt={isBase ? product.name : `${product.name} ${product.type} mattress`}
             />
           </div>
 
@@ -164,12 +187,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        {/* Tabs section — Studio gets the spec-sheet layout; Artisan keeps the classic tabs */}
-        {isStudio ? <StudioSpecSheet product={product} /> : <ProductTabs product={product} />}
+        {/* Tabs section — Studio gets the spec-sheet layout; Artisan keeps the classic tabs; bases get their own spec sheet */}
+        {isBase ? (
+          <BaseSpecSheet product={product} />
+        ) : isStudio ? (
+          <StudioSpecSheet product={product} />
+        ) : (
+          <ProductTabs product={product} />
+        )}
 
-        {/* Fits any bed / crib section */}
-        {slug === 'nest' ? <FitsAnyCrib /> : <FitsAnyBed />}
+        {/* Fits any bed / crib section (mattresses only) */}
+        {!isBase && (slug === 'nest' ? <FitsAnyCrib /> : <FitsAnyBed />)}
       </section>
+
+      {/* "You may also want" — BedTech adjustable bases */}
+      {showBaseCrossSell && <PairWithBase productName={product.name} />}
 
       {/* Explainer video, for the beds that have one */}
       {product.video && (
@@ -196,11 +228,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
               We stand behind our products. If you&apos;re not completely satisfied, we&apos;ll help you find the right solution.
             </p>
             <ul className="max-w-md mx-auto space-y-3">
-              {[
-                '100% fiberglass-free construction',
-                ...(product.firmness.length > 0 ? ['10-year warranty'] : []),
-                'Ships to all 50 states',
-              ].map((item, i) => (
+              {(isBase
+                ? ['20-year limited BedTech warranty', 'Tool-free setup in minutes']
+                : [
+                    '100% fiberglass-free construction',
+                    ...(product.firmness.length > 0 ? ['10-year warranty'] : []),
+                    'Ships to all 50 states',
+                  ]
+              ).map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-gray-700">
                   <div className="w-5 h-5 bg-[var(--accent)]/20 rounded-full flex items-center justify-center">
                     <Check className="w-3 h-3 text-[var(--accent)]" />
