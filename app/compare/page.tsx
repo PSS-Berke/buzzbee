@@ -1,12 +1,18 @@
+import { Suspense } from 'react';
 import CompareClient from './CompareClient';
 
 export const metadata = {
   title: 'Compare Mattresses | Busby',
   description:
-    'Compare Busby mattresses side by side — toggle between the Artisan and Studio lines to find your perfect level.',
+    'Build your own comparison: pick any Busby mattresses from the Artisan and Studio lines and see them side by side.',
   alternates: { canonical: '/compare' },
 };
 
 export default function ComparePage() {
-  return <CompareClient />;
+  // CompareClient reads ?m= (the picked mattresses) via useSearchParams.
+  return (
+    <Suspense>
+      <CompareClient />
+    </Suspense>
+  );
 }
