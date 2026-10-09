@@ -286,7 +286,7 @@ export default function CompareClient() {
                 <p className="font-heading text-sm font-semibold uppercase tracking-widest text-gold">Elmhurst showroom</p>
                 <p className="mt-1 text-xl font-semibold">Feel the difference in person.</p>
                 <p className="mt-1 text-white/80">
-                  Try {picked.map(shortName).join(', ')} side by side. Free, private, by appointment.
+                  Try {picked.map(shortName).join(', ')} side by side. Book a free fitting, or stop by anytime — we&rsquo;re open 24/7.
                 </p>
               </div>
               <Link

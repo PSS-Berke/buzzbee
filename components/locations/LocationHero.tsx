@@ -20,11 +20,11 @@ export default function LocationHero() {
         </div>
 
         <h1 className="text-4xl md:text-6xl font-serif leading-tight mb-4">
-          A showroom <span className="text-gold">built around you</span>.
+          A showroom that&rsquo;s <span className="text-gold">always open</span>.
         </h1>
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed mb-12">
-          Try every Busby mattress in person. Staffed Mon–Thu, 10 AM–2 PM — or book an
-          appointment any day, 9 AM–7 PM, and a Sleep Guide will meet you at the door.
+          Try every Busby mattress, 24/7 — just text to enter. We&rsquo;re staffed Mon–Thu,
+          10 AM–2 PM, and you can book a Sleep Guide any day, 9 AM–7 PM.
         </p>
 
         <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden border border-gold/20 shadow-2xl shadow-navy/50 mb-10 bg-white">

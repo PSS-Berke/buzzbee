@@ -159,7 +159,7 @@ If this guide has been useful, the most helpful thing you can do is share it wit
 If you want to try a Busby:
 
 - **Online:** [Take our 2-minute Sleep Quiz](/quiz) for a personalized match.
-- **In person:** Visit our showroom in Elmhurst, IL. Walk-ins welcome, no commission, same online prices.
+- **In person:** Visit our showroom in Elmhurst, IL. Open 24/7 (just text to enter), no commission, same online prices.
 - **Questions:** [support@mybusby.com](mailto:support@mybusby.com)
 
 Whatever you decide — Busby or otherwise — sleep well.

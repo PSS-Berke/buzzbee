@@ -32,9 +32,9 @@ export default function SleepGuides() {
             Meet your Sleep Guide.
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            The showroom is self-serve by design. When you want expert guidance — choosing between
-            two models, sleep position questions, anything technical — book a Sleep Consultation
-            and Robert will meet you in store.
+            Outside staffed hours the showroom is self-serve. When you want expert guidance —
+            choosing between two models, sleep position questions, anything technical — book a
+            Sleep Consultation and Robert will meet you in store.
           </p>
         </div>
 

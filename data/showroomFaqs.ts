@@ -7,12 +7,12 @@ export interface ShowroomFaq {
 
 export const showroomFaqs: ShowroomFaq[] = [
   {
-    q: 'What are the showroom hours?',
-    a: 'The showroom is staffed Monday through Thursday, 10 AM–2 PM. Outside those hours, visits are by appointment — pick a time between 9 AM and 7 PM any day of the week and a Sleep Guide will meet you at the door.',
+    q: 'Wait — is the store really open 24/7?',
+    a: 'Yes. Text to enter any time, day or night. We’re staffed Monday through Thursday, 10 AM–2 PM; the rest of the time the showroom is yours to try in peace, on your own schedule.',
   },
   {
     q: 'How do I get help if I have questions?',
-    a: 'Two ways. During staffed hours (Mon–Thu, 10 AM–2 PM) walk in and someone will be there. Any other time, book a Sleep Consultation and one of our Sleep Guides will meet you in store at your scheduled time.',
+    a: 'During staffed hours (Mon–Thu, 10 AM–2 PM) someone will be there. Any other time, the in-store kiosk walks you through every model — or book a Sleep Consultation and one of our Sleep Guides will meet you in store at your scheduled time.',
   },
   {
     q: 'How do I actually buy a mattress at the showroom?',

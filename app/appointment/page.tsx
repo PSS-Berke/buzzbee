@@ -16,12 +16,12 @@ import ReserveForm from '@/components/locations/ReserveForm';
 export const metadata: Metadata = {
   title: 'Book a Free Mattress Fitting | Busby Elmhurst Showroom',
   description:
-    'Try every Busby mattress in private at our Elmhurst showroom. Visits are by appointment — pick a time online and a Sleep Guide meets you at the door.',
+    'Try every Busby mattress in private at our Elmhurst showroom. Pick a time online and a Sleep Guide meets you at the door.',
   alternates: { canonical: '/appointment' },
   openGraph: {
     title: 'Book a Free Mattress Fitting | Busby Elmhurst Showroom',
     description:
-      'Try every Busby mattress in private at our Elmhurst showroom. Visits are by appointment.',
+      'Try every Busby mattress in private at our Elmhurst showroom with a Sleep Guide.',
     url: `${SITE_URL}/appointment`,
     type: 'website',
   },
@@ -62,8 +62,8 @@ export default function AppointmentPage() {
             Book a Free <span className="text-gold">Mattress Fitting</span>.
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed">
-            Our Elmhurst showroom is by appointment. Pick a time and a Sleep Guide meets you at the
-            door, then you have the whole place to yourself to try every bed we make.
+            Pick a time and a Sleep Guide meets you at the Elmhurst showroom door, then you have
+            the whole place to yourself to try every bed we make.
           </p>
 
           {/* Primary path: book online */}

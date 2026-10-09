@@ -79,7 +79,7 @@ export default function BookAFittingPage() {
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                Our Elmhurst showroom is by appointment, so when you come the whole place is yours.
+                Book a fitting and a Sleep Guide meets you at our Elmhurst showroom.
                 Try every bed we make with nobody hovering and no pressure to buy.
               </p>
             </div>

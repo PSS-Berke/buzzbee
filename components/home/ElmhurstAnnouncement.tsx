@@ -59,12 +59,12 @@ export default function ElmhurstAnnouncement() {
                 {eyebrowByPhase[elmhurstStore.launchPhase]}
               </span>
               <h2 className="text-3xl md:text-4xl font-serif text-navy mb-4 leading-tight">
-                A showroom built around you.
+                A showroom that&rsquo;s open whenever you are.
               </h2>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                Every Busby model, side by side. Walk in Mon–Thu, 10 AM–2 PM when we&rsquo;re
-                staffed, or book an appointment any day between 9 AM and 7 PM and a Sleep Guide
-                will meet you at the door.
+                Every Busby model, side by side, 24/7 — just text to enter. We&rsquo;re staffed
+                Mon–Thu, 10 AM–2 PM, or book a Sleep Consultation any day and a Sleep Guide will
+                meet you at the door.
               </p>
 
               <div className="space-y-4 mb-8">

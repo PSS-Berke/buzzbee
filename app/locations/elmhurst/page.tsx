@@ -11,13 +11,13 @@ import LocationFAQ from '@/components/locations/LocationFAQ';
 import StoreViewTracker from '@/components/locations/StoreViewTracker';
 
 export const metadata: Metadata = {
-  title: 'Mattress Store in Elmhurst, IL — Busby Showroom, by Appointment',
-  description: `Try every Busby mattress side-by-side at our showroom at ${formatAddress(elmhurstStore.address)}. Staffed Mon–Thu 10 AM–2 PM; by appointment 9 AM–7 PM daily. Serving Elmhurst, Oak Brook, Hinsdale, and the western Chicago suburbs. American-made, 100-night trial.`,
+  title: 'Mattress Store in Elmhurst, IL — Busby Showroom, Open 24/7',
+  description: `Try every Busby mattress side-by-side at our 24/7 showroom at ${formatAddress(elmhurstStore.address)} — just text to enter. Staffed Mon–Thu 10 AM–2 PM. Serving Elmhurst, Oak Brook, Hinsdale, and the western Chicago suburbs. American-made, 100-night trial.`,
   alternates: { canonical: '/locations/elmhurst' },
   openGraph: {
-    title: 'Mattress Store in Elmhurst, IL — Busby Showroom, by Appointment',
+    title: 'Mattress Store in Elmhurst, IL — Busby Showroom, Open 24/7',
     description:
-      'Try every Busby mattress side-by-side at our Elmhurst showroom. Staffed Mon–Thu 10 AM–2 PM; by appointment 9 AM–7 PM daily.',
+      'Try every Busby mattress side-by-side at our Elmhurst showroom. Open 24/7 — just text to enter.',
     url: `${SITE_URL}/locations/elmhurst`,
     type: 'website',
   },
@@ -48,15 +48,23 @@ const localBusinessSchema = {
   openingHoursSpecification: [
     {
       '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
-      opens: '10:00',
-      closes: '14:00',
+      dayOfWeek: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ],
+      opens: '00:00',
+      closes: '23:59',
     },
   ],
   areaServed: ['Elmhurst', 'Oak Brook', 'Hinsdale', 'Chicago', 'DuPage County'],
   priceRange: '$$$',
   description:
-    'Busby mattress showroom in Elmhurst, IL. Staffed Mon–Thu 10 AM–2 PM; by appointment 9 AM–7 PM daily. Try every American-made Busby mattress side-by-side, same prices as online.',
+    'Busby mattress showroom in Elmhurst, IL. Open 24/7 — just text to enter. Staffed Mon–Thu 10 AM–2 PM. Try every American-made Busby mattress side-by-side, same prices as online.',
   hasMap: elmhurstStore.mapsLink,
   parentOrganization: {
     '@type': 'Organization',
