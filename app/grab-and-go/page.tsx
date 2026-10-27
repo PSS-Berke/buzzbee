@@ -1,52 +1,61 @@
 import Link from 'next/link';
 import {
-  Tag,
-  CheckCircle,
+  Star,
   Phone,
   MessageSquare,
   ExternalLink,
-  ShoppingBag,
-  PackageCheck,
-  Home,
+  GraduationCap,
+  KeyRound,
+  BedDouble,
+  Truck,
+  Store,
+  CalendarCheck,
+  ArrowRight,
 } from 'lucide-react';
 import { elmhurstStore, formatAddress } from '@/data/store';
-import { grabAndGoProduct } from '@/data/products';
 import GrabAndGoBuy from '@/components/grab-and-go/GrabAndGoBuy';
 
-const steps = [
+// Who it is for. Richard's examples from the Oct 26 call were a kid heading off
+// to college and someone renting a place for a year.
+const moments = [
   {
-    icon: ShoppingBag,
-    title: 'Order online',
-    body: 'Pick store pickup or delivery and check out in a couple of minutes.',
+    icon: GraduationCap,
+    title: 'Heading off to school',
+    body: 'A real mattress for the first apartment, sorted before move-in day.',
   },
   {
-    icon: PackageCheck,
-    title: 'We get it ready',
-    body: 'We reach out to confirm your pickup time or delivery window.',
+    icon: KeyRound,
+    title: 'Renting for a year',
+    body: 'Sleep well on a short lease without a big spend.',
   },
   {
-    icon: Home,
-    title: 'Sleep on it this week',
-    body: 'Ready at the showroom in 72 hours, or at your door in 96.',
+    icon: BedDouble,
+    title: 'Guest room or just moved',
+    body: 'Something far better than the air mattress, ready this week.',
   },
 ];
 
-const faqs = [
+const ways = [
   {
-    q: 'Why is it only online?',
-    a: 'Selling it online keeps it simple and keeps the price at $599. Order here and choose pickup or delivery.',
+    icon: Store,
+    title: 'Pick it up',
+    timing: '72 hours',
+    body: 'Order online and it is waiting at our Elmhurst showroom three days later.',
+    cta: { label: 'Order for pickup', href: '#buy' },
   },
   {
-    q: 'Where do I pick it up?',
-    a: `At the ${elmhurstStore.name}, ${formatAddress(elmhurstStore.address)}. Free parking right outside. We will contact you to set a time once it is ready.`,
+    icon: Truck,
+    title: 'Have it delivered',
+    timing: '96 hours',
+    body: 'Order online and we bring it to your door within four days. Delivery is free.',
+    cta: { label: 'Order for delivery', href: '#buy' },
   },
   {
-    q: 'How fast is delivery?',
-    a: 'Within 96 hours of your order. We will reach out to set a delivery window that works for you.',
-  },
-  {
-    q: 'Can I try it before I buy?',
-    a: 'Yes. Book a free fitting and lie on it at the showroom first. The $599 price is still for online orders.',
+    icon: CalendarCheck,
+    title: 'Try it first',
+    timing: 'Your time',
+    body: 'Book a visit and lie on it at the showroom before you decide.',
+    cta: { label: 'Book a visit', href: '/book-a-fitting' },
   },
 ];
 
@@ -64,33 +73,41 @@ export default function GrabAndGoPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-[auto_1fr] gap-6 lg:gap-x-14 lg:gap-y-8 items-start">
             <div className="lg:col-start-1 lg:row-start-1 lg:pt-6">
               <div className="inline-flex items-center gap-2 bg-gold/20 rounded-full px-4 py-2 text-sm text-gold-light mb-4">
-                <Tag className="w-4 h-4" aria-hidden="true" />
-                <span>Online only special</span>
+                <Star className="w-4 h-4 fill-gold text-gold" aria-hidden="true" />
+                <span>Our online special</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif leading-tight mb-3">
-                A Busby queen for <span className="text-gold">$599</span>.
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif leading-tight mb-3">
+                Grab and Go. <span className="text-gold">$599.</span>
               </h1>
 
-              <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
-                Order online, then pick it up in Elmhurst in 72 hours or have it delivered in 96.
-                No waiting weeks for a good night&rsquo;s sleep.
+              <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed mb-5">
+                A Busby mattress made in Wisconsin, ready this week. Only online.
               </p>
+
+              {/* The speed is the point, so the hours get top billing. */}
+              <dl className="grid grid-cols-2 gap-3 max-w-md">
+                <div className="rounded-xl bg-white/10 px-4 py-3">
+                  <dt className="text-xs uppercase tracking-wide text-gray-300">Store pickup</dt>
+                  <dd className="font-serif text-3xl text-gold">
+                    72<span className="text-lg"> hrs</span>
+                  </dd>
+                </div>
+                <div className="rounded-xl bg-white/10 px-4 py-3">
+                  <dt className="text-xs uppercase tracking-wide text-gray-300">Free delivery</dt>
+                  <dd className="font-serif text-3xl text-gold">
+                    96<span className="text-lg"> hrs</span>
+                  </dd>
+                </div>
+              </dl>
             </div>
 
             {/* Supporting detail. Below the buy box on a phone. */}
             <div className="lg:col-start-1 lg:row-start-2 order-last lg:order-none">
-              <ul className="space-y-3 mb-8">
-                {grabAndGoProduct.features.map((f) => (
-                  <li key={f} className="flex items-center gap-3 text-gray-200">
-                    <span className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="w-4 h-4 text-gold" aria-hidden="true" />
-                    </span>
-                    <span className="text-base">{f}</span>
-                  </li>
-                ))}
-              </ul>
-
+              <p className="text-gray-300 leading-relaxed mb-5 max-w-md">
+                Made in Wisconsin and backed by the same local team and Elmhurst showroom as
+                every Busby bed. Just quicker, and simpler.
+              </p>
               <div className="flex flex-col sm:flex-row gap-3 text-sm">
                 <a
                   href={`tel:${elmhurstStore.phoneE164}`}
@@ -109,29 +126,32 @@ export default function GrabAndGoPage() {
               </div>
             </div>
 
-            <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2">
+            <div id="buy" className="scroll-mt-24 lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <GrabAndGoBuy />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── How it works ── */}
+      {/* ── Who it is for ── */}
       <section className="py-16 md:py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-serif text-navy mb-10 text-center">
-            How it works
+          <h2 className="text-2xl md:text-3xl font-serif text-navy mb-3 text-center">
+            For when you need a good bed now
           </h2>
+          <p className="text-gray-600 text-center max-w-xl mx-auto mb-10 leading-relaxed">
+            No weeks of waiting and no sales floor. Order it, and sleep on it this week.
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {steps.map((s) => {
-              const Icon = s.icon;
+            {moments.map((m) => {
+              const Icon = m.icon;
               return (
-                <div key={s.title} className="bg-white rounded-2xl p-7 border-2 border-gold/15 shadow-sm">
+                <div key={m.title} className="bg-white rounded-2xl p-7 border-2 border-gold/15 shadow-sm">
                   <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-navy mb-4">
                     <Icon className="w-5 h-5 text-gold" aria-hidden="true" />
                   </span>
-                  <p className="font-semibold text-navy mb-2">{s.title}</p>
-                  <p className="text-gray-600 text-sm leading-relaxed">{s.body}</p>
+                  <p className="font-semibold text-navy mb-2">{m.title}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed">{m.body}</p>
                 </div>
               );
             })}
@@ -139,19 +159,36 @@ export default function GrabAndGoPage() {
         </div>
       </section>
 
-      {/* ── Questions ── */}
+      {/* ── Three ways to get it ── */}
       <section className="py-16 bg-white border-t border-gold/10">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-serif text-navy mb-8 text-center">
-            Good to know
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl md:text-3xl font-serif text-navy mb-10 text-center">
+            Three ways to get yours
           </h2>
-          <div className="space-y-4">
-            {faqs.map((f) => (
-              <div key={f.q} className="bg-[#faf8f5] rounded-2xl p-6 border-2 border-gold/15">
-                <h3 className="font-semibold text-navy mb-1.5">{f.q}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{f.a}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {ways.map((w) => {
+              const Icon = w.icon;
+              return (
+                <div
+                  key={w.title}
+                  className="flex flex-col bg-[#faf8f5] rounded-2xl p-7 border-2 border-gold/15"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <Icon className="w-6 h-6 text-gold-dark" aria-hidden="true" />
+                    <span className="font-serif text-xl text-navy">{w.timing}</span>
+                  </div>
+                  <h3 className="font-semibold text-navy mb-2">{w.title}</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed mb-5">{w.body}</p>
+                  <Link
+                    href={w.cta.href}
+                    className="mt-auto inline-flex min-h-11 items-center gap-2 text-gold-dark font-semibold hover:text-navy transition-colors"
+                  >
+                    {w.cta.label}
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -163,32 +200,26 @@ export default function GrabAndGoPage() {
             <h2 className="text-2xl md:text-3xl font-serif text-navy mb-3">Pickup in Elmhurst</h2>
             <p className="text-gray-600 mb-5 leading-relaxed">
               {formatAddress(elmhurstStore.address)}. Free parking right outside, easy from anywhere
-              in the western suburbs.
+              in the western suburbs. We reach out to set your pickup time once it is ready.
             </p>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 text-sm">
-              <a
-                href={elmhurstStore.mapsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-gold-dark font-semibold hover:text-navy transition-colors"
-              >
-                Get directions
-                <span className="sr-only"> (opens Google Maps in a new tab)</span>
-                <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-              </a>
-              <Link
-                href="/book-a-fitting"
-                className="inline-flex items-center gap-2 text-gold-dark font-semibold hover:text-navy transition-colors"
-              >
-                Want to try it first? Book a free fitting
-              </Link>
-            </div>
             <a
-              href="#top"
-              className="inline-flex items-center gap-2 bg-navy text-white font-semibold rounded-full px-8 py-4 hover:bg-navy/90 transition-colors"
+              href={elmhurstStore.mapsLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-gold-dark font-semibold hover:text-navy transition-colors mb-6"
             >
-              Get mine for $599
+              Get directions
+              <span className="sr-only"> (opens Google Maps in a new tab)</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
             </a>
+            <div>
+              <a
+                href="#buy"
+                className="inline-flex items-center gap-2 bg-navy text-white font-semibold rounded-full px-8 py-4 hover:bg-navy/90 transition-colors"
+              >
+                Grab mine for $599
+              </a>
+            </div>
           </div>
 
           <div className="aspect-[4/3] rounded-2xl overflow-hidden border-2 border-gold/15 shadow-sm bg-gray-100">

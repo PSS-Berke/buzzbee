@@ -2,9 +2,15 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, CalendarCheck, ChevronDown } from 'lucide-react';
+import { ArrowRight, CalendarCheck, ChevronDown, Star } from 'lucide-react';
 import HeroVideo from './HeroVideo';
 import QuickBook from './QuickBook';
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 export default function Hero() {
   const [open, setOpen] = useState(false);
@@ -40,9 +46,28 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 bg-gold/10 rounded-full px-4 py-2 text-sm text-navy">
-              <span className="w-2 h-2 bg-gold rounded-full animate-pulse" />
-              <span>Proudly Made in the USA</span>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center gap-2 bg-gold/10 rounded-full px-4 py-2 text-sm text-navy">
+                <span className="w-2 h-2 bg-gold rounded-full animate-pulse" />
+                <span>Proudly Made in the USA</span>
+              </div>
+
+              {/* Online-only special. Hover or focus shows "Click for more information". */}
+              <Link
+                href="/grab-and-go"
+                onClick={() => window.gtag?.('event', 'grab_and_go_home_click')}
+                className="group relative inline-flex min-h-11 items-center gap-2 bg-navy text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:bg-navy-light transition-colors"
+              >
+                <Star className="w-4 h-4 fill-gold text-gold" aria-hidden="true" />
+                Grab and Go <span className="text-gold">$599</span>
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-navy opacity-0 shadow-lg ring-1 ring-gold/20 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                >
+                  Click for more information
+                </span>
+              </Link>
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif leading-tight text-navy">

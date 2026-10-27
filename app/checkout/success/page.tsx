@@ -3,6 +3,12 @@
 import { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 
@@ -51,7 +57,13 @@ export default function CheckoutSuccessPage() {
 // Set by the grab and go checkout, which offers store pickup or delivery.
 function FulfillmentNote() {
   const fulfillment = useSearchParams().get('fulfillment');
-  if (fulfillment !== 'pickup' && fulfillment !== 'delivery') return null;
+  const isOffer = fulfillment === 'pickup' || fulfillment === 'delivery';
+
+  useEffect(() => {
+    if (isOffer) window.gtag?.('event', 'grab_and_go_purchase', { fulfillment });
+  }, [isOffer, fulfillment]);
+
+  if (!isOffer) return null;
 
   return (
     <div className="bg-white rounded-2xl border-2 border-gold/15 p-6 mb-10 text-left">

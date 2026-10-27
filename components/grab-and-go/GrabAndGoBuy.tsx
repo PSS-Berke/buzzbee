@@ -1,9 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { Store, Truck, Loader2, Lock } from 'lucide-react';
 import { grabAndGoProduct } from '@/data/products';
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 type Fulfillment = 'pickup' | 'delivery';
 
@@ -19,14 +26,14 @@ const options: {
     icon: Store,
     title: 'Store pickup',
     timing: 'Ready in 72 hours',
-    detail: 'At our Elmhurst showroom, 665 W North Ave',
+    detail: 'Pick it up at our Elmhurst showroom',
   },
   {
     value: 'delivery',
     icon: Truck,
     title: 'Delivery',
     timing: 'At your door in 96 hours',
-    detail: 'Free delivery in the Chicago area',
+    detail: 'Free delivery, straight to your home',
   },
 ];
 
@@ -40,8 +47,19 @@ export default function GrabAndGoBuy() {
   const [fulfillment, setFulfillment] = useState<Fulfillment>('pickup');
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
 
+  function choose(value: Fulfillment) {
+    setFulfillment(value);
+    window.gtag?.('event', 'grab_and_go_fulfillment_select', { fulfillment: value });
+  }
+
   async function handleBuy() {
     setStatus('loading');
+    window.gtag?.('event', 'begin_checkout', {
+      currency: 'USD',
+      value: size.price,
+      fulfillment,
+      items: [{ item_id: product.id, item_name: product.name, item_variant: size.name, price: size.price, quantity: 1 }],
+    });
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -61,6 +79,10 @@ export default function GrabAndGoBuy() {
 
   return (
     <div className="bg-white rounded-2xl p-5 sm:p-6 md:p-8 border-2 border-gold/15 shadow-lg text-navy">
+      {/* Only the note waits on the URL, so the buy box itself still renders on the server. */}
+      <Suspense fallback={null}>
+        <CancelledNote />
+      </Suspense>
       <div className="flex items-center gap-4 mb-5">
         <div className="relative w-24 h-20 sm:w-28 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden bg-[#faf8f5]">
           <Image
@@ -103,7 +125,7 @@ export default function GrabAndGoBuy() {
                   name="fulfillment"
                   value={o.value}
                   checked={selected}
-                  onChange={() => setFulfillment(o.value)}
+                  onChange={() => choose(o.value)}
                   className="sr-only"
                 />
                 <Icon className="w-5 h-5 mt-0.5 text-gold-dark flex-shrink-0" aria-hidden="true" />
@@ -145,5 +167,22 @@ export default function GrabAndGoBuy() {
         </p>
       )}
     </div>
+  );
+}
+
+// Stripe sends people who back out of checkout here with ?checkout=cancelled,
+// which is how the offer's cart abandonment shows up in GA4.
+function CancelledNote() {
+  const cancelled = useSearchParams().get('checkout') === 'cancelled';
+
+  useEffect(() => {
+    if (cancelled) window.gtag?.('event', 'grab_and_go_checkout_abandon');
+  }, [cancelled]);
+
+  if (!cancelled) return null;
+  return (
+    <p role="status" className="mb-4 rounded-xl bg-gold/10 px-4 py-3 text-sm">
+      Your order wasn&rsquo;t completed and nothing was charged. It&rsquo;s still here when you&rsquo;re ready.
+    </p>
   );
 }

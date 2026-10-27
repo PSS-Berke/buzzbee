@@ -108,7 +108,11 @@ export async function POST(req: NextRequest) {
       success_url: fulfillment
         ? `${origin}/checkout/success?fulfillment=${fulfillment}`
         : `${origin}/checkout/success`,
-      cancel_url: `${origin}/checkout/cancel`,
+      // The grab and go page is the only caller that sets fulfillment; send
+      // shoppers who back out there instead of to the cart.
+      cancel_url: fulfillment
+        ? `${origin}/grab-and-go?checkout=cancelled`
+        : `${origin}/checkout/cancel`,
     });
 
     return NextResponse.json({ url: session.url });
