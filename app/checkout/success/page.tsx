@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 
@@ -31,6 +32,9 @@ export default function CheckoutSuccessPage() {
           <p className="text-gray-600 mb-10">
             A confirmation email will be sent to you shortly. If you have any questions, feel free to reach out to us.
           </p>
+          <Suspense fallback={null}>
+            <FulfillmentNote />
+          </Suspense>
           <Link
             href="/"
             className="inline-flex items-center gap-2 bg-navy hover:bg-navy-light text-white font-medium py-4 px-8 rounded-full transition-all group"
@@ -40,6 +44,25 @@ export default function CheckoutSuccessPage() {
           </Link>
         </div>
       </div>
+    </div>
+  );
+}
+
+// Set by the grab and go checkout, which offers store pickup or delivery.
+function FulfillmentNote() {
+  const fulfillment = useSearchParams().get('fulfillment');
+  if (fulfillment !== 'pickup' && fulfillment !== 'delivery') return null;
+
+  return (
+    <div className="bg-white rounded-2xl border-2 border-gold/15 p-6 mb-10 text-left">
+      <p className="font-semibold text-navy mb-1">
+        {fulfillment === 'pickup' ? 'Store pickup in 72 hours' : 'Delivery in 96 hours'}
+      </p>
+      <p className="text-gray-600 text-sm leading-relaxed">
+        {fulfillment === 'pickup'
+          ? 'Your mattress will be ready at our Elmhurst showroom, 665 W North Ave. We will reach out to set a pickup time.'
+          : 'We will reach out to set a delivery window that works for you.'}
+      </p>
     </div>
   );
 }

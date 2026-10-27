@@ -13,6 +13,10 @@ interface CheckoutItemInput {
   quantity: number;
 }
 
+// How the order reaches the customer. Only the grab and go page sends this
+// today; the regular cart leaves it unset and always ships.
+type Fulfillment = 'pickup' | 'delivery';
+
 export async function POST(req: NextRequest) {
   if (!process.env.STRIPE_SECRET_KEY) {
     return NextResponse.json({ error: 'Stripe key not configured' }, { status: 500 });
@@ -21,10 +25,16 @@ export async function POST(req: NextRequest) {
     httpAgent: stripeAgent,
   });
   try {
-    const { items, email } = (await req.json()) as {
+    const { items, email, fulfillment: rawFulfillment } = (await req.json()) as {
       items?: CheckoutItemInput[];
       email?: string;
+      fulfillment?: string;
     };
+
+    if (rawFulfillment !== undefined && rawFulfillment !== 'pickup' && rawFulfillment !== 'delivery') {
+      return NextResponse.json({ error: 'Invalid fulfillment option' }, { status: 400 });
+    }
+    const fulfillment = rawFulfillment as Fulfillment | undefined;
 
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
@@ -74,14 +84,30 @@ export async function POST(req: NextRequest) {
       automatic_tax: { enabled: true },
       customer_email: email || undefined,
       line_items,
-      shipping_address_collection: {
-        allowed_countries: ['US'],
-      },
+      // Store pickup needs no shipping address; everything else ships.
+      ...(fulfillment === 'pickup'
+        ? {}
+        : { shipping_address_collection: { allowed_countries: ['US' as const] } }),
+      ...(fulfillment
+        ? {
+            metadata: { fulfillment },
+            custom_text: {
+              submit: {
+                message:
+                  fulfillment === 'pickup'
+                    ? 'Store pickup at 665 W North Ave, Elmhurst. Ready in 72 hours. We will contact you to set a time.'
+                    : 'Delivered to your door within 96 hours. We will contact you to set a delivery window.',
+              },
+            },
+          }
+        : {}),
       phone_number_collection: {
         enabled: true,
       },
       allow_promotion_codes: true,
-      success_url: `${origin}/checkout/success`,
+      success_url: fulfillment
+        ? `${origin}/checkout/success?fulfillment=${fulfillment}`
+        : `${origin}/checkout/success`,
       cancel_url: `${origin}/checkout/cancel`,
     });
 

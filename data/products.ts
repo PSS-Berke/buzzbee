@@ -825,6 +825,45 @@ export const adjustableBaseProducts: Product[] = [
 
 export const allProducts: Product[] = [...homeLineProducts, ...accessoryProducts, ...adjustableBaseProducts];
 
+// Online-only specials. Kept out of allProducts so they get no /products/[slug]
+// page, no sitemap entry and no shop listing; they are sold from their own
+// landing page. getProductById still finds them so checkout can price them.
+//
+// PLACEHOLDER (confirm with Berke before launch): which bed this is, its name,
+// size(s), feel, image and spec lines. The image is the Studio 10 photo until
+// we have the real one.
+export const GRAB_AND_GO_ID = 'offer-grab-and-go';
+
+export const specialOfferProducts: Product[] = [
+  {
+    id: GRAB_AND_GO_ID,
+    slug: 'grab-and-go',
+    name: 'Busby Grab and Go',
+    brand: 'busby',
+    line: 'studio',
+    type: 'Foam',
+    tagline: 'A great queen mattress, ready in days',
+    description:
+      'Our online-only grab and go special. A queen mattress made in the USA, ready for pickup at our Elmhurst showroom in 72 hours or delivered in 96.',
+    price: 599,
+    originalPrice: 599,
+    rating: 0,
+    reviewCount: 0,
+    images: ['/images/products/studio/studio-10.webp'],
+    sizes: [{ name: 'Queen', dimensions: '60" x 80"', price: 599, inStock: true }],
+    firmness: [
+      { level: 'Medium', description: 'Balanced support and comfort', recommended: ['All sleep positions'] },
+    ],
+    selectedFirmness: 'Medium',
+    features: ['Queen size', 'Medium feel', 'CertiPUR-US certified foams', 'Made in the USA'],
+    bestFor: ['Value seekers', 'Guest rooms', 'First apartments'],
+    components: [],
+    materials: [],
+  },
+];
+
+export const grabAndGoProduct = specialOfferProducts[0];
+
 export function isAdjustableBase(product: Pick<Product, 'type'>): boolean {
   return product.type === 'Adjustable Base';
 }
@@ -845,7 +884,7 @@ export function getProductBySlug(slug: string): Product | undefined {
 }
 
 export function getProductById(id: string): Product | undefined {
-  return allProducts.find((p) => p.id === id);
+  return allProducts.find((p) => p.id === id) ?? specialOfferProducts.find((p) => p.id === id);
 }
 
 /**
