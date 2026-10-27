@@ -37,6 +37,13 @@ const moments = [
 
 const ways = [
   {
+    icon: CalendarCheck,
+    title: 'Try it first',
+    timing: 'Your time',
+    body: 'Book a visit and lie on it at the showroom before you decide.',
+    cta: { label: 'Book a visit', href: '/book-a-fitting' },
+  },
+  {
     icon: Store,
     title: 'Pick it up',
     timing: '72 hours',
@@ -49,13 +56,6 @@ const ways = [
     timing: '96 hours',
     body: 'Order online and we bring it to your door within four days. Delivery is free.',
     cta: { label: 'Order for delivery', href: '#buy' },
-  },
-  {
-    icon: CalendarCheck,
-    title: 'Try it first',
-    timing: 'Your time',
-    body: 'Book a visit and lie on it at the showroom before you decide.',
-    cta: { label: 'Book a visit', href: '/book-a-fitting' },
   },
 ];
 
