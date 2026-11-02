@@ -54,12 +54,12 @@ export default function Hero() {
 
               {/* Online-only special. Hover or focus shows "Click for more information". */}
               <Link
-                href="/grab-and-go"
+                href="/studio-go"
                 onClick={() => window.gtag?.('event', 'grab_and_go_home_click')}
                 className="group relative inline-flex min-h-11 items-center gap-2 bg-navy text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:bg-navy-light transition-colors"
               >
                 <Star className="w-4 h-4 fill-gold text-gold" aria-hidden="true" />
-                Grab and Go <span className="text-gold">$599</span>
+                Studio Go <span className="text-gold">$599</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 <span
                   aria-hidden="true"

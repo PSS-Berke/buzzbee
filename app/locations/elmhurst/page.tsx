@@ -12,12 +12,12 @@ import StoreViewTracker from '@/components/locations/StoreViewTracker';
 
 export const metadata: Metadata = {
   title: 'Mattress Store in Elmhurst, IL — Busby Showroom, Open 24/7',
-  description: `Try every Busby mattress side-by-side at our 24/7 showroom at ${formatAddress(elmhurstStore.address)} — just text to enter. Staffed Mon–Thu 10 AM–2 PM. Serving Elmhurst, Oak Brook, Hinsdale, and the western Chicago suburbs. American-made, 100-night trial.`,
+  description: `Try Busby mattresses side-by-side at our 24/7 showroom at ${formatAddress(elmhurstStore.address)} — just text to enter. Staffed Mon–Thu 10 AM–2 PM. Serving Elmhurst, Oak Brook, Hinsdale, and the western Chicago suburbs. American-made, 100-night trial.`,
   alternates: { canonical: '/locations/elmhurst' },
   openGraph: {
     title: 'Mattress Store in Elmhurst, IL — Busby Showroom, Open 24/7',
     description:
-      'Try every Busby mattress side-by-side at our Elmhurst showroom. Open 24/7 — just text to enter.',
+      'Try Busby mattresses side-by-side at our Elmhurst showroom. Open 24/7 — just text to enter.',
     url: `${SITE_URL}/locations/elmhurst`,
     type: 'website',
   },
@@ -64,7 +64,7 @@ const localBusinessSchema = {
   areaServed: ['Elmhurst', 'Oak Brook', 'Hinsdale', 'Chicago', 'DuPage County'],
   priceRange: '$$$',
   description:
-    'Busby mattress showroom in Elmhurst, IL. Open 24/7 — just text to enter. Staffed Mon–Thu 10 AM–2 PM. Try every American-made Busby mattress side-by-side, same prices as online.',
+    'Busby mattress showroom in Elmhurst, IL. Open 24/7 — just text to enter. Staffed Mon–Thu 10 AM–2 PM. Try American-made Busby mattresses side-by-side, same prices as online.',
   hasMap: elmhurstStore.mapsLink,
   parentOrganization: {
     '@type': 'Organization',

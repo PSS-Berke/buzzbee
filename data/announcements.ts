@@ -15,7 +15,7 @@ const phaseCopy: Record<LaunchPhase, (city: string, date: string | null) => stri
       ? `Opening ${date}: Visit Busby in ${city} →`
       : `Coming soon: Visit Busby in ${city} →`,
   'now-open': (city) => `Now Open: Visit Busby in ${city} →`,
-  'steady-state': (city) => `Try every Busby mattress in person — ${city} →`,
+  'steady-state': (city) => `Try Busby mattresses in person — ${city} →`,
 };
 
 function formatOpeningDate(iso: string | null): string | null {

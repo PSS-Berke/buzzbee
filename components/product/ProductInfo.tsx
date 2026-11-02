@@ -3,8 +3,9 @@
 import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { isAdjustableBase, isTopper, usesAccessoryLayout, type Product, type Size } from '@/data/products';
+import { isAdjustableBase, isStudioGo, isTopper, usesAccessoryLayout, type Product, type Size } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
+import StudioGoBuy from '@/components/studio-go/StudioGoBuy';
 
 interface ProductInfoProps {
   product: Product;
@@ -118,59 +119,66 @@ export default function ProductInfo({ product }: ProductInfoProps) {
         </p>
       </div>
 
-      {/* Size Selector - Horizontal Pills */}
-      <div className="space-y-4">
-        <p id="size-group-label" className="block text-sm text-[var(--accent-strong)] font-medium">
-          Select Size
-        </p>
-        <div role="radiogroup" aria-labelledby="size-group-label" className="flex flex-wrap gap-3">
-          {product.sizes.map((size, index) => (
-            <button
-              key={size.name}
-              ref={(el) => {
-                sizeRefs.current[index] = el;
-              }}
-              type="button"
-              role="radio"
-              aria-checked={selectedSize.name === size.name}
-              tabIndex={selectedSize.name === size.name ? 0 : -1}
-              onClick={() => setSelectedSize(size)}
-              onKeyDown={(e) => handleSizeKeyDown(e, index)}
-              disabled={!size.inStock}
-              className={`
-                relative px-5 py-4 rounded-2xl border-2 transition-all duration-500
-                ${selectedSize.name === size.name
-                  ? 'border-[var(--card-border)] bg-white shadow-lg shadow-[var(--accent)]/10'
-                  : size.inStock
-                    ? 'border-[var(--card-border)]/10 hover:border-[var(--card-border)]/30 bg-white/60'
-                    : 'border-gray-100 bg-gray-50/50 opacity-40 cursor-not-allowed'
-                }
-              `}
-            >
-              <span className="block font-semibold text-navy">{size.name}</span>
-              <span className="block text-xs text-gray-600 mt-0.5">{size.dimensions}</span>
-              {selectedSize.name === size.name && (
-                <span
-                  aria-hidden="true"
-                  className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--accent)] rounded-full"
-                />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
+      {isStudioGo(product) ? (
+        // One size, and pickup or delivery straight to checkout instead of the cart.
+        <StudioGoBuy inline />
+      ) : (
+        <>
+          {/* Size Selector - Horizontal Pills */}
+          <div className="space-y-4">
+            <p id="size-group-label" className="block text-sm text-[var(--accent-strong)] font-medium">
+              Select Size
+            </p>
+            <div role="radiogroup" aria-labelledby="size-group-label" className="flex flex-wrap gap-3">
+              {product.sizes.map((size, index) => (
+                <button
+                  key={size.name}
+                  ref={(el) => {
+                    sizeRefs.current[index] = el;
+                  }}
+                  type="button"
+                  role="radio"
+                  aria-checked={selectedSize.name === size.name}
+                  tabIndex={selectedSize.name === size.name ? 0 : -1}
+                  onClick={() => setSelectedSize(size)}
+                  onKeyDown={(e) => handleSizeKeyDown(e, index)}
+                  disabled={!size.inStock}
+                  className={`
+                    relative px-5 py-4 rounded-2xl border-2 transition-all duration-500
+                    ${selectedSize.name === size.name
+                      ? 'border-[var(--card-border)] bg-white shadow-lg shadow-[var(--accent)]/10'
+                      : size.inStock
+                        ? 'border-[var(--card-border)]/10 hover:border-[var(--card-border)]/30 bg-white/60'
+                        : 'border-gray-100 bg-gray-50/50 opacity-40 cursor-not-allowed'
+                    }
+                  `}
+                >
+                  <span className="block font-semibold text-navy">{size.name}</span>
+                  <span className="block text-xs text-gray-600 mt-0.5">{size.dimensions}</span>
+                  {selectedSize.name === size.name && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--accent)] rounded-full"
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
 
-      {/* Add to Cart - Premium Navy */}
-      <button
-        onClick={handleAddToCart}
-        disabled={!selectedSize.inStock}
-        className="w-full bg-navy hover:bg-navy-dark text-white font-medium py-5 px-8 rounded-full text-lg tracking-wide transition-all duration-500 hover:shadow-2xl hover:shadow-navy/20 group disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        <span className="flex items-center justify-center gap-3">
-          {selectedSize.inStock ? 'Add to Cart' : 'Out of Stock'}
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-500" />
-        </span>
-      </button>
+          {/* Add to Cart - Premium Navy */}
+          <button
+            onClick={handleAddToCart}
+            disabled={!selectedSize.inStock}
+            className="w-full bg-navy hover:bg-navy-dark text-white font-medium py-5 px-8 rounded-full text-lg tracking-wide transition-all duration-500 hover:shadow-2xl hover:shadow-navy/20 group disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="flex items-center justify-center gap-3">
+              {selectedSize.inStock ? 'Add to Cart' : 'Out of Stock'}
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-500" />
+            </span>
+          </button>
+        </>
+      )}
 
       {/* Trust Badges - Single Elegant Line */}
       <div

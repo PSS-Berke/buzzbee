@@ -9,11 +9,10 @@ import {
   BedDouble,
   Truck,
   Store,
-  CalendarCheck,
   ArrowRight,
 } from 'lucide-react';
 import { elmhurstStore, formatAddress } from '@/data/store';
-import GrabAndGoBuy from '@/components/grab-and-go/GrabAndGoBuy';
+import StudioGoBuy from '@/components/studio-go/StudioGoBuy';
 
 // Who it is for. Richard's examples from the Oct 26 call were a kid heading off
 // to college and someone renting a place for a year.
@@ -35,14 +34,8 @@ const moments = [
   },
 ];
 
+// Studio Go isn't on the showroom floor, so there's no "try it first" option.
 const ways = [
-  {
-    icon: CalendarCheck,
-    title: 'Try it first',
-    timing: 'Your time',
-    body: 'Book a visit and lie on it at the showroom before you decide.',
-    cta: { label: 'Book a visit', href: '/book-a-fitting' },
-  },
   {
     icon: Store,
     title: 'Pick it up',
@@ -59,7 +52,7 @@ const ways = [
   },
 ];
 
-export default function GrabAndGoPage() {
+export default function StudioGoPage() {
   return (
     <div className="min-h-screen bg-[#faf8f5]">
       {/* ── Hero + buy box. On a phone: headline, then the buy box, then the rest. ── */}
@@ -78,7 +71,7 @@ export default function GrabAndGoPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif leading-tight mb-3">
-                Grab and Go. <span className="text-gold">$599.</span>
+                Studio Go. <span className="text-gold">$599.</span>
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed mb-5">
@@ -104,6 +97,13 @@ export default function GrabAndGoPage() {
 
             {/* Supporting detail. Below the buy box on a phone. */}
             <div className="lg:col-start-1 lg:row-start-2 order-last lg:order-none">
+              <Link
+                href="/products/studio-go"
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-gold/60 px-6 py-3 font-semibold text-gold-light hover:bg-white/10 hover:text-white transition-colors mb-6"
+              >
+                See full details
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
               <p className="text-gray-300 leading-relaxed mb-5 max-w-md">
                 Made in Wisconsin and backed by the same local team and Elmhurst showroom as
                 every Busby bed. Just quicker, and simpler.
@@ -127,7 +127,7 @@ export default function GrabAndGoPage() {
             </div>
 
             <div id="buy" className="scroll-mt-24 lg:col-start-2 lg:row-start-1 lg:row-span-2">
-              <GrabAndGoBuy />
+              <StudioGoBuy />
             </div>
           </div>
         </div>
@@ -159,13 +159,13 @@ export default function GrabAndGoPage() {
         </div>
       </section>
 
-      {/* ── Three ways to get it ── */}
+      {/* ── Two ways to get it ── */}
       <section className="py-16 bg-white border-t border-gold/10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl md:text-3xl font-serif text-navy mb-10 text-center">
-            Three ways to get yours
+            Two ways to get yours
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {ways.map((w) => {
               const Icon = w.icon;
               return (
@@ -212,13 +212,20 @@ export default function GrabAndGoPage() {
               <span className="sr-only"> (opens Google Maps in a new tab)</span>
               <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
             </a>
-            <div>
+            <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href="#buy"
-                className="inline-flex items-center gap-2 bg-navy text-white font-semibold rounded-full px-8 py-4 hover:bg-navy/90 transition-colors"
+                className="inline-flex justify-center items-center gap-2 bg-navy text-white font-semibold rounded-full px-8 py-4 hover:bg-navy/90 transition-colors"
               >
                 Grab mine for $599
               </a>
+              <Link
+                href="/products/studio-go"
+                className="inline-flex justify-center items-center gap-2 border-2 border-navy text-navy font-semibold rounded-full px-8 py-4 hover:bg-navy hover:text-white transition-colors"
+              >
+                See full details
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
+              </Link>
             </div>
           </div>
 

@@ -29,6 +29,7 @@ const keyBenefits: Record<string, string> = {
   'studio-12': 'Motion Isolation',
   'studio-hybrid': 'Balanced Hybrid Feel',
   'studio-hybrid-firm': 'Same Build, Firmer Feel',
+  'studio-go': 'Ready This Week',
 };
 
 export function sizePrice(p: Product, size: string) {
@@ -59,6 +60,8 @@ const BAND_STYLE: Record<Band, string> = {
 
 function LayerStack({ p }: { p: Product }) {
   const layers = layersTopDown(p);
+  // Studio Go's build isn't published yet.
+  if (layers.length === 0) return <span className="text-gray-600">Coming soon</span>;
   return (
     <div>
       <p className="mb-2">
@@ -114,7 +117,7 @@ function Chips({ items }: { items: string[] }) {
 
 export const ROWS: CompareRow[] = [
   { label: () => 'Line', render: (p) => <LineTag line={p.line} />, key: (p) => p.line },
-  { label: () => 'Type', render: (p) => (p.type === 'Foam' ? 'All-foam' : p.type), key: (p) => p.type },
+  { label: () => 'Type', render: (p) => (p.type === 'Foam' ? 'All-foam' : p.type || 'Coming soon'), key: (p) => p.type },
   {
     label: ({ size }) => `${size} price`,
     render: (p, { size }) => {
@@ -149,7 +152,12 @@ export const ROWS: CompareRow[] = [
     key: (p) => highlights(p).join('|'),
   },
   { label: () => 'Made in', render: madeIn, key: madeIn },
-  { label: () => 'Certifications', render: (p) => <Chips items={certifications(p)} />, key: (p) => certifications(p).join('|') },
+  {
+    label: () => 'Certifications',
+    render: (p) =>
+      p.materials.length ? <Chips items={certifications(p)} /> : <span className="text-gray-600">Coming soon</span>,
+    key: (p) => certifications(p).join('|'),
+  },
   {
     label: () => 'Video',
     render: (p, { onWatch }) =>

@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
         destination: '/showroom/videos',
         permanent: false,
       },
+      {
+        // Studio Go launched as Grab and Go. Keeps ad, social and in-flight
+        // Stripe cancel links working; query strings carry over. Temporary, so
+        // the name can still change without a redirect cached in browsers.
+        source: '/grab-and-go',
+        destination: '/studio-go',
+        permanent: false,
+      },
     ];
   },
 };

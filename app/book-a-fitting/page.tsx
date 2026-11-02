@@ -80,7 +80,7 @@ export default function BookAFittingPage() {
 
               <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed">
                 Book a fitting and a Sleep Guide meets you at our Elmhurst showroom.
-                Try every bed we make with nobody hovering and no pressure to buy.
+                Try our beds with nobody hovering and no pressure to buy.
               </p>
             </div>
 

@@ -8,8 +8,8 @@ const tiles = [
   },
   {
     icon: Layers,
-    title: 'Every mattress, side by side',
-    body: 'Every Busby model in one room. Try them in any order, as many times as you want.',
+    title: 'Our mattresses, side by side',
+    body: 'Our beds in one room. Try them in any order, as many times as you want.',
   },
   {
     icon: MonitorSmartphone,

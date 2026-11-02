@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight, CalendarCheck, Check, Plus, ShoppingBag, X } from 'lucide-react';
-import { productLines, type Product, type ProductLine } from '@/data/products';
+import { isStudioGo, productLines, type Product, type ProductLine } from '@/data/products';
 import { comparableProducts, compareHref, MAX_COMPARE, parseCompareParam } from '@/lib/compare';
 import { useCart } from '@/contexts/CartContext';
 import { ROWS, SIZE_ORDER, sizePrice, type RowContext } from './compareRows';
@@ -28,6 +28,8 @@ export default function CompareClient() {
     .map((slug) => comparableProducts.find((p) => p.slug === slug))
     .filter((p): p is Product => !!p);
   const atMax = selected.length >= MAX_COMPARE;
+  // Studio Go is online only; it isn't on the showroom floor to try.
+  const inShowroom = picked.filter((p) => !isStudioGo(p));
   const { addItem, openCartDrawer } = useCart();
   const [size, setSize] = useState('Queen');
   const [diffOnly, setDiffOnly] = useState(false);
@@ -253,7 +255,16 @@ export default function CompareClient() {
                     <td className="sticky left-0 z-10 bg-white" />
                     {picked.map((p) => (
                       <td key={p.slug} className="space-y-2 p-4">
-                        {sizePrice(p, size) ? (
+                        {isStudioGo(p) && sizePrice(p, size) ? (
+                          // Studio Go skips the cart: pickup or delivery is chosen in its buy box.
+                          <Link
+                            href="/studio-go#buy"
+                            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-gold px-4 font-semibold text-navy hover:bg-gold-light"
+                          >
+                            <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                            Buy {size}<span className="sr-only"> {p.name}</span>
+                          </Link>
+                        ) : sizePrice(p, size) ? (
                           <button
                             type="button"
                             onClick={() => addToCart(p)}
@@ -280,17 +291,17 @@ export default function CompareClient() {
             </div>
           )}
 
-          {picked.length > 0 && (
+          {inShowroom.length > 0 && (
             <div className="mt-8 flex flex-col gap-4 rounded-3xl bg-navy p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
               <div>
                 <p className="font-heading text-sm font-semibold uppercase tracking-widest text-gold">Elmhurst showroom</p>
                 <p className="mt-1 text-xl font-semibold">Feel the difference in person.</p>
                 <p className="mt-1 text-white/80">
-                  Try {picked.map(shortName).join(', ')} side by side. Book a free fitting, or stop by anytime — we&rsquo;re open 24/7.
+                  Try {inShowroom.map(shortName).join(', ')} side by side. Book a free fitting, or stop by anytime — we&rsquo;re open 24/7.
                 </p>
               </div>
               <Link
-                href={`/appointment?try=${encodeURIComponent(picked.map(shortName).join(','))}#book`}
+                href={`/appointment?try=${encodeURIComponent(inShowroom.map(shortName).join(','))}#book`}
                 className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 font-semibold text-navy hover:bg-gold-light"
               >
                 <CalendarCheck className="h-5 w-5" aria-hidden="true" />

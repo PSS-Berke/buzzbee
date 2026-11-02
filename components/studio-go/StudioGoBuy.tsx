@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Store, Truck, Loader2, Lock } from 'lucide-react';
-import { grabAndGoProduct } from '@/data/products';
+import { studioGoProduct } from '@/data/products';
 
 declare global {
   interface Window {
@@ -38,11 +38,13 @@ const options: {
 ];
 
 /**
- * Buy box for the grab and go special. Skips the cart on purpose: one bed, one
+ * Buy box for the Studio Go special. Skips the cart on purpose: one bed, one
  * size, one decision, straight to Stripe with the pickup or delivery choice.
+ * `inline` drops the card and product header for the product page, which
+ * already shows them. Colors follow the page's line (gold, or clay on Studio).
  */
-export default function GrabAndGoBuy() {
-  const product = grabAndGoProduct;
+export default function StudioGoBuy({ inline = false }: { inline?: boolean }) {
+  const product = studioGoProduct;
   const size = product.sizes[0];
   const [fulfillment, setFulfillment] = useState<Fulfillment>('pickup');
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -78,34 +80,42 @@ export default function GrabAndGoBuy() {
   }
 
   return (
-    <div className="bg-white rounded-2xl p-5 sm:p-6 md:p-8 border-2 border-gold/15 shadow-lg text-navy">
+    <div
+      className={
+        inline
+          ? 'text-navy'
+          : 'bg-white rounded-2xl p-5 sm:p-6 md:p-8 border-2 border-gold/15 shadow-lg text-navy'
+      }
+    >
       {/* Only the note waits on the URL, so the buy box itself still renders on the server. */}
       <Suspense fallback={null}>
         <CancelledNote />
       </Suspense>
-      <div className="flex items-center gap-4 mb-5">
-        <div className="relative w-24 h-20 sm:w-28 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden bg-[#faf8f5]">
-          <Image
-            src={product.images[0]}
-            alt={`${product.name} mattress`}
-            fill
-            sizes="112px"
-            className="object-cover"
-          />
+      {!inline && (
+        <div className="flex items-center gap-4 mb-5">
+          <div className="relative w-24 h-20 sm:w-28 sm:h-24 flex-shrink-0 rounded-xl overflow-hidden bg-[#faf8f5]">
+            <Image
+              src={product.images[0]}
+              alt={`${product.name} mattress`}
+              fill
+              sizes="112px"
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <p className="font-serif text-xl sm:text-2xl leading-tight">{product.name}</p>
+            <p className="text-gray-600 text-sm">
+              {size.name} · {size.dimensions}
+            </p>
+            <p className="mt-1 text-3xl font-semibold">
+              ${size.price}
+              <span className="ml-2 align-middle text-xs font-semibold uppercase tracking-wide text-gold-dark">
+                Online only
+              </span>
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="font-serif text-xl sm:text-2xl leading-tight">{product.name}</p>
-          <p className="text-gray-600 text-sm">
-            {size.name} · {size.dimensions}
-          </p>
-          <p className="mt-1 text-3xl font-semibold">
-            ${size.price}
-            <span className="ml-2 align-middle text-xs font-semibold uppercase tracking-wide text-gold-dark">
-              Online only
-            </span>
-          </p>
-        </div>
-      </div>
+      )}
 
       <fieldset className="mb-5">
         <legend className="font-semibold mb-3">How do you want it?</legend>
@@ -117,7 +127,9 @@ export default function GrabAndGoBuy() {
               <label
                 key={o.value}
                 className={`relative flex min-h-11 cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-navy ${
-                  selected ? 'border-gold bg-gold/10' : 'border-gray-200 hover:border-gold/50'
+                  selected
+                    ? 'border-[var(--card-border)] bg-[var(--accent)]/10'
+                    : 'border-gray-200 hover:border-[var(--card-border)]/50'
                 }`}
               >
                 <input
@@ -128,7 +140,7 @@ export default function GrabAndGoBuy() {
                   onChange={() => choose(o.value)}
                   className="sr-only"
                 />
-                <Icon className="w-5 h-5 mt-0.5 text-gold-dark flex-shrink-0" aria-hidden="true" />
+                <Icon className="w-5 h-5 mt-0.5 text-[var(--accent-strong)] flex-shrink-0" aria-hidden="true" />
                 <span>
                   <span className="block font-semibold">{o.title}</span>
                   <span className="block text-sm font-medium text-navy">{o.timing}</span>
@@ -144,7 +156,9 @@ export default function GrabAndGoBuy() {
         type="button"
         onClick={handleBuy}
         disabled={status === 'loading'}
-        className="w-full inline-flex items-center justify-center gap-2 bg-gold text-navy font-semibold rounded-full px-8 py-4 text-lg hover:bg-gold-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        className={`w-full inline-flex items-center justify-center gap-2 font-semibold rounded-full px-8 py-4 text-lg transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
+          inline ? 'bg-navy text-white hover:bg-navy-dark' : 'bg-gold text-navy hover:bg-gold-light'
+        }`}
       >
         {status === 'loading' ? (
           <>

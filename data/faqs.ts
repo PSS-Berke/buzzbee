@@ -8,7 +8,7 @@ export const faqs: FAQ[] = [
   {
     question: "How long will it take to receive my mattress?",
     answer:
-      "Every Busby mattress is made to order. Typical delivery time is 5–7 business days.",
+      "Busby mattresses are made to order, with typical delivery in 5–7 business days. Studio Go, our online special, is ready for pickup in 72 hours or delivered in 96.",
   },
   {
     question: "Where are Busby mattresses made?",

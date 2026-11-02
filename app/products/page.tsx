@@ -53,7 +53,7 @@ export default function ProductsPage() {
             Every Busby, <span className="wavy-underline">side by side.</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Eight American-made mattresses across our handcrafted Artisan and design-led Studio lines. Filter,
+            Nine American-made mattresses across our handcrafted Artisan and design-led Studio lines. Filter,
             sort, and compare to find yours.
           </p>
 

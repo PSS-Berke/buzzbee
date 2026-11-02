@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { QuizResult as QuizResultType, productDetails } from '@/lib/quiz-logic';
 import QuizEmailCapture from './QuizEmailCapture';
+import StudioGoNudge from '@/components/studio-go/StudioGoNudge';
 
 interface QuizResultProps {
   result: QuizResultType;
@@ -96,6 +97,8 @@ export default function QuizResult({ result, onRetake }: QuizResultProps) {
           </div>
         </div>
       </div>
+
+      <StudioGoNudge className="max-w-lg mx-auto" />
 
       <QuizEmailCapture
         productSlug={result.product}

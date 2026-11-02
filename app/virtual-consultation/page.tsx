@@ -125,7 +125,7 @@ export default function VirtualConsultationPage() {
       <section className="border-t border-gold/15 py-14">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-gray-600 leading-relaxed">
-            Near Chicago? You can skip the call and lie on every bed instead.{' '}
+            Near Chicago? You can skip the call and lie on the beds instead.{' '}
             <a
               href="/book-a-fitting"
               className="text-gold-dark underline underline-offset-2 hover:text-navy transition-colors"

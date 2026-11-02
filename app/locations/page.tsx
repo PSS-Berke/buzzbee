@@ -7,11 +7,11 @@ import { SITE_URL } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Visit a Busby Showroom',
   description:
-    'Try every Busby mattress in person. Now open in Elmhurst, with more cities coming soon.',
+    'Try Busby mattresses in person. Now open in Elmhurst, with more cities coming soon.',
   alternates: { canonical: '/locations' },
   openGraph: {
     title: 'Visit a Busby Showroom',
-    description: 'Try every Busby mattress in person. Now open in Elmhurst.',
+    description: 'Try Busby mattresses in person. Now open in Elmhurst.',
     url: `${SITE_URL}/locations`,
     type: 'website',
   },
@@ -42,10 +42,10 @@ export default function LocationsIndex() {
             BUSBY SHOWROOMS
           </span>
           <h1 className="text-4xl md:text-6xl font-serif leading-tight mb-4">
-            Try every Busby in person.
+            Try Busby in person.
           </h1>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            One showroom open today, more on the way. Every model on the floor, no commission, same online prices.
+            One showroom open today, more on the way. Our beds on the floor, no commission, same online prices.
           </p>
         </div>
       </section>

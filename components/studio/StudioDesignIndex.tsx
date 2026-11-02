@@ -1,5 +1,6 @@
-import type { Product } from '@/data/products';
+import { isStudioGo, type Product } from '@/data/products';
 import StudioSpecCard from './StudioSpecCard';
+import StudioGoCard from './StudioGoCard';
 
 // One-line spec descriptor per Studio build (parallel to keyBenefits on compare).
 export const studioSpecLines: Record<string, string> = {
@@ -11,6 +12,8 @@ export const studioSpecLines: Record<string, string> = {
 };
 
 export default function StudioDesignIndex({ products }: { products: Product[] }) {
+  const builds = products.filter((p) => !isStudioGo(p));
+  const studioGo = products.find(isStudioGo);
   return (
     <section className="py-24 relative">
       <div className="absolute inset-0 blueprint-grid opacity-[0.25] pointer-events-none" />
@@ -29,7 +32,7 @@ export default function StudioDesignIndex({ products }: { products: Product[] })
 
         {/* Hairline blueprint grid — gap-px over bg-grid draws 1px dividers between cards */}
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-grid border border-grid">
-          {products.map((p, i) => (
+          {builds.map((p, i) => (
             <li key={p.slug}>
               <StudioSpecCard
                 product={p}
@@ -39,6 +42,7 @@ export default function StudioDesignIndex({ products }: { products: Product[] })
             </li>
           ))}
         </ul>
+        {studioGo && <StudioGoCard product={studioGo} />}
       </div>
     </section>
   );

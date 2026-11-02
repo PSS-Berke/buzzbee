@@ -22,6 +22,7 @@ const RECOMMENDED = [
   'studio-10',
   'nod',
   'studio-hybrid-firm',
+  'studio-go',
 ];
 
 const SORTS: { key: SortKey; label: string }[] = [
@@ -46,8 +47,13 @@ function bestFor(p: Product) {
     .join(' · ');
 }
 
+// Studio Go's build isn't published yet, so it has no type or layers listed.
 function typeLabel(p: Product) {
-  return p.type === 'Foam' ? 'All-foam' : p.type;
+  return p.type === 'Foam' ? 'All-foam' : p.type || 'Coming soon';
+}
+
+function layerCount(p: Product) {
+  return p.components.length || 'Coming soon';
 }
 
 function Chip({
@@ -239,7 +245,7 @@ export default function AllMattressesClient({ products }: { products: Product[] 
                       </div>
                       <div className="bg-gray-50 px-3 py-2">
                         <dt className="text-gray-600">Layers</dt>
-                        <dd className="font-semibold text-navy">{p.components.length}</dd>
+                        <dd className="font-semibold text-navy">{layerCount(p)}</dd>
                       </div>
                     </dl>
 
@@ -307,7 +313,7 @@ export default function AllMattressesClient({ products }: { products: Product[] 
               {[
                 { label: 'Line', value: (p: Product) => <LineTag line={p.line} /> },
                 { label: 'Type', value: typeLabel },
-                { label: 'Layers', value: (p: Product) => p.components.length },
+                { label: 'Layers', value: layerCount },
                 { label: 'Queen price', value: (p: Product) => `$${p.price.toLocaleString()}` },
                 { label: 'Best for', value: bestFor },
               ].map((row) => (
@@ -384,7 +390,7 @@ function ShowroomTile() {
       <div className="flex flex-col gap-4 rounded-2xl bg-navy p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div>
           <p className="font-heading text-sm font-semibold uppercase tracking-widest text-gold">Elmhurst showroom</p>
-          <p className="mt-1 text-xl font-semibold">Try all eight in person before you decide.</p>
+          <p className="mt-1 text-xl font-semibold">Try all eight showroom beds in person before you decide.</p>
           <p className="mt-1 text-white/80">Private, by-appointment visits. A Sleep Guide meets you at the door.</p>
         </div>
         <Link

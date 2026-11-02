@@ -44,7 +44,7 @@ export default function ProductsOnDisplay() {
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-serif text-navy mb-3">What you can try</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Every Busby model is on the floor — same online prices, same 100-night home trial.
+            Try them on the floor — same online prices, same 100-night home trial.
           </p>
         </div>
 

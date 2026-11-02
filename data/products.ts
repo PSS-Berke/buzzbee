@@ -96,6 +96,10 @@ export const productLines: Record<ProductLine, ProductLineMeta> = {
   },
 };
 
+// Studio Go launched as "Grab and Go". The ID and the grab_and_go_* GA4 events
+// keep that name so reports stay continuous across the rename.
+export const STUDIO_GO_ID = 'offer-grab-and-go';
+
 // Sleep6 — Busby home line
 export const homeLineProducts: Product[] = [
   {
@@ -606,6 +610,32 @@ export const homeLineProducts: Product[] = [
       { name: 'HD Base Foam', source: 'North Carolina, USA', certification: 'CertiPUR-US', description: 'Durable foundation layer' },
     ],
   },
+  // Which bed this is isn't confirmed yet, so type, feel, components and
+  // materials stay empty and the site shows "Coming soon" in their place. Fill
+  // them in (and the features list) once the build is confirmed.
+  {
+    id: STUDIO_GO_ID,
+    slug: 'studio-go',
+    name: 'Studio Go',
+    brand: 'busby',
+    line: 'studio',
+    type: '',
+    tagline: 'A great queen mattress, ready in days',
+    description:
+      'An online-only special from our Studio line. A queen mattress made in the USA, ready for pickup at our Elmhurst showroom in 72 hours or delivered in 96.',
+    price: 599,
+    originalPrice: 599,
+    rating: 0,
+    reviewCount: 0,
+    images: ['/images/products/studio/studio-go.webp'],
+    sizes: [{ name: 'Queen', dimensions: '60" x 80"', price: 599, inStock: true }],
+    firmness: [],
+    selectedFirmness: '',
+    features: ['Queen size', 'Store pickup in 72 hours', 'Free delivery in 96 hours', 'Made in the USA'],
+    bestFor: ['Value seekers', 'Guest rooms', 'First apartments'],
+    components: [],
+    materials: [],
+  },
 ];
 
 export const accessoryProducts: Product[] = [
@@ -825,44 +855,15 @@ export const adjustableBaseProducts: Product[] = [
 
 export const allProducts: Product[] = [...homeLineProducts, ...accessoryProducts, ...adjustableBaseProducts];
 
-// Online-only specials. Kept out of allProducts so they get no /products/[slug]
-// page, no sitemap entry and no shop listing; they are sold from their own
-// landing page. getProductById still finds them so checkout can price them.
-//
-// PLACEHOLDER (confirm with Berke before launch): which bed this is, its name,
-// size(s), feel, image and spec lines. The image is the Studio 10 photo until
-// we have the real one.
-export const GRAB_AND_GO_ID = 'offer-grab-and-go';
+export const studioGoProduct = homeLineProducts.find(isStudioGo)!;
 
-export const specialOfferProducts: Product[] = [
-  {
-    id: GRAB_AND_GO_ID,
-    slug: 'grab-and-go',
-    name: 'Busby Grab and Go',
-    brand: 'busby',
-    line: 'studio',
-    type: 'Foam',
-    tagline: 'A great queen mattress, ready in days',
-    description:
-      'Our online-only grab and go special. A queen mattress made in the USA, ready for pickup at our Elmhurst showroom in 72 hours or delivered in 96.',
-    price: 599,
-    originalPrice: 599,
-    rating: 0,
-    reviewCount: 0,
-    images: ['/images/products/studio/studio-10.webp'],
-    sizes: [{ name: 'Queen', dimensions: '60" x 80"', price: 599, inStock: true }],
-    firmness: [
-      { level: 'Medium', description: 'Balanced support and comfort', recommended: ['All sleep positions'] },
-    ],
-    selectedFirmness: 'Medium',
-    features: ['Queen size', 'Medium feel', 'CertiPUR-US certified foams', 'Made in the USA'],
-    bestFor: ['Value seekers', 'Guest rooms', 'First apartments'],
-    components: [],
-    materials: [],
-  },
-];
-
-export const grabAndGoProduct = specialOfferProducts[0];
+/**
+ * The Studio line's online special. It sells from its own buy box (store pickup
+ * or delivery, straight to Stripe), never through the cart.
+ */
+export function isStudioGo(product: Pick<Product, 'id'>): boolean {
+  return product.id === STUDIO_GO_ID;
+}
 
 export function isAdjustableBase(product: Pick<Product, 'type'>): boolean {
   return product.type === 'Adjustable Base';
@@ -884,14 +885,15 @@ export function getProductBySlug(slug: string): Product | undefined {
 }
 
 export function getProductById(id: string): Product | undefined {
-  return allProducts.find((p) => p.id === id) ?? specialOfferProducts.find((p) => p.id === id);
+  return allProducts.find((p) => p.id === id);
 }
 
 /**
  * Adult mattresses for a given line, in display order (price ascending, then by
  * id so equally-priced SKUs — e.g. the Studio Hybrid pair — stay deterministic).
- * Excludes cribs so callers get exactly the 4-up lineup the compare toggle and
- * line landing pages expect, preserving the grid-cols-4 layout.
+ * Excludes cribs so callers get the 4-up lineup the compare toggle and line
+ * landing pages expect, preserving the grid-cols-4 layout. Studio also returns
+ * Studio Go; the Studio grids pull it out and show it beneath the four builds.
  */
 export function getProductsByLine(line: ProductLine): Product[] {
   return homeLineProducts

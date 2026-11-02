@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { comparableProducts, compareHref, MAX_COMPARE } from '@/lib/compare';
 import LineTag from '@/components/product/LineTag';
+import StudioGoNudge from '@/components/studio-go/StudioGoNudge';
 import type { Product } from '@/data/products';
 
 type Category = {
@@ -360,6 +361,7 @@ export default function ShopByFeelPage() {
                   .
                 </p>
               )}
+              <StudioGoNudge className="mt-6" />
             </>
           )}
         </section>

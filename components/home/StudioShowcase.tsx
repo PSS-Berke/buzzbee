@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { getProductsByLine } from '@/data/products';
+import { getProductsByLine, isStudioGo, studioGoProduct } from '@/data/products';
 import StudioSpecCard from '@/components/studio/StudioSpecCard';
+import StudioGoCard from '@/components/studio/StudioGoCard';
 import { studioSpecLines } from '@/components/studio/StudioDesignIndex';
 
-const studioProducts = getProductsByLine('studio');
+const studioProducts = getProductsByLine('studio').filter((p) => !isStudioGo(p));
 
 // Home page counterpart to FeaturedProducts (Artisan): same header → cards → CTA
 // rhythm, but rendered in the Studio design language so the two lines read as
@@ -35,13 +36,16 @@ export default function StudioShowcase() {
         </div>
 
         {/* Hairline blueprint grid — gap-px over bg-grid draws 1px dividers between cards */}
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-grid border border-grid mb-16">
-          {studioProducts.map((p, i) => (
-            <li key={p.slug}>
-              <StudioSpecCard product={p} index={i + 1} descriptor={studioSpecLines[p.slug] ?? p.tagline} />
-            </li>
-          ))}
-        </ul>
+        <div className="mb-16">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-grid border border-grid">
+            {studioProducts.map((p, i) => (
+              <li key={p.slug}>
+                <StudioSpecCard product={p} index={i + 1} descriptor={studioSpecLines[p.slug] ?? p.tagline} />
+              </li>
+            ))}
+          </ul>
+          <StudioGoCard product={studioGoProduct} />
+        </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
           <Link

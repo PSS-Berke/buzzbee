@@ -16,7 +16,7 @@ export const showroomFaqs: ShowroomFaq[] = [
   },
   {
     q: 'How do I actually buy a mattress at the showroom?',
-    a: 'You can order from the kiosk, from your phone in store, or from home after you visit — same prices, same 100-night home trial, same warranty. Nothing is sold off the showroom floor; every Busby is built to order in our USA factory.',
+    a: 'You can order from the kiosk, from your phone in store, or from home after you visit — same prices, same 100-night home trial, same warranty. Nothing is sold off the showroom floor; each bed is built to order in our USA factory.',
   },
   {
     q: 'Are prices the same as online?',

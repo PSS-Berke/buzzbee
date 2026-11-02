@@ -16,12 +16,12 @@ import ReserveForm from '@/components/locations/ReserveForm';
 export const metadata: Metadata = {
   title: 'Book a Free Mattress Fitting | Busby Elmhurst Showroom',
   description:
-    'Try every Busby mattress in private at our Elmhurst showroom. Pick a time online and a Sleep Guide meets you at the door.',
+    'Try Busby mattresses in private at our Elmhurst showroom. Pick a time online and a Sleep Guide meets you at the door.',
   alternates: { canonical: '/appointment' },
   openGraph: {
     title: 'Book a Free Mattress Fitting | Busby Elmhurst Showroom',
     description:
-      'Try every Busby mattress in private at our Elmhurst showroom with a Sleep Guide.',
+      'Try Busby mattresses in private at our Elmhurst showroom with a Sleep Guide.',
     url: `${SITE_URL}/appointment`,
     type: 'website',
   },
@@ -63,7 +63,7 @@ export default function AppointmentPage() {
           </h1>
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed">
             Pick a time and a Sleep Guide meets you at the Elmhurst showroom door, then you have
-            the whole place to yourself to try every bed we make.
+            the whole place to yourself to try our beds.
           </p>
 
           {/* Primary path: book online */}
@@ -90,7 +90,7 @@ export default function AppointmentPage() {
           <div id="book" className="scroll-mt-28">
             <h2 className="text-2xl md:text-3xl font-serif text-navy mb-2">Pick a time</h2>
             <p className="text-gray-600 mb-5 leading-relaxed">
-              Come to the showroom and try every bed, or start with fifteen minutes on video if
+              Come to the showroom and try the beds, or start with fifteen minutes on video if
               you&rsquo;d rather not make the drive yet. Either way you&rsquo;ll get a confirmation
               by email straight away, and a reminder before your time.
             </p>

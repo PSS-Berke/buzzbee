@@ -33,7 +33,7 @@ const MODES: {
   {
     value: 'in-person',
     label: 'Come to the showroom',
-    blurb: 'Lie on every bed. The place is yours for the hour.',
+    blurb: 'Lie on any bed. The place is yours for the hour.',
     icon: Store,
   },
   {

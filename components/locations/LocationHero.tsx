@@ -23,7 +23,7 @@ export default function LocationHero() {
           A showroom that&rsquo;s <span className="text-gold">always open</span>.
         </h1>
         <p className="text-lg md:text-xl text-gray-300 max-w-2xl leading-relaxed mb-12">
-          Try every Busby mattress, 24/7 — just text to enter. We&rsquo;re staffed Mon–Thu,
+          Try Busby mattresses 24/7 — just text to enter. We&rsquo;re staffed Mon–Thu,
           10 AM–2 PM, and you can book a Sleep Guide any day, 9 AM–7 PM.
         </p>
 

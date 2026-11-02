@@ -1,10 +1,18 @@
-import type { Product } from '@/data/products';
+import { isStudioGo, type Product } from '@/data/products';
 
 const DELIVERY_STEPS = [
   { title: 'Order', desc: 'Production begins the moment you order — nothing sits in a warehouse.' },
   { title: 'Build', desc: 'Made to order in the USA and quality-checked layer by layer.' },
   { title: 'Ship', desc: 'Compressed, boxed, and shipped free within 5–7 days.' },
   { title: 'Sleep', desc: 'Unbox, let it expand, and try it for 100 nights.' },
+];
+
+// Studio Go is ready in days, not built to order.
+const STUDIO_GO_STEPS = [
+  { title: 'Order', desc: 'Order online and choose store pickup or delivery.' },
+  { title: 'Pick up', desc: 'Ready at our Elmhurst showroom in 72 hours.' },
+  { title: 'Or have it delivered', desc: 'Free delivery to your door within 96 hours.' },
+  { title: 'Sleep', desc: 'Sleep on it this week, and try it for 100 nights.' },
 ];
 
 function SectionHeader({ index, title }: { index: string; title: string }) {
@@ -46,10 +54,15 @@ function FirmnessScale({ levels, selected }: { levels: string[]; selected: strin
 }
 
 export default function StudioSpecSheet({ product }: { product: Product }) {
+  const studioGo = isStudioGo(product);
+  const deliverySteps = studioGo ? STUDIO_GO_STEPS : DELIVERY_STEPS;
+  // A build that isn't published yet (Studio Go) has no type, feel, layers or
+  // materials to show, so it also skips the Materials section.
+  const hasBuild = product.materials.length > 0 || product.firmness.length > 0;
   const specRows: [string, string][] = [
-    ['Type', product.type],
-    ['Feel', product.selectedFirmness],
-    ['Layers', String(product.components.length)],
+    ['Type', product.type || 'Coming soon'],
+    ['Feel', product.selectedFirmness || 'Coming soon'],
+    ...(product.components.length > 0 ? [['Layers', String(product.components.length)] as [string, string]] : []),
     ['Sizes', product.sizes.map((s) => s.name).join(' · ')],
     ['Best for', product.bestFor.join(' · ')],
     ['From', `$${product.price.toLocaleString()}`],
@@ -95,66 +108,72 @@ export default function StudioSpecSheet({ product }: { product: Product }) {
       </section>
 
       {/* 02 — Materials */}
-      <section>
-        <SectionHeader index="02" title="Materials" />
-        <div className="space-y-12">
-          <div
-            tabIndex={0}
-            role="region"
-            aria-label="Materials table"
-            className="overflow-x-auto"
-          >
-            <table className="w-full text-sm min-w-[560px]">
-              <thead>
-                <tr className="text-left text-xs tracking-[0.18em] uppercase text-clay-deep border-b border-grid">
-                  <th scope="col" className="py-3 pr-4 font-medium w-10">#</th>
-                  <th scope="col" className="py-3 pr-4 font-medium">Material</th>
-                  <th scope="col" className="py-3 pr-4 font-medium">Certification</th>
-                  <th scope="col" className="py-3 font-medium">Source</th>
-                </tr>
-              </thead>
-              <tbody>
-                {product.materials.map((m, i) => (
-                  <tr key={i} className="border-b border-grid align-top">
-                    <td className="py-4 pr-4 text-clay-deep tabular-nums">
-                      {String(i + 1).padStart(2, '0')}
-                    </td>
-                    <th scope="row" className="py-4 pr-4 text-left font-normal">
-                      <span className="text-navy font-medium block">{m.name}</span>
-                      <span className="text-navy/70 text-xs block mt-1 max-w-sm">{m.description}</span>
-                    </th>
-                    <td className="py-4 pr-4">
-                      <span className="inline-block bg-clay/10 text-clay-deep text-xs px-2.5 py-1 rounded-sm whitespace-nowrap">
-                        {m.certification}
-                      </span>
-                    </td>
-                    <td className="py-4 text-navy/70 whitespace-nowrap">{m.source}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {hasBuild && (
+        <section>
+          <SectionHeader index="02" title={product.materials.length > 0 ? 'Materials' : 'Feel'} />
+          <div className="space-y-12">
+            {product.materials.length > 0 && (
+              <div
+                tabIndex={0}
+                role="region"
+                aria-label="Materials table"
+                className="overflow-x-auto"
+              >
+                <table className="w-full text-sm min-w-[560px]">
+                  <thead>
+                    <tr className="text-left text-xs tracking-[0.18em] uppercase text-clay-deep border-b border-grid">
+                      <th scope="col" className="py-3 pr-4 font-medium w-10">#</th>
+                      <th scope="col" className="py-3 pr-4 font-medium">Material</th>
+                      <th scope="col" className="py-3 pr-4 font-medium">Certification</th>
+                      <th scope="col" className="py-3 font-medium">Source</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.materials.map((m, i) => (
+                      <tr key={i} className="border-b border-grid align-top">
+                        <td className="py-4 pr-4 text-clay-deep tabular-nums">
+                          {String(i + 1).padStart(2, '0')}
+                        </td>
+                        <th scope="row" className="py-4 pr-4 text-left font-normal">
+                          <span className="text-navy font-medium block">{m.name}</span>
+                          <span className="text-navy/70 text-xs block mt-1 max-w-sm">{m.description}</span>
+                        </th>
+                        <td className="py-4 pr-4">
+                          <span className="inline-block bg-clay/10 text-clay-deep text-xs px-2.5 py-1 rounded-sm whitespace-nowrap">
+                            {m.certification}
+                          </span>
+                        </td>
+                        <td className="py-4 text-navy/70 whitespace-nowrap">{m.source}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {product.firmness.length > 0 && (
+              <FirmnessScale
+                levels={product.firmness.map((f) => f.level)}
+                selected={product.selectedFirmness}
+              />
+            )}
           </div>
+        </section>
+      )}
 
-          {product.firmness.length > 0 && (
-            <FirmnessScale
-              levels={product.firmness.map((f) => f.level)}
-              selected={product.selectedFirmness}
-            />
-          )}
-        </div>
-      </section>
-
-      {/* 03 — Delivery */}
+      {/* 03 — Delivery (02 without a Materials section) */}
       <section>
-        <SectionHeader index="03" title="Delivery" />
+        <SectionHeader index={hasBuild ? '03' : '02'} title="Delivery" />
         <div className="space-y-8">
           <p className="text-navy/70 leading-relaxed max-w-2xl">
-            {product.firmness.length === 0
-              ? `Your ${product.name} ships fast and arrives ready to use straight out of the box.`
-              : `Your ${product.name} ships compressed in a box, straight to your door. Unbox, unroll, and it expands to full size within hours.`}
+            {studioGo
+              ? `Your ${product.name} is ready in days, not weeks: pick it up in Elmhurst in 72 hours, or have it delivered free within 96.`
+              : product.firmness.length === 0
+                ? `Your ${product.name} ships fast and arrives ready to use straight out of the box.`
+                : `Your ${product.name} ships compressed in a box, straight to your door. Unbox, unroll, and it expands to full size within hours.`}
           </p>
           <ol className="grid sm:grid-cols-2 lg:grid-cols-4 border-t border-l border-grid">
-            {DELIVERY_STEPS.map((s, i) => (
+            {deliverySteps.map((s, i) => (
               <li key={i} className="border-b border-r border-grid p-6">
                 <span className="text-clay-deep tabular-nums text-xs">
                   {String(i + 1).padStart(2, '0')}

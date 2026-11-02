@@ -172,7 +172,7 @@ export default function QuickBook() {
           <h2 id="quick-book-heading" tabIndex={-1} className="text-2xl sm:text-3xl font-serif text-navy outline-none">
             Pick a time this week
           </h2>
-          <p className="mt-1 text-gray-600">Free, private visits at our Elmhurst showroom. Try every bed.</p>
+          <p className="mt-1 text-gray-600">Free, private visits at our Elmhurst showroom. Try the beds side by side.</p>
         </div>
         <Link href="/appointment" className="text-sm font-medium text-navy underline hover:text-gold-dark">
           See more dates

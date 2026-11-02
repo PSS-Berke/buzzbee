@@ -129,7 +129,7 @@ export default function GiveawayPage() {
 
         <div className="mt-12 rounded-2xl bg-white p-6 ring-1 ring-gray-200">
           <p className="font-semibold text-navy">Can&apos;t wait to try one?</p>
-          <p className="mt-1 text-gray-600">Book a free private visit to our Elmhurst showroom and try every Busby mattress.</p>
+          <p className="mt-1 text-gray-600">Book a free private visit to our Elmhurst showroom and try our mattresses.</p>
           <Link
             href="/appointment"
             className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-6 py-3 font-semibold text-white hover:bg-navy-dark"

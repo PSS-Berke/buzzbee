@@ -54,7 +54,7 @@ export default function CheckoutSuccessPage() {
   );
 }
 
-// Set by the grab and go checkout, which offers store pickup or delivery.
+// Set by the Studio Go checkout, which offers store pickup or delivery.
 function FulfillmentNote() {
   const fulfillment = useSearchParams().get('fulfillment');
   const isOffer = fulfillment === 'pickup' || fulfillment === 'delivery';

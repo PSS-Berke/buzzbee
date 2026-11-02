@@ -7,6 +7,7 @@ import {
   getAllProductSlugs,
   homeLineProducts,
   isAdjustableBase,
+  isStudioGo,
   isTopper,
   usesAccessoryLayout,
 } from '@/data/products';
@@ -100,8 +101,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const isBase = isAdjustableBase(product);
   const isTopperProduct = isTopper(product);
   const isAccessoryLayout = usesAccessoryLayout(product);
+  // Accessories have no firmness options. Studio Go has none published yet but is still a mattress.
+  const isMattress = product.firmness.length > 0 || isStudioGo(product);
   // Accessory cross-sell (topper + BedTech bases) goes on adult mattress pages only (not cribs or accessories)
-  const showSetupCrossSell = !isAccessoryLayout && product.firmness.length > 0 && product.type !== 'Crib Mattress';
+  const showSetupCrossSell = !isAccessoryLayout && isMattress && product.type !== 'Crib Mattress';
 
   // Get related products from the same line (excluding current product)
   const productPool = homeLineProducts.filter((p) => p.line === product.line);
@@ -246,8 +249,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   ? ['One price for every size, Twin through King', 'See it on the beds in our Elmhurst showroom']
                   : [
                     '100% fiberglass-free construction',
-                    ...(product.firmness.length > 0 ? ['10-year warranty'] : []),
-                    'Ships to all 50 states',
+                    ...(isMattress ? ['10-year warranty'] : []),
+                    isStudioGo(product) ? 'Pickup in 72 hours or free delivery in 96' : 'Ships to all 50 states',
                   ]
               ).map((item, i) => (
                 <li key={i} className="flex items-center gap-3 text-gray-700">
