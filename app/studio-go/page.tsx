@@ -71,7 +71,7 @@ export default function StudioGoPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif leading-tight mb-3">
-                Studio Go. <span className="text-gold">$779.</span>
+                Studio Go. <span className="text-gold">$599.</span>
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed mb-5">
@@ -217,7 +217,7 @@ export default function StudioGoPage() {
                 href="#buy"
                 className="inline-flex justify-center items-center gap-2 bg-navy text-white font-semibold rounded-full px-8 py-4 hover:bg-navy/90 transition-colors"
               >
-                Grab mine for $779
+                Grab mine for $599
               </a>
               <Link
                 href="/products/studio-go"

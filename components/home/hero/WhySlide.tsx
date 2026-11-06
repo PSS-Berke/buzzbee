@@ -70,9 +70,11 @@ export default function WhySlide({
       <div className="scene-grid absolute inset-0 blueprint-grid opacity-[0.25] pointer-events-none" />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-10 pt-5 sm:px-6 md:pt-8 lg:px-8 lg:py-5">
-        <div className="grid items-center gap-6 md:gap-8 lg:grid-cols-12 lg:gap-10">
-          {/* The deal, then the story */}
-          <div className="lg:col-span-5">
+        {/* On a desktop the two blocks of words stack beside the photo, centered as one. */}
+        <div className="grid gap-6 md:gap-8 lg:grid-cols-12 lg:items-center lg:gap-x-10 lg:gap-y-0">
+          {/* The deal comes first on every screen. On a phone that puts it above the photo,
+              clear of the fixed "Now Open" pill along the bottom of the screen. */}
+          <div className="lg:col-span-5 lg:col-start-1 lg:self-end">
             <p
               className="scene-reveal text-xs font-medium uppercase tracking-[0.2em] text-clay-deep sm:text-sm"
               style={order(0)}
@@ -87,17 +89,11 @@ export default function WhySlide({
                 {content.price}
               </span>
             </Heading>
-            <p className="scene-reveal mt-2 text-lg font-semibold text-navy" style={order(4)}>
-              {content.subhead}
-            </p>
-            <p className="scene-reveal mt-2 leading-relaxed text-navy/70" style={order(5)}>
-              {content.story}
-            </p>
           </div>
 
-          {/* The bed. Comes first on a phone. The inner box keeps the photo's own shape,
-              and sits where object-position would put it, so the pins stay on the bed. */}
-          <div className="order-first lg:order-none lg:col-span-7">
+          {/* The bed. The inner box keeps the photo's own shape, and sits where
+              object-position would put it, so the pins stay on the bed. */}
+          <div className="lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1">
             <div className="scene-wipe relative aspect-[16/10] overflow-hidden border border-grid bg-putty/40 lg:aspect-auto lg:h-[clamp(20rem,calc(100svh-620px),30rem)]">
               <div
                 className="absolute inset-x-0"
@@ -131,6 +127,16 @@ export default function WhySlide({
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* The story */}
+          <div className="lg:col-span-5 lg:col-start-1 lg:self-start">
+            <p className="scene-reveal text-lg font-semibold text-navy lg:mt-2" style={order(4)}>
+              {content.subhead}
+            </p>
+            <p className="scene-reveal mt-2 leading-relaxed text-navy/70" style={order(5)}>
+              {content.story}
+            </p>
           </div>
         </div>
 

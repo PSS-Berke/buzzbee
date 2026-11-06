@@ -379,10 +379,11 @@ html {
   animation: scene-fade 0.5s ease-out calc(1.7s + var(--i) * 0.35s) both;
 }
 
-/* The price lands, then a glint runs across it. */
+/* The price is on show from the first frame. It settles into place, then a glint runs
+   across it. Don't fade it in or delay it: it has to be the first thing a visitor sees. */
 [data-scene][data-active='true'] .scene-stamp {
   position: relative;
-  animation: scene-stamp 0.55s cubic-bezier(0.2, 1.5, 0.4, 1) 0.35s both;
+  animation: scene-stamp 0.55s cubic-bezier(0.2, 1.5, 0.4, 1) both;
 }
 
 [data-scene][data-active='true'] .scene-stamp::after {
@@ -581,11 +582,9 @@ html {
 
 @keyframes scene-stamp {
   from {
-    opacity: 0;
     transform: scale(1.4) rotate(-3deg);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }

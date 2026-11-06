@@ -613,7 +613,7 @@ export const homeLineProducts: Product[] = [
     tagline: 'A great all-foam queen, ready in days',
     description:
       'An online-only special from our Studio line. An all-foam, medium-firm queen mattress made in the USA, ready for pickup at our Elmhurst showroom in 72 hours or delivered in 96.',
-    price: 779,
+    price: 599,
     rating: 0,
     reviewCount: 0,
     images: ['/images/products/studio/studio-go.webp'],
@@ -621,7 +621,7 @@ export const homeLineProducts: Product[] = [
       src: '/Videos/studio-go-explainer.mp4',
       poster: '/Videos/studio-go-poster.jpg',
     },
-    sizes: [{ name: 'Queen', dimensions: '60" x 80"', price: 779, inStock: true }],
+    sizes: [{ name: 'Queen', dimensions: '60" x 80"', price: 599, inStock: true }],
     firmness: [
       { level: 'Soft', description: 'Plush comfort', recommended: ['Side sleepers', 'Lighter body types'] },
       { level: 'Medium', description: 'Balanced support and comfort', recommended: ['All sleep positions', 'Couples'] },

@@ -3,7 +3,6 @@
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -15,16 +14,16 @@ import Studio12WhySlide from './hero/Studio12WhySlide';
 import VideoSlide from './hero/VideoSlide';
 import DreamSlide from './hero/DreamSlide';
 
-// Left to right, as they sit on the track. The hero opens on the primary slide, second
-// along, and rotates rightward, wrapping around to the far left. Labels are for screen
-// readers. On screen the dots carry no names.
+// Left to right, as they sit on the track. Studio Go stays first: a scroller always opens
+// at its far left, so it's what paints before any JavaScript runs. The hero rotates
+// rightward and wraps back to it. Labels are for screen readers. On screen the dots carry
+// no names.
 const slides = [
-  { id: 'studio12', label: 'Studio 12' },
   { id: 'why', label: 'Why Studio Go' },
   { id: 'video', label: 'Watch' },
   { id: 'dream', label: 'Busby Dream' },
+  { id: 'studio12', label: 'Studio 12' },
 ] as const;
-const START = slides.findIndex((slide) => slide.id === 'why');
 
 const ROTATE_MS = 30_000;
 // The video slide moves on after its plays finish instead. This only catches a video
@@ -55,7 +54,7 @@ export default function Hero() {
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const firstRender = useRef(true);
 
-  const [active, setActive] = useState<number>(START);
+  const [active, setActive] = useState(0);
   const [stopped, setStopped] = useState(false);
   const [focusWithin, setFocusWithin] = useState(false);
   const [inView, setInView] = useState(true);
@@ -71,21 +70,6 @@ export default function Hero() {
   );
   const rotating = canRotate && !stopped;
   const running = rotating && !focusWithin && inView;
-
-  // A scroller always opens at its far left, and this page is prerendered. So until this
-  // runs, CSS pulls the slide before the primary one off to the left, and the primary one
-  // is what paints first.
-  // This puts it back and scrolls to match before the browser paints again, keeping any
-  // swipe made in the meantime. The slides are transition-none because the reduced-motion
-  // rule in globals.css gives everything a tiny transition: the slide coming back a frame
-  // late would push the track one slide too far.
-  useLayoutEffect(() => {
-    const track = trackRef.current;
-    if (!track || track.hasAttribute('data-ready')) return;
-    const index = Math.round(track.scrollLeft / track.clientWidth) + START;
-    track.setAttribute('data-ready', '');
-    track.scrollLeft = index * track.clientWidth;
-  }, []);
 
   const goTo = useCallback((index: number) => {
     const track = trackRef.current;
@@ -195,7 +179,7 @@ export default function Hero() {
           if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) setStopped(true);
         }}
         aria-live={rotating ? 'off' : 'polite'}
-        className="relative flex h-[var(--slide-h)] snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] duration-300 [scrollbar-width:none] motion-reduce:transition-none lg:h-auto lg:min-h-[max(640px,min(56.25vw,calc(100svh-232px)))] lg:items-stretch [&:not([data-ready])>:first-child]:-ml-[100%] [&::-webkit-scrollbar]:hidden"
+        className="relative flex h-[var(--slide-h)] snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] duration-300 [scrollbar-width:none] motion-reduce:transition-none lg:h-auto lg:min-h-[max(640px,min(56.25vw,calc(100svh-232px)))] lg:items-stretch [&::-webkit-scrollbar]:hidden"
       >
         {slides.map((slide, i) => (
           <div
@@ -207,7 +191,7 @@ export default function Hero() {
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${slides.length}: ${slide.label}`}
             inert={i !== active}
-            className="w-full shrink-0 snap-start snap-always transition-none lg:flex"
+            className="w-full shrink-0 snap-start snap-always lg:flex"
           >
             {panels[slide.id]}
           </div>
