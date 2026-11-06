@@ -5,8 +5,8 @@ import { Users, Factory, Award, Heart } from 'lucide-react';
 const stats = [
   { icon: Users, value: '25+', label: 'Years Experience' },
   { icon: Factory, value: '1', label: 'American Factory' },
-  { icon: Award, value: '100%', label: 'USA Materials' },
-  { icon: Heart, value: '10K+', label: 'Happy Customers' },
+  { icon: Award, value: '10', label: 'Year Warranty' },
+  { icon: Heart, value: '100', label: 'Night Home Trial' },
 ];
 
 export default function OurStoryTeaser() {

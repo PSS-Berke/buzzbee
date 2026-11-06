@@ -3,7 +3,7 @@ import { isStudioGo, type Product } from '@/data/products';
 const DELIVERY_STEPS = [
   { title: 'Order', desc: 'Production begins the moment you order — nothing sits in a warehouse.' },
   { title: 'Build', desc: 'Made to order in the USA and quality-checked layer by layer.' },
-  { title: 'Ship', desc: 'Compressed, boxed, and shipped free within 5–7 days.' },
+  { title: 'Ship', desc: 'Compressed, boxed, and shipped free within 5–7 business days.' },
   { title: 'Sleep', desc: 'Unbox, let it expand, and try it for 100 nights.' },
 ];
 
@@ -56,11 +56,11 @@ function FirmnessScale({ levels, selected }: { levels: string[]; selected: strin
 export default function StudioSpecSheet({ product }: { product: Product }) {
   const studioGo = isStudioGo(product);
   const deliverySteps = studioGo ? STUDIO_GO_STEPS : DELIVERY_STEPS;
-  // A build that isn't published yet (Studio Go) has no type, feel, layers or
-  // materials to show, so it also skips the Materials section.
+  // A build that isn't published yet (Studio Go) has no layers or materials to
+  // show, so its second section is just Feel.
   const hasBuild = product.materials.length > 0 || product.firmness.length > 0;
   const specRows: [string, string][] = [
-    ['Type', product.type || 'Coming soon'],
+    ['Type', product.type === 'Foam' ? 'All-foam' : product.type || 'Coming soon'],
     ['Feel', product.selectedFirmness || 'Coming soon'],
     ...(product.components.length > 0 ? [['Layers', String(product.components.length)] as [string, string]] : []),
     ['Sizes', product.sizes.map((s) => s.name).join(' · ')],

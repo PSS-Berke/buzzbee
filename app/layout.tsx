@@ -37,7 +37,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Busby | American-Made Mattresses | Premium Sleep",
   description:
-    "Discover Busby - premium mattresses handcrafted in the USA with 25+ years of expertise. The perfect night's sleep. Free delivery, financing available, up to 20 year warranty.",
+    "Discover Busby - premium mattresses handcrafted in the USA with 25+ years of expertise. The perfect night's sleep. Free delivery, financing available, 10-year warranty.",
   keywords: [
     "American made mattress",
     "USA mattress",
@@ -54,14 +54,14 @@ export const metadata: Metadata = {
     siteName: "Busby",
     title: "Busby | American-Made Mattresses | Premium Sleep",
     description:
-      "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
+      "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, 10-year warranty.",
     url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
     title: "Busby | American-Made Mattresses | Premium Sleep",
     description:
-      "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, up to 20 year warranty.",
+      "Premium mattresses handcrafted in the USA with 25+ years of expertise. Free delivery, financing available, 10-year warranty.",
   },
 };
 

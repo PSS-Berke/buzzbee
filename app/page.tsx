@@ -1,6 +1,7 @@
 import { SITE_URL } from '@/lib/site';
 import Hero from '@/components/home/Hero';
 import TrustBar from '@/components/home/TrustBar';
+import QuickBook from '@/components/home/QuickBook';
 import FinancingBanner from '@/components/home/FinancingBanner';
 import TheDifference from '@/components/home/TheDifference';
 import SixComponents from '@/components/home/SixComponents';
@@ -42,6 +43,7 @@ export default function Home() {
         <div className="relative z-10">
           <Hero />
           <TrustBar />
+          <QuickBook />
           <FeaturedProducts />
           <StudioShowcase />
           <ElmhurstAnnouncement />

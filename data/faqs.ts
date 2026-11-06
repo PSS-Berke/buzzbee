@@ -13,7 +13,7 @@ export const faqs: FAQ[] = [
   {
     question: "Where are Busby mattresses made?",
     answer:
-      "All Busby mattresses are 100% USA-made. Our mattresses are crafted in Chicago and manufactured in Wisconsin.",
+      "All Busby mattresses are made in the USA. Our mattresses are crafted in Chicago and manufactured in Wisconsin.",
   },
   {
     question: "Do you offer expedited shipping?",
@@ -23,7 +23,7 @@ export const faqs: FAQ[] = [
   {
     question: "How is a foam core different than a coil mattress?",
     answer:
-      "Our foam core offers a tri-support system which works inline with all curves of the human body, providing consistent pressure relief and support that coil mattresses can't match.",
+      "Foam contours to your body and soaks up movement, while coils add support and bounce. We make both: Studio 10, Studio 12 and Studio Go are all foam, and the rest of our beds are hybrids that combine foam with coils.",
   },
   {
     question: "How long will the mattress last?",
@@ -52,7 +52,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "Do you ship internationally?",
-    answer: "Yes, we ship to Canada and Mexico for an additional fee!",
+    answer: "Online orders ship to all 50 U.S. states. For delivery outside the U.S., please call us at (844) 886-1640.",
   },
   {
     question: "How do I unbox the mattress?",

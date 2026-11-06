@@ -149,7 +149,7 @@ const sampleQuestions = [
 const quickFacts = [
   { value: '25+', label: 'Years in the Industry' },
   { value: 'Chicago', label: 'Headquarters & Factory' },
-  { value: '100%', label: 'USA-Made Materials' },
+  { value: '100', label: 'Night Home Trial' },
   { value: 'Abt.', label: 'National Retail Partner' },
   { value: '2', label: 'Brands: Sleep6 & Busby' },
   { value: '10yr', label: 'Product Warranty' },
@@ -164,9 +164,7 @@ const pressLogos = [
 
 const downloads = [
   { icon: FileText, label: 'One-Sheet (PDF)', file: '/press/one-sheet', newTab: true },
-  { icon: FileText, label: 'Full Press Kit (PDF)', file: '/press/Robert_Taglianetti_Press_Kit.pdf', newTab: false },
-  { icon: ImageIcon, label: 'High-Res Headshot (JPG)', file: '/press/robert-headshot.jpg', newTab: false },
-  { icon: ImageIcon, label: 'Brand Logos (ZIP)', file: '/press/brand-logos.zip', newTab: false },
+  { icon: ImageIcon, label: 'High-Res Headshot (JPG)', file: '/images/team/robert-taglianetti.jpg', newTab: false },
 ];
 
 export default function PressPage() {
@@ -262,7 +260,7 @@ export default function PressPage() {
                     <p>
                       Under Robert&apos;s leadership, Sleep6 secured a partnership with Abt.,
                       bringing factory-direct mattresses to consumers across the country. Every
-                      product in both brands is manufactured using 100% USA-sourced materials —
+                      product in both brands is manufactured in the USA —
                       a commitment Robert has maintained even as competitors have shifted overseas
                       in pursuit of lower costs.
                     </p>
@@ -292,7 +290,7 @@ export default function PressPage() {
                   </div>
                   <div className="border-2 border-gold/20 rounded-3xl p-6 bg-[#faf8f5]">
                     <p className="text-2xl font-bold text-gold-dark mb-1">Made in USA</p>
-                    <p className="text-navy font-medium">100% domestic materials</p>
+                    <p className="text-navy font-medium">American factory, American workers</p>
                   </div>
                 </div>
               </div>

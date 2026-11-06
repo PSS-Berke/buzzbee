@@ -124,7 +124,7 @@ export default function MattressesPage() {
                   {/* Content Side */}
                   <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16">
                     <span className="text-gold-dark font-medium text-sm mb-4">
-                      The Pinnacle
+                      Plush Pillowtop Hybrid
                     </span>
                     <h2 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
                       {flagship.name}

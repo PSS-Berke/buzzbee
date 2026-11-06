@@ -101,8 +101,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const isBase = isAdjustableBase(product);
   const isTopperProduct = isTopper(product);
   const isAccessoryLayout = usesAccessoryLayout(product);
-  // Accessories have no firmness options. Studio Go has none published yet but is still a mattress.
-  const isMattress = product.firmness.length > 0 || isStudioGo(product);
+  // Accessories have no firmness options.
+  const isMattress = product.firmness.length > 0;
   // Accessory cross-sell (topper + BedTech bases) goes on adult mattress pages only (not cribs or accessories)
   const showSetupCrossSell = !isAccessoryLayout && isMattress && product.type !== 'Crib Mattress';
 

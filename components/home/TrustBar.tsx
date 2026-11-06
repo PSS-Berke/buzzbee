@@ -1,15 +1,10 @@
-import { Flag, Truck, DollarSign, Shield, Moon, Users } from 'lucide-react';
+import { Flag, Truck, DollarSign, Shield, Moon } from 'lucide-react';
 
 const trustItems = [
   {
-    icon: Users,
-    title: '10,000+',
-    description: 'American sleepers',
-  },
-  {
     icon: Flag,
     title: 'Made in USA',
-    description: 'American materials, American workers',
+    description: 'Built by American workers',
   },
   {
     icon: Truck,
@@ -37,7 +32,7 @@ export default function TrustBar() {
   return (
     <section className="py-8 border-y border-gold/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
+        <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
           {trustItems.map((item) => (
             <li key={item.title} className="flex items-center gap-3">
               <div className="flex-shrink-0 w-12 h-12 bg-gold/15 rounded-full flex items-center justify-center">

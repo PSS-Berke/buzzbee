@@ -232,7 +232,7 @@ export function renderUserSleepGuideEmail(toEmail: string): {
               {
                 head: '"Handcrafted in the USA"',
                 body:
-                  'Ask where, by whom, and what percentage of the materials are also from the US. Most "USA" mattresses use imported foam and imported covers, assembled here.',
+                  'Ask where, and by whom. Anyone proud of where they build a mattress will tell you.',
               },
             ],
           })}

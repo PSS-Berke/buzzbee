@@ -6,7 +6,7 @@ import { useCart } from '@/contexts/CartContext';
 import CartItem from '@/components/cart/CartItem';
 
 export default function CartPage() {
-  const { state, subtotal, savings, clearCart } = useCart();
+  const { state, subtotal, clearCart } = useCart();
 
   if (state.items.length === 0) {
     return (
@@ -98,14 +98,6 @@ export default function CartPage() {
                   <span className="text-gray-600">Subtotal</span>
                   <span className="text-navy">${subtotal.toLocaleString()}</span>
                 </div>
-                {savings > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">You Save</span>
-                    <span className="text-gold-dark font-medium">
-                      -${savings.toLocaleString()}
-                    </span>
-                  </div>
-                )}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span className="text-gold-dark font-medium">FREE</span>
@@ -159,7 +151,7 @@ export default function CartPage() {
             <div className="mt-6 bg-gold/5 rounded-2xl p-4 text-center">
               <p className="text-sm text-gray-600">
                 <span className="font-medium text-gold-dark">Financing Available</span>
-                {' '}&bull; Pay as low as ${Math.round(subtotal / 12)}/mo
+                {' '}&bull; Choose a payment plan at checkout
               </p>
             </div>
           </div>

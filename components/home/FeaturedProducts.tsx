@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
+import ArtisanReel from './ArtisanReel';
 
 // Product data with luxury positioning
 const flagship = {
@@ -11,9 +12,9 @@ const flagship = {
   tagline: 'Engineered for luxury performance.',
   heroDescription:
     'Individually wrapped coils meet advanced foam layers for the kind of performance you expect from a luxury mattress — at a price that doesn\'t require compromise.',
-  layers: 6,
-  keyBenefit: 'Zero Motion Transfer',
-  price: 1999,
+  layers: 7,
+  keyBenefit: 'Cooling CoolGel Quilting',
+  price: 2599,
   image: '/images/products/Dream/dream-bed.webp',
 };
 
@@ -22,30 +23,30 @@ const supportingProducts = [
     id: 'hl-3',
     slug: 'slumber',
     name: 'Busby Slumber',
-    type: 'Memory Foam',
+    type: 'Hybrid',
     tagline: 'Rich, plush comfort that envelops you',
     keyBenefit: 'Deep Pressure Relief',
-    price: 1699,
+    price: 2209,
     image: '/images/products/Slumber/slumber-bed.webp',
   },
   {
     id: 'hl-2',
     slug: 'doze',
     name: 'Busby Doze',
-    type: 'Foam',
+    type: 'Hybrid',
     tagline: 'Plush comfort, built to last.',
     keyBenefit: 'Enhanced Comfort',
-    price: 1299,
+    price: 1689,
     image: '/images/products/Doze/doze-bed.webp',
   },
   {
     id: 'hl-1',
     slug: 'nod',
     name: 'Busby Nod',
-    type: 'Foam',
+    type: 'Hybrid',
     tagline: 'Dependable comfort, night after night',
     keyBenefit: 'Built to Last',
-    price: 1499,
+    price: 1949,
     image: '/images/products/Nod/nod-bed.webp',
   },
 ];
@@ -87,7 +88,7 @@ export default function FeaturedProducts() {
               {/* Content Side */}
               <div className="flex flex-col justify-center p-6 sm:p-8 md:p-12 lg:p-16">
                 <span className="text-gold-dark font-medium text-sm mb-4">
-                  Flagship Collection
+                  Plush Pillowtop Hybrid
                 </span>
                 <h3 className="text-3xl lg:text-4xl font-serif text-navy mb-2">
                   Busby <span className="font-semibold">Dream</span>
@@ -170,6 +171,8 @@ export default function FeaturedProducts() {
             </Link>
           ))}
         </div>
+
+        <ArtisanReel />
 
         {/* View All Link */}
         <div className="text-center">

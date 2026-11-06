@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useReducer, useEffect, useRef, useState, ReactNode } from 'react';
+import { resolveLineItem } from '@/data/products';
 
 // Types
 export interface CartItem {
@@ -12,7 +13,6 @@ export interface CartItem {
   size: string;
   sizeDimensions: string;
   price: number;
-  originalPrice: number;
   quantity: number;
   image: string;
 }
@@ -41,7 +41,6 @@ interface CartContextValue {
   closeCartDrawer: () => void;
   itemCount: number;
   subtotal: number;
-  savings: number;
 }
 
 // Generate unique cart item ID
@@ -142,12 +141,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     announceTimeout.current = window.setTimeout(() => setAnnouncement(message), 50);
   };
 
-  // Hydrate from localStorage on mount
+  // Hydrate from localStorage on mount. The price comes from the product data, not the saved
+  // copy, so a cart saved before a price change shows what checkout will actually charge.
+  // A line that's no longer for sale is dropped, since checkout would reject it anyway.
   useEffect(() => {
     const stored = localStorage.getItem('sleep6-cart');
     if (stored) {
       try {
-        const items = JSON.parse(stored);
+        const saved: CartItem[] = JSON.parse(stored);
+        const items = saved.flatMap((item) => {
+          const current = resolveLineItem(item);
+          return current ? [{ ...item, price: current.price }] : [];
+        });
         dispatch({ type: 'HYDRATE', payload: items });
       } catch (e) {
         console.error('Failed to parse cart from localStorage:', e);
@@ -202,12 +207,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   // Computed values
   const itemCount = state.items.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const savings = state.items.reduce(
-    // Clamp per line: items with no markdown (or larger sizes priced above the
-    // product's reference price) must not cancel out real savings elsewhere.
-    (sum, item) => sum + Math.max(0, item.originalPrice - item.price) * item.quantity,
-    0
-  );
 
   const value: CartContextValue = {
     state,
@@ -219,7 +218,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     closeCartDrawer,
     itemCount,
     subtotal,
-    savings,
   };
 
   return (

@@ -9,7 +9,7 @@ import CartItem from './CartItem';
 import CartEmpty from './CartEmpty';
 
 export default function CartDrawer() {
-  const { state, closeCartDrawer, subtotal, savings, itemCount } = useCart();
+  const { state, closeCartDrawer, subtotal, itemCount } = useCart();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useFocusTrap<HTMLDivElement>(state.isOpen);
 
@@ -108,16 +108,6 @@ export default function CartDrawer() {
         {/* Summary */}
         {state.items.length > 0 && (
           <div className="border-t border-gold/10 p-4 sm:p-6 bg-gray-50/50">
-            {/* Savings */}
-            {savings > 0 && (
-              <div className="flex justify-between text-sm mb-3">
-                <span className="text-gray-600">You&apos;re saving</span>
-                <span className="text-gold-dark font-medium">
-                  ${savings.toLocaleString()}
-                </span>
-              </div>
-            )}
-
             {/* Subtotal */}
             <div className="flex justify-between mb-6">
               <span className="text-navy font-medium">Subtotal</span>

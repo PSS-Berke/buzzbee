@@ -254,7 +254,7 @@ export const quizQuestions: QuizQuestion[] = [
       {
         id: 'studio',
         label: 'Studio',
-        sublabel: 'Modern, spec-forward design at a sharper price',
+        sublabel: 'Modern, spec-forward design',
         icon: LayoutGrid,
         weights: { nod: 0, slumber: 0, dream: 0 },
         line: 'studio',
@@ -372,8 +372,8 @@ function getResultMessaging(
       headline: 'Simple Comfort, Exceptional Value',
       reason:
         scores.nod > 10
-          ? "You know what you want — quality sleep without overpaying. The Busby Nod delivers exactly that: essential comfort, solid support, and American craftsmanship at an unbeatable price."
-          : "Based on your sleep profile, you don't need the bells and whistles. The Busby Nod gives you everything essential for great sleep — comfort, support, and durability — at our best value.",
+          ? "You know what you want — quality sleep without overpaying. The Busby Nod delivers exactly that: essential comfort, solid support, and American craftsmanship."
+          : "Based on your sleep profile, you don't need the bells and whistles. The Busby Nod gives you everything essential for great sleep — comfort, support, and durability.",
     },
     slumber: {
       headline: 'Relief and Recovery While You Sleep',
@@ -392,12 +392,12 @@ function getResultMessaging(
     'studio-10': {
       headline: 'Clean Design, Smart Value',
       reason:
-        "You want quality sleep without the extras — and you like the Studio approach. The Studio 10's three-layer foam build delivers essential comfort and honest support at our most accessible price.",
+        "You want quality sleep without the extras — and you like the Studio approach. The Studio 10's three-layer foam build delivers essential comfort and honest support.",
     },
     'studio-12': {
       headline: 'Undisturbed Sleep by Design',
       reason:
-        "The Studio 12 is your match. Its motion-isolating core and contouring comfort layer absorb pressure and movement, so you get the restorative, undisturbed sleep your body needs — at a Studio price.",
+        "The Studio 12 is your match. Its motion-isolating core and contouring comfort layer absorb pressure and movement, so you get the restorative, undisturbed sleep your body needs.",
     },
     'studio-hybrid': {
       headline: 'Balanced Hybrid Comfort',
@@ -420,43 +420,43 @@ export const productDetails: Record<
 > = {
   nod: {
     name: 'Busby Nod',
-    price: 1499,
+    price: 1949,
     tagline: 'Dependable comfort, night after night',
     features: ['5-layer hybrid construction', 'CertiPUR-US certified foams', 'Made in Wisconsin, USA'],
   },
   slumber: {
     name: 'Busby Slumber',
-    price: 1699,
+    price: 2209,
     tagline: 'Rich, plush comfort that envelops you',
     features: ['100% natural latex layer', 'Deep pressure relief', 'Made in Wisconsin, USA'],
   },
   dream: {
     name: 'Busby Dream',
-    price: 1999,
+    price: 2599,
     tagline: 'Engineered for luxury performance.',
     features: ['Joma® Wool CoolGel quilting', 'Tri-Zone encased coil system', 'Made in Wisconsin, USA'],
   },
   'studio-10': {
     name: 'Studio 10',
-    price: 1348,
+    price: 1752,
     tagline: 'The essentials of comfort and support',
     features: ['3-layer foam construction', 'CertiPUR-US certified foams', 'Made in the USA'],
   },
   'studio-12': {
     name: 'Studio 12',
-    price: 2148,
-    tagline: 'Balances affordability and comfort',
+    price: 2792,
+    tagline: 'Quiet by design',
     features: ['Motion-isolating core', '100% fiber glass free', 'Made in the USA'],
   },
   'studio-hybrid': {
     name: 'Studio Hybrid',
-    price: 2448,
+    price: 3182,
     tagline: 'Balanced hybrid comfort, medium feel',
     features: ['7-layer construction', 'Pocketed coil support system', 'Made in the USA'],
   },
   'studio-hybrid-firm': {
     name: 'Studio Hybrid Firm',
-    price: 2448,
+    price: 3182,
     tagline: 'Same hybrid build, firmer feel',
     features: ['7-layer construction', 'Firmer comfort top', 'Made in the USA'],
   },

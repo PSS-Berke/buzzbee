@@ -59,7 +59,6 @@ export default function CompareClient() {
       size: s.name,
       sizeDimensions: s.dimensions,
       price: s.price,
-      originalPrice: p.originalPrice,
       quantity: 1,
       image: p.images[0] || '',
     });

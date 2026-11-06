@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { formatSlot } from '@/lib/slots';
 import { isHeldBack, scheduledSlotsForDate } from '@/lib/availability';
 import { SOURCE_IN_PERSON } from '@/lib/consult';
@@ -41,7 +41,98 @@ function upcomingDays(): string[] {
   return Array.from({ length: DAYS_SHOWN }, (_, i) => plusDays(today, i + 1));
 }
 
+// Why book, all as promised on /appointment. Studio Go is left out on purpose: it
+// isn't on the showroom floor.
+const visitReasons = [
+  {
+    title: 'The whole showroom to yourself',
+    body: 'No other customers, no floor staff circling. A Sleep Guide meets you at the door and the place is yours.',
+  },
+  {
+    title: 'Nobody hovering, nobody selling',
+    body: 'Your guide is salaried, never on commission, and there to help you choose, not to close you.',
+  },
+  {
+    title: 'Free either way',
+    body: 'Same prices as online and the same 100-night home trial, whether you buy that day or not.',
+  },
+];
+
 export default function QuickBook() {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // The picker can't be prerendered: its days come from today's date, and a page
+  // built yesterday would fail hydration. Waiting until it's on screen also means
+  // a home page view only costs availability's rate-limited database calls (one
+  // per day shown) if the visitor actually scrolls here.
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setMounted(true);
+      observer.disconnect();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section
+      id="quick-book"
+      aria-labelledby="quick-book-heading"
+      className="scroll-mt-20 lg:scroll-mt-24 py-16 md:py-24"
+    >
+      {/* grid-cols-1 caps the column at the page width, so the day strip scrolls instead of stretching it. */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        {/* Why come in */}
+        <div className="lg:col-span-5">
+          <p className="text-gold-dark font-medium text-sm">Quick Appointment</p>
+          <h2 id="quick-book-heading" className="mt-3 text-4xl md:text-5xl font-serif text-navy leading-tight">
+            Not sure what feels right? <span className="wavy-underline">Come lie down.</span>
+          </h2>
+          <p className="mt-5 text-lg text-gray-600 leading-relaxed">
+            Reading about a mattress only goes so far. Book a free, private visit to our Elmhurst
+            showroom and feel the difference between our beds side by side. (Studio Go is online
+            only, so it won&rsquo;t be on the floor.)
+          </p>
+          <ul className="mt-8 space-y-5">
+            {visitReasons.map((r) => (
+              <li key={r.title} className="flex gap-4">
+                <span className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-gold/15">
+                  <Check className="h-4 w-4 text-gold-dark" aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="font-semibold text-navy">{r.title}</h3>
+                  <p className="mt-0.5 text-gray-600 leading-relaxed">{r.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Then pick a time */}
+        <div
+          ref={cardRef}
+          className="lg:col-span-7 rounded-3xl bg-white border-2 border-gold/20 shadow-xl shadow-gold/5 p-5 sm:p-8"
+        >
+          <div className="flex items-baseline justify-between gap-4">
+            <h3 className="text-xl sm:text-2xl font-serif text-navy">Pick a time this week</h3>
+            <Link href="/appointment" className="shrink-0 text-sm font-medium text-navy underline hover:text-gold-dark">
+              See more dates
+            </Link>
+          </div>
+
+          {/* Holds the height of a full day of times, so nothing jumps while they load. */}
+          <div className="mt-6 min-h-[491px] sm:min-h-[336px]">{mounted && <Picker />}</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Picker() {
   const [days] = useState(upcomingDays);
   // null = still loading; a failed fetch falls back to [] so the picker stays usable
   // and the server's unique index still catches a clash at submit.
@@ -166,23 +257,11 @@ export default function QuickBook() {
   const daySlots = date ? slotsFor(date) : [];
 
   return (
-    <div className="rounded-3xl bg-white border-2 border-gold/20 shadow-xl shadow-gold/5 p-5 sm:p-8">
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 id="quick-book-heading" tabIndex={-1} className="text-2xl sm:text-3xl font-serif text-navy outline-none">
-            Pick a time this week
-          </h2>
-          <p className="mt-1 text-gray-600">Free, private visits at our Elmhurst showroom. Try the beds side by side.</p>
-        </div>
-        <Link href="/appointment" className="text-sm font-medium text-navy underline hover:text-gold-dark">
-          See more dates
-        </Link>
-      </div>
-
+    <>
       {/* Days — a swipeable strip on phones, a 7-up grid from sm. min-w-0 matters:
           a <fieldset> defaults to min-inline-size: min-content, which stretches it
           to the strip's full width so the strip never scrolls (it just gets clipped). */}
-      <fieldset className="mt-6 min-w-0">
+      <fieldset className="min-w-0">
         <legend className="sr-only">Day</legend>
         <div className="-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-2 overflow-x-auto overscroll-x-contain px-5 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-7 sm:overflow-visible sm:px-0">
           {days.map((d) => {
@@ -222,7 +301,7 @@ export default function QuickBook() {
         {date && daySlots.length === 0 && (
           <p className="text-sm text-gray-600">The showroom is closed this day. Pick another.</p>
         )}
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5 lg:grid-cols-10">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
           {daySlots.map(({ slot: s, free }) => {
             const selected = slot === s;
             return (
@@ -306,6 +385,6 @@ export default function QuickBook() {
           </button>
         </form>
       )}
-    </div>
+    </>
   );
 }

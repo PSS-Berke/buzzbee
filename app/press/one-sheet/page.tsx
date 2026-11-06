@@ -227,7 +227,7 @@ export default function OneSheetPage() {
                   { label: 'Experience', value: '25+ Years' },
                   { label: 'Location', value: 'Chicago, IL' },
                   { label: 'Brands', value: 'Sleep6 & Busby' },
-                  { label: 'Materials', value: '100% USA-Made' },
+                  { label: 'Manufacturing', value: 'Made in USA' },
                   { label: 'Retail Partner', value: 'Abt.' },
                   { label: 'Warranty', value: '10-Year Guarantee' },
                   { label: 'Interview Format', value: 'Audio & Video' },

@@ -8,6 +8,26 @@ import ReserveForm from '@/components/locations/ReserveForm';
 // Once dismissed, don't show again for this many days
 const SUPPRESS_DAYS = 7;
 const STORAGE_KEY = 'busby_appt_modal_dismissed';
+// How long a visitor gets with the page, and the hero's offer, before this opens.
+const OPEN_DELAY_MS = 20_000;
+
+// Don't interrupt someone already booking, typing, or in the cart or a menu, and
+// don't let it fire unseen in a background tab. They just skip it this page view.
+function visitorIsBusy() {
+  const active = document.activeElement;
+  const typing =
+    active instanceof HTMLInputElement ||
+    active instanceof HTMLTextAreaElement ||
+    active instanceof HTMLSelectElement;
+  const picker = document.getElementById('quick-book')?.getBoundingClientRect();
+  const onPicker = !!picker && picker.top < window.innerHeight && picker.bottom > 0;
+  return (
+    document.hidden ||
+    typing ||
+    onPicker ||
+    document.querySelector('[role="dialog"], header [aria-expanded="true"]') !== null
+  );
+}
 
 const perks = [
   'A salaried Sleep Guide — never a commission',
@@ -20,7 +40,7 @@ export default function AppointmentModal() {
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useFocusTrap<HTMLDivElement>(isOpen);
 
-  // Open immediately on load, unless dismissed within the suppression window
+  // Open after the delay, unless dismissed within the suppression window
   useEffect(() => {
     let suppressed = false;
     try {
@@ -33,9 +53,9 @@ export default function AppointmentModal() {
     }
     if (suppressed) return;
 
-    // Defer to the next tick so we open right after mount without a
-    // synchronous cascading render.
-    const timer = window.setTimeout(() => setIsOpen(true), 0);
+    const timer = window.setTimeout(() => {
+      if (!visitorIsBusy()) setIsOpen(true);
+    }, OPEN_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -60,14 +80,16 @@ export default function AppointmentModal() {
     };
   }, [isOpen]);
 
-  // Close on Escape
+  // Close on Escape. Only listens while open: Escape on the cart or a menu during
+  // the delay must not count as dismissing this.
   useEffect(() => {
+    if (!isOpen) return;
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close();
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, []);
+  }, [isOpen]);
 
   // Everything outside the dialog is inert while open
   useEffect(() => {

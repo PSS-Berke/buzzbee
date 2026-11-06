@@ -1,146 +1,248 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight, CalendarCheck, ChevronDown, Star } from 'lucide-react';
-import HeroVideo from './HeroVideo';
-import QuickBook from './QuickBook';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import StudioGoWhySlide from './hero/StudioGoWhySlide';
+import Studio12WhySlide from './hero/Studio12WhySlide';
+import VideoSlide from './hero/VideoSlide';
+import DreamSlide from './hero/DreamSlide';
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
+// Left to right, as they sit on the track. The hero opens on the primary slide, second
+// along, and rotates rightward, wrapping around to the far left. Labels are for screen
+// readers. On screen the dots carry no names.
+const slides = [
+  { id: 'studio12', label: 'Studio 12' },
+  { id: 'why', label: 'Why Studio Go' },
+  { id: 'video', label: 'Watch' },
+  { id: 'dream', label: 'Busby Dream' },
+] as const;
+const START = slides.findIndex((slide) => slide.id === 'why');
+
+const ROTATE_MS = 30_000;
+// The video slide moves on after its plays finish instead. This only catches a video
+// that never gets there, because it failed to load or the browser blocked it.
+const VIDEO_BACKSTOP_MS = 90_000;
+
+// Rotates on desktop only. Slides differ in height on a phone, so rotating there
+// would move the page under someone's thumb.
+const ROTATE_QUERY = '(min-width: 1024px) and (prefers-reduced-motion: no-preference)';
+
+function subscribeRotate(onChange: () => void) {
+  const query = window.matchMedia(ROTATE_QUERY);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
 }
 
+/**
+ * The home hero: a row of slides on a native scroll-snap track, so swiping just works.
+ * Only the active slide is interactive (the rest are inert). Each slide holds for 30
+ * seconds, except the video, which gets two full plays. Rotation stops for good once
+ * the visitor takes control, and holds under keyboard focus or off screen. The mouse
+ * only holds it from on top of a button or link: the hero fills most of a desktop
+ * screen, so holding on any hover would mean it rarely rotated at all.
+ */
 export default function Hero() {
-  const [open, setOpen] = useState(false);
-  // QuickBook mounts on first open (that's when it fetches availability) and then
-  // stays mounted, so closing animates the real content instead of an empty box.
-  const [mounted, setMounted] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const firstRender = useRef(true);
 
-  const toggle = () => {
-    const next = !open;
-    setOpen(next);
-    if (!next) return;
-    setMounted(true);
-    // Let the panel start expanding and move focus to it. Only scroll on stacked
-    // (below lg) layouts, where the hero video pushes the panel off-screen; on
-    // desktop it opens in place with no page jump.
-    requestAnimationFrame(() => {
-      if (!window.matchMedia('(min-width: 1024px)').matches) {
-        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        panelRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-      }
-      document.getElementById('quick-book-heading')?.focus({ preventScroll: true });
-    });
+  const [active, setActive] = useState<number>(START);
+  const [stopped, setStopped] = useState(false);
+  const [focusWithin, setFocusWithin] = useState(false);
+  const [inView, setInView] = useState(true);
+  const [videoPlayed, setVideoPlayed] = useState(false);
+
+  const onVideo = slides[active].id === 'video';
+  if (!onVideo && videoPlayed) setVideoPlayed(false);
+
+  const canRotate = useSyncExternalStore(
+    subscribeRotate,
+    () => window.matchMedia(ROTATE_QUERY).matches,
+    () => false,
+  );
+  const rotating = canRotate && !stopped;
+  const running = rotating && !focusWithin && inView;
+
+  // A scroller always opens at its far left, and this page is prerendered. So until this
+  // runs, CSS pulls the slide before the primary one off to the left, and the primary one
+  // is what paints first.
+  // This puts it back and scrolls to match before the browser paints again, keeping any
+  // swipe made in the meantime. The slides are transition-none because the reduced-motion
+  // rule in globals.css gives everything a tiny transition: the slide coming back a frame
+  // late would push the track one slide too far.
+  useLayoutEffect(() => {
+    const track = trackRef.current;
+    if (!track || track.hasAttribute('data-ready')) return;
+    const index = Math.round(track.scrollLeft / track.clientWidth) + START;
+    track.setAttribute('data-ready', '');
+    track.scrollLeft = index * track.clientWidth;
+  }, []);
+
+  const goTo = useCallback((index: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    track.scrollTo({ left: index * track.clientWidth, behavior: reduce ? 'auto' : 'smooth' });
+  }, []);
+  const userGoTo = (index: number) => {
+    setStopped(true);
+    goTo((index + slides.length) % slides.length);
   };
 
+  const onScroll = () => {
+    const track = trackRef.current;
+    if (track) setActive(Math.round(track.scrollLeft / track.clientWidth));
+  };
+
+  useEffect(() => {
+    if (!running) return;
+    let timer: number;
+    const advance = () => {
+      // Moving the slide under a pointer would change what its click lands on.
+      if (document.hidden || sectionRef.current?.querySelector('a:hover, button:hover')) {
+        timer = window.setTimeout(advance, 1000);
+      } else {
+        goTo((active + 1) % slides.length);
+      }
+    };
+    const wait = !onVideo ? ROTATE_MS : videoPlayed ? 0 : VIDEO_BACKSTOP_MS;
+    timer = window.setTimeout(advance, wait);
+    return () => window.clearTimeout(timer);
+  }, [running, active, onVideo, videoPlayed, goTo]);
+
+  // Slides differ in height on a phone, so the track follows the active one.
+  useEffect(() => {
+    const track = trackRef.current;
+    const slide = slideRefs.current[active];
+    if (!track || !slide) return;
+    const observer = new ResizeObserver(() => {
+      track.style.setProperty('--slide-h', `${slide.offsetHeight}px`);
+    });
+    observer.observe(slide);
+    return () => observer.disconnect();
+  }, [active]);
+
+  // The primary slide is long on a phone. Swiping from far down it onto a shorter slide
+  // would otherwise leave the visitor looking at whatever is below the hero.
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const section = sectionRef.current;
+    if (!section || window.matchMedia('(min-width: 1024px)').matches) return;
+    if (section.getBoundingClientRect().top < 0) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      section.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+    }
+  }, [active]);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.25,
+    });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  const panels: Record<(typeof slides)[number]['id'], ReactNode> = {
+    video: (
+      <VideoSlide
+        active={onVideo && inView}
+        onPlayedThrough={() => setVideoPlayed(true)}
+        onControl={() => setStopped(true)}
+      />
+    ),
+    why: <StudioGoWhySlide active={slides[active].id === 'why'} />,
+    studio12: <Studio12WhySlide active={slides[active].id === 'studio12'} />,
+    dream: <DreamSlide active={slides[active].id === 'dream'} />,
+  };
+
+  // On desktop the track fills the screen down to the controls, stopping above the fixed
+  // "Now Open" pill so it doesn't cover them: 232px is the header, the controls and the pill.
+  const controlClass =
+    'flex h-11 w-11 items-center justify-center rounded-full text-navy transition-colors hover:bg-navy/5';
+
   return (
-    <section className="relative overflow-clip pt-4 pb-20 md:pt-8 md:pb-24">
-      {/* Organic blob shapes */}
-      <div className="absolute top-0 right-0 w-[200px] h-[200px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] bg-gold/15 blob-shape blur-3xl -translate-y-1/3 translate-x-1/4" />
-      <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[280px] sm:h-[280px] md:w-[400px] md:h-[400px] bg-navy/5 blob-shape-alt blur-3xl translate-y-1/3 -translate-x-1/4" />
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Content */}
-          <div className="space-y-8">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center gap-2 bg-gold/10 rounded-full px-4 py-2 text-sm text-navy">
-                <span className="w-2 h-2 bg-gold rounded-full animate-pulse" />
-                <span>Proudly Made in the USA</span>
-              </div>
-
-              {/* Online-only special. Hover or focus shows "Click for more information". */}
-              <Link
-                href="/studio-go"
-                onClick={() => window.gtag?.('event', 'grab_and_go_home_click')}
-                className="group relative inline-flex min-h-11 items-center gap-2 bg-navy text-white rounded-full px-4 py-2 text-sm font-semibold shadow-md hover:bg-navy-light transition-colors"
-              >
-                <Star className="w-4 h-4 fill-gold text-gold" aria-hidden="true" />
-                Studio Go <span className="text-gold">$599</span>
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-navy opacity-0 shadow-lg ring-1 ring-gold/20 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
-                >
-                  Click for more information
-                </span>
-              </Link>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif leading-tight text-navy">
-              Built for How You{' '}
-              <span className="wavy-underline">Actually Sleep.</span>
-            </h1>
-
-            <p className="text-xl text-gray-600 max-w-xl leading-relaxed">
-              We believe better sleep changes everything — your energy, your health, your
-              focus, your life. 25+ years of expertise, handcrafted in America, delivered
-              directly to you.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                type="button"
-                onClick={toggle}
-                aria-expanded={open}
-                aria-controls="quick-book"
-                className="inline-flex items-center justify-center gap-2 bg-navy hover:bg-navy-light text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-full transition-all hover:scale-105"
-              >
-                <CalendarCheck className="w-5 h-5" aria-hidden="true" />
-                Quick Appointment
-                <ChevronDown
-                  className={`w-5 h-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-              <Link
-                href="/products"
-                className="inline-flex items-center justify-center gap-2 bg-white border-2 border-navy/20 hover:border-gold text-navy font-semibold px-8 py-4 rounded-full transition-all"
-              >
-                Shop Mattresses
-                <ArrowRight className="w-5 h-5" aria-hidden="true" />
-              </Link>
-            </div>
+    <section
+      ref={sectionRef}
+      aria-roledescription="carousel"
+      aria-label="Featured at Busby"
+      // Keyboard focus only: a mouse click leaves focus on the button it clicked,
+      // which would otherwise hold rotation until the next click elsewhere.
+      onFocusCapture={(e) => setFocusWithin((e.target as HTMLElement).matches(':focus-visible'))}
+      onBlurCapture={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setFocusWithin(false);
+      }}
+      className="scroll-mt-[108px] border-b border-grid lg:scroll-mt-[124px]"
+    >
+      <div
+        ref={trackRef}
+        onScroll={onScroll}
+        onTouchStart={() => setStopped(true)}
+        onWheel={(e) => {
+          if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) setStopped(true);
+        }}
+        aria-live={rotating ? 'off' : 'polite'}
+        className="relative flex h-[var(--slide-h)] snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] duration-300 [scrollbar-width:none] motion-reduce:transition-none lg:h-auto lg:min-h-[max(640px,min(56.25vw,calc(100svh-232px)))] lg:items-stretch [&:not([data-ready])>:first-child]:-ml-[100%] [&::-webkit-scrollbar]:hidden"
+      >
+        {slides.map((slide, i) => (
+          <div
+            key={slide.id}
+            ref={(el) => {
+              slideRefs.current[i] = el;
+            }}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${i + 1} of ${slides.length}: ${slide.label}`}
+            inert={i !== active}
+            className="w-full shrink-0 snap-start snap-always transition-none lg:flex"
+          >
+            {panels[slide.id]}
           </div>
+        ))}
+      </div>
 
-          {/* Visual */}
-          <div className="relative">
-            <div className="aspect-square bg-white/80 border-2 border-gold/20 rounded-3xl p-8 flex items-center justify-center shadow-xl shadow-gold/5">
-              <HeroVideo />
-            </div>
-
-            {/* Floating badges */}
-            <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-lg shadow-gold/10 p-4 hidden md:block border border-gold/10">
-              <p className="text-sm font-semibold text-navy">Financing Available</p>
-              <p className="text-xs text-gray-600">Flexible payment options</p>
-            </div>
-            <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-lg shadow-gold/10 p-4 hidden md:block border border-gold/10">
-              <p className="text-sm font-semibold text-navy">10 Year Warranty</p>
-              <p className="text-xs text-gray-600">Built to last</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick-book drawer: grid-rows 0fr -> 1fr animates to the content's real
-            height, pushing the trust bar down. inert keeps it out of the tab
-            order while closed. */}
+      <div className="border-t border-grid bg-white">
+        {/* Faint until someone reaches for it. */}
         <div
-          id="quick-book"
-          ref={panelRef}
-          inert={!open}
-          // The wrapper's top edge never moves (spacing lives inside the animated
-          // box), so scrollIntoView targets a stable position mid-animation.
-          // scroll-mt = sticky header height + a little air - the pt-12 below.
-          className={`grid scroll-mt-20 lg:scroll-mt-24 transition-[grid-template-rows,opacity] duration-500 ease-out motion-reduce:transition-none ${
-            open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-          }`}
+          role="group"
+          aria-label="Choose a slide"
+          className="mx-auto flex w-fit items-center opacity-60 transition-opacity hover:opacity-100 has-[:focus-visible]:opacity-100"
         >
-          <div className="overflow-hidden">
-            <div className="pt-12">{mounted && <QuickBook />}</div>
-          </div>
+          <button type="button" onClick={() => userGoTo(active - 1)} aria-label="Previous slide" className={controlClass}>
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          </button>
+          {slides.map((slide, i) => (
+            <button
+              key={slide.id}
+              type="button"
+              aria-label={slide.label}
+              aria-current={i === active ? 'true' : undefined}
+              onClick={() => userGoTo(i)}
+              className="group/dot flex h-11 w-6 items-center justify-center"
+            >
+              <span
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  i === active ? 'bg-navy' : 'bg-navy/30 group-hover/dot:bg-navy/60'
+                }`}
+              />
+            </button>
+          ))}
+          <button type="button" onClick={() => userGoTo(active + 1)} aria-label="Next slide" className={controlClass}>
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </section>

@@ -66,6 +66,37 @@ for (const route of ROUTES) {
   });
 }
 
+test('axe: appointment pop-up open', async ({ page }) => {
+  // No entrance animation, so axe measures final colors rather than a dialog
+  // that's still fading in.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.clock.install();
+  await page.goto('/');
+  const dialog = page.getByRole('dialog', { name: /book a sleep guide/i });
+  // Retried because the delay only starts counting once the page has hydrated.
+  await expect(async () => {
+    await page.clock.fastForward(60_000);
+    await expect(dialog).toBeVisible({ timeout: 1_000 });
+  }).toPass();
+  const violations = await severeViolations(page);
+  expect(violations, report(violations)).toEqual([]);
+});
+
+// Slides that aren't showing are inert, so the plain "/" scan only covers the first.
+for (const slide of ['Watch', 'Studio 12', 'Busby Dream']) {
+  test(`axe: home hero slide "${slide}"`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('/');
+    const tab = page.getByRole('button', { name: slide, exact: true });
+    await expect(async () => {
+      await tab.click();
+      await expect(tab).toHaveAttribute('aria-current', 'true', { timeout: 1_000 });
+    }).toPass();
+    const violations = await severeViolations(page);
+    expect(violations, report(violations)).toEqual([]);
+  });
+}
+
 test('axe: cart drawer open', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /shopping cart/i }).first().click();

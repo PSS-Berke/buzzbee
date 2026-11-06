@@ -133,10 +133,10 @@ export default function ProductTabs({ product }: ProductTabsProps) {
           >
             <div className="text-center">
               <h2 className="text-2xl font-[family-name:var(--heading-font)] text-navy mb-2">
-                American-Sourced <span className="font-semibold">Materials</span>
+                Our <span className="font-semibold">Materials</span>
               </h2>
               <p className="text-gray-600">
-                Every material certified and sourced from American suppliers
+                What goes into your mattress, and how it&apos;s certified
               </p>
             </div>
 

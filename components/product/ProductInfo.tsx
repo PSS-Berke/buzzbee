@@ -57,7 +57,6 @@ export default function ProductInfo({ product }: ProductInfoProps) {
       size: selectedSize.name,
       sizeDimensions: selectedSize.dimensions,
       price: selectedSize.price,
-      originalPrice: product.originalPrice,
       quantity: 1,
       image: product.images[0] || '',
     });

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Free Sleep Guide | Busby Mattresses',
     description:
-      'Get the Busby Sleep Guide — 25 years of bedding expertise distilled into one free PDF.',
+      'Get the Busby Sleep Guide — 25 years of bedding expertise distilled into one free guide.',
     url: `${SITE_URL}/sleep-guide`,
     type: 'website',
   },
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Free Sleep Guide | Busby Mattresses',
     description:
-      'Get the Busby Sleep Guide — 25 years of bedding expertise distilled into one free PDF.',
+      'Get the Busby Sleep Guide — 25 years of bedding expertise distilled into one free guide.',
   },
 };
 
@@ -54,7 +54,7 @@ const guideContents = [
 const faqs = [
   {
     q: 'What’s actually in the guide?',
-    a: 'A 12-page PDF covering the six essentials of a great mattress, how to read materials and certifications, and how to match a mattress to your sleep style. No jargon, no hard sell.',
+    a: 'A short guide, sent by email, covering the six essentials of a great mattress, how to read materials and certifications, and how to match a mattress to your sleep style. No jargon, no hard sell.',
   },
   {
     q: 'Do I have to buy a mattress?',
@@ -100,7 +100,7 @@ export default function SleepGuidePage() {
                 Sleep deeper, in <span className="text-gold-dark">30 nights</span> or less.
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed mb-8">
-                Get the Busby Sleep Guide — 25 years of bedding expertise, distilled into one PDF.
+                Get the Busby Sleep Guide — 25 years of bedding expertise, distilled into one guide.
                 Plus early access to new mattresses and showroom events.
               </p>
 
@@ -111,7 +111,7 @@ export default function SleepGuidePage() {
               />
 
               <p className="mt-6 text-sm text-gray-600">
-                10,000+ American sleepers · Made in USA · 100-night trial
+                Made in USA · 100-night trial
               </p>
             </div>
 
@@ -148,7 +148,7 @@ export default function SleepGuidePage() {
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-serif text-navy mb-3">What’s in the guide</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              A 12-page PDF written by our 25-year-veteran craftspeople. No jargon, no upsells, just
+              A short guide written by our 25-year-veteran craftspeople. No jargon, no upsells, just
               the things we wish every shopper knew.
             </p>
           </div>

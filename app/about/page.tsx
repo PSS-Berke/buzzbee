@@ -7,6 +7,7 @@ import {
   DollarSign,
   Shield,
   Flag,
+  Moon,
   Check,
   X,
   Layers,
@@ -25,7 +26,7 @@ const stats = [
   { icon: Users, value: '25+', label: 'Years Experience' },
   { icon: Factory, value: '1', label: 'American Factory' },
   { icon: Shield, value: '10', label: 'Year Warranty' },
-  { icon: Flag, value: '100%', label: 'USA Materials' },
+  { icon: Moon, value: '100', label: 'Night Home Trial' },
 ];
 
 const philosophyItems = [
@@ -57,7 +58,7 @@ const promises = [
   {
     icon: Flag,
     title: 'Made in USA',
-    description: 'American materials, American workers. Every mattress is handcrafted in our own factory.',
+    description: 'Built by American workers. Every mattress is handcrafted in our own factory.',
   },
 ];
 

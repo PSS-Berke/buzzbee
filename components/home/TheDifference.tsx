@@ -3,7 +3,7 @@ import { Check, X } from 'lucide-react';
 const comparisons = [
   { ours: 'Handcrafted in our USA factory', theirs: 'Mass-produced overseas' },
   { ours: 'Better sourced materials', theirs: 'Mystery materials from unknown sources' },
-  { ours: 'Direct-to-consumer pricing', theirs: 'Retail markup adds 300%+' },
+  { ours: 'Direct-to-consumer pricing', theirs: 'Retail markup built into the price' },
   { ours: 'Expert craftspeople with 25+ years', theirs: 'Anonymous assembly lines' },
   { ours: 'Transparent pricing, no hidden fees', theirs: 'Confusing sales and bait-and-switch pricing' },
   { ours: 'Every mattress individually inspected', theirs: 'Mass-produced with minimal quality checks' },
@@ -24,11 +24,11 @@ export default function TheDifference() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Sleep6 */}
+          {/* Busby */}
           <div className="bg-white border-2 border-gold/30 rounded-3xl p-8 shadow-lg shadow-gold/5">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-gold/20 rounded-full flex items-center justify-center">
-                <span className="text-gold-dark font-bold text-xl">6</span>
+                <span className="text-gold-dark font-bold text-xl">B</span>
               </div>
               <div>
                 <h3 className="text-xl font-semibold text-navy">Busby</h3>
@@ -73,7 +73,7 @@ export default function TheDifference() {
 
         <div className="mt-12 text-center">
           <p className="text-lg text-gray-600 mb-6">
-            Same luxury quality. <span className="font-semibold text-navy">A fraction of the price.</span>
+            Made in our own factory. <span className="font-semibold text-navy">Sold directly to you.</span>
             <br />
             <span className="text-navy font-semibold">No shortcuts. No hype. Just real comfort.</span>
           </p>

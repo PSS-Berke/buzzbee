@@ -6,7 +6,7 @@ const options = [
     alt: 'Afterpay',
     width: 110,
     height: 36,
-    detail: '4 interest-free payments',
+    detail: '4 interest-free payments on eligible orders',
   },
   {
     logo: '/afterpay logos/Klarna_Logo_1.png',

@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, ShoppingBag, Lock } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 
 export default function CheckoutPage() {
-  const { state, subtotal, savings } = useCart();
+  const { state, subtotal } = useCart();
   const [email, setEmail] = useState('');
 
   const [loading, setLoading] = useState(false);
@@ -212,14 +212,6 @@ export default function CheckoutPage() {
                     <span className="text-gray-600">Subtotal</span>
                     <span className="text-navy">${subtotal.toLocaleString()}</span>
                   </div>
-                  {savings > 0 && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">You Save</span>
-                      <span className="text-gold-dark font-medium">
-                        -${savings.toLocaleString()}
-                      </span>
-                    </div>
-                  )}
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
                     <span className="text-gold-dark font-medium">FREE</span>

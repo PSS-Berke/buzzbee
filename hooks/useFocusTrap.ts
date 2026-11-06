@@ -57,8 +57,10 @@ export function useFocusTrap<T extends HTMLElement>(active: boolean) {
       document.removeEventListener('keydown', handleKeyDown);
       // Deferred: sibling cleanups in the same commit may still hold `inert`
       // on the previously focused element's ancestors, which would make an
-      // immediate .focus() fail silently.
-      queueMicrotask(() => previouslyFocused?.focus?.());
+      // immediate .focus() fail silently. preventScroll: the page didn't move while
+      // the dialog was open, and a dialog that opened on its own may have found that
+      // element scrolled out of view.
+      queueMicrotask(() => previouslyFocused?.focus?.({ preventScroll: true }));
     };
   }, [active]);
 

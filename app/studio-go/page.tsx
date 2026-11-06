@@ -4,9 +4,9 @@ import {
   Phone,
   MessageSquare,
   ExternalLink,
-  GraduationCap,
   KeyRound,
   BedDouble,
+  Users,
   Truck,
   Store,
   ArrowRight,
@@ -14,23 +14,23 @@ import {
 import { elmhurstStore, formatAddress } from '@/data/store';
 import StudioGoBuy from '@/components/studio-go/StudioGoBuy';
 
-// Who it is for. Richard's examples from the Oct 26 call were a kid heading off
-// to college and someone renting a place for a year.
+// Who it is for: any room, not only a first apartment. Richard's examples from the Oct 26
+// call, a kid heading off to college and someone renting for a year, are in "A new place".
 const moments = [
   {
-    icon: GraduationCap,
-    title: 'Heading off to school',
-    body: 'A real mattress for the first apartment, sorted before move-in day.',
+    icon: BedDouble,
+    title: 'Your own bedroom',
+    body: 'A new mattress for the bed you sleep in every night, without weeks of shopping.',
   },
   {
     icon: KeyRound,
-    title: 'Renting for a year',
-    body: 'Sleep well on a short lease without a big spend.',
+    title: 'A new place',
+    body: 'Moving, renting or heading off to school? Have it sorted before move-in day.',
   },
   {
-    icon: BedDouble,
-    title: 'Guest room or just moved',
-    body: 'Something far better than the air mattress, ready this week.',
+    icon: Users,
+    title: 'The guest room',
+    body: 'A real bed for the people who stay with you, ready this week.',
   },
 ];
 
@@ -71,7 +71,7 @@ export default function StudioGoPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif leading-tight mb-3">
-                Studio Go. <span className="text-gold">$599.</span>
+                Studio Go. <span className="text-gold">$779.</span>
               </h1>
 
               <p className="text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed mb-5">
@@ -217,7 +217,7 @@ export default function StudioGoPage() {
                 href="#buy"
                 className="inline-flex justify-center items-center gap-2 bg-navy text-white font-semibold rounded-full px-8 py-4 hover:bg-navy/90 transition-colors"
               >
-                Grab mine for $599
+                Grab mine for $779
               </a>
               <Link
                 href="/products/studio-go"

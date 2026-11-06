@@ -60,8 +60,8 @@ const BAND_STYLE: Record<Band, string> = {
 
 function LayerStack({ p }: { p: Product }) {
   const layers = layersTopDown(p);
-  // Studio Go's build isn't published yet.
-  if (layers.length === 0) return <span className="text-gray-600">Coming soon</span>;
+  // Studio Go is just all foam, so it has no layers to list.
+  if (layers.length === 0) return <span className="text-navy">All foam</span>;
   return (
     <div>
       <p className="mb-2">
@@ -154,8 +154,8 @@ export const ROWS: CompareRow[] = [
   { label: () => 'Made in', render: madeIn, key: madeIn },
   {
     label: () => 'Certifications',
-    render: (p) =>
-      p.materials.length ? <Chips items={certifications(p)} /> : <span className="text-gray-600">Coming soon</span>,
+    // Blank for Studio Go, whose certifications aren't confirmed.
+    render: (p) => (p.materials.length ? <Chips items={certifications(p)} /> : null),
     key: (p) => certifications(p).join('|'),
   },
   {

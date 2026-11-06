@@ -13,16 +13,17 @@ type Construction = 'Hybrid' | 'Foam';
 type SortKey = 'recommended' | 'price-asc' | 'price-desc';
 
 // Curated default order: interleaves the two lines so neither reads as "the other section".
+// Studio Go closes the top row on a desktop, which fits four across.
 const RECOMMENDED = [
   'dream',
   'studio-hybrid',
   'slumber',
-  'studio-12',
-  'doze',
-  'studio-10',
-  'nod',
-  'studio-hybrid-firm',
   'studio-go',
+  'doze',
+  'studio-12',
+  'nod',
+  'studio-10',
+  'studio-hybrid-firm',
 ];
 
 const SORTS: { key: SortKey; label: string }[] = [
@@ -47,13 +48,13 @@ function bestFor(p: Product) {
     .join(' · ');
 }
 
-// Studio Go's build isn't published yet, so it has no type or layers listed.
 function typeLabel(p: Product) {
   return p.type === 'Foam' ? 'All-foam' : p.type || 'Coming soon';
 }
 
+// Studio Go is just all foam, so it has no layers to count.
 function layerCount(p: Product) {
-  return p.components.length || 'Coming soon';
+  return p.components.length || 'All foam';
 }
 
 function Chip({

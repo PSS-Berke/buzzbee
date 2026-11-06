@@ -48,7 +48,6 @@ export interface Product {
   tagline: string;
   description: string;
   price: number;
-  originalPrice: number;
   rating: number;
   reviewCount: number;
   images: string[];
@@ -111,8 +110,7 @@ export const homeLineProducts: Product[] = [
     type: 'Hybrid',
     tagline: 'Dependable comfort, night after night',
     description: 'The Busby Nod is a 13½" plush hybrid mattress built for sleepers who want the conforming feel of foam with the responsive support of individually wrapped coils. Five precision-layered components work together — from the CoolGel-infused quilt fill to the Quantum® reinforced perimeter coils — to deliver consistent, roll-off-free comfort from edge to edge.',
-    price: 1499,
-    originalPrice: 2998,
+    price: 1949,
     rating: 4.7,
     reviewCount: 0,
     images: [
@@ -123,10 +121,10 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/nod-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1199, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1299, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1499, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1699, inStock: true },    ],
+      { name: 'Twin', dimensions: '38" x 75"', price: 1559, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1689, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1949, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2209, inStock: true },    ],
     firmness: [
       { level: 'Medium', description: 'Balanced support and comfort', recommended: ['All sleep positions', 'Couples'] },
       { level: 'Plush', description: 'Soft, enveloping comfort with coil support', recommended: ['Side sleepers', 'Lighter body types'] },
@@ -165,8 +163,7 @@ export const homeLineProducts: Product[] = [
     type: 'Hybrid',
     tagline: 'Plush comfort, built to last.',
     description: 'The Busby Doze is a 13½" XPlush hybrid mattress engineered for sleepers who want deep, enveloping comfort without sacrificing support. A 2" Serene™ foam comfort layer — double the depth of the Nod — works alongside CoolGel quilting and individually wrapped coils to deliver responsive pressure relief from the very first night.',
-    price: 1299,
-    originalPrice: 2598,
+    price: 1689,
     rating: 4.8,
     reviewCount: 0,
     images: [
@@ -177,10 +174,10 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/doze-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 999, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1099, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1299, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1499, inStock: true },    ],
+      { name: 'Twin', dimensions: '38" x 75"', price: 1299, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1429, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1689, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 1949, inStock: true },    ],
     firmness: [
       { level: 'XFirm', description: 'Maximum support', recommended: ['Stomach sleepers', 'Heavier body types'] },
       { level: 'Firm', description: 'Solid support with light cushion', recommended: ['Back sleepers', 'Stomach sleepers'] },
@@ -188,7 +185,7 @@ export const homeLineProducts: Product[] = [
       { level: 'Plush', description: 'Soft surface with coil support', recommended: ['Side sleepers', 'Lighter body types'] },
       { level: 'XPlush', description: 'Deep enveloping comfort', recommended: ['Side sleepers', 'Pressure relief seekers'] },
     ],
-    selectedFirmness: 'Medium',
+    selectedFirmness: 'XPlush',
     features: [
       'Adjustable base compatible',
       'Roll-pack delivery',
@@ -221,8 +218,7 @@ export const homeLineProducts: Product[] = [
     type: 'Hybrid',
     tagline: 'Rich, plush comfort that envelops you',
     description: 'The Busby Slumber is a 15½" plush hybrid mattress built for sleepers who demand the most from every layer. Six precision-engineered components — including 1" of 100% natural latex and 2" of Serene™ plush foam — work together with an individually wrapped coil system to deliver deep, responsive comfort from edge to edge.',
-    price: 1699,
-    originalPrice: 3398,
+    price: 2209,
     rating: 4.8,
     reviewCount: 0,
     images: [
@@ -233,10 +229,10 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/slumber-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1299, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1499, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1699, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1999, inStock: true },    ],
+      { name: 'Twin', dimensions: '38" x 75"', price: 1689, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1949, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 2209, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2599, inStock: true },    ],
     firmness: [
       { level: 'XFirm', description: 'Maximum support', recommended: ['Stomach sleepers', 'Heavier body types'] },
       { level: 'Firm', description: 'Solid support with light cushion', recommended: ['Back sleepers', 'Stomach sleepers'] },
@@ -278,9 +274,8 @@ export const homeLineProducts: Product[] = [
     line: 'artisan',
     type: 'Hybrid',
     tagline: 'Engineered for luxury performance.',
-    description: 'The Busby Dream is a 15½" XPlush pillowtop hybrid mattress — the most refined mattress in the Busby Home line. Seven precision-engineered layers, including Joma® Wool-infused CoolGel quilting, 1" of natural latex, 2" of Serene™ plush foam, and a Tri-Zone encased coil system, deliver uncompromising plush comfort from surface to foundation.',
-    price: 1999,
-    originalPrice: 3998,
+    description: 'The Busby Dream is a 15½" XPlush pillowtop hybrid mattress. Seven precision-engineered layers, including Joma® Wool-infused CoolGel quilting, 1" of natural latex, 2" of Serene™ plush foam, and a Tri-Zone encased coil system, deliver uncompromising plush comfort from surface to foundation.',
+    price: 2599,
     rating: 4.9,
     reviewCount: 0,
     images: [
@@ -291,10 +286,10 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/dream-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1599, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1799, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1999, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 2100, inStock: true },    ],
+      { name: 'Twin', dimensions: '38" x 75"', price: 2079, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 2339, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 2599, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2730, inStock: true },    ],
     firmness: [
       { level: 'XFirm', description: 'Maximum support', recommended: ['Stomach sleepers', 'Heavier body types'] },
       { level: 'Firm', description: 'Solid support with light cushion', recommended: ['Back sleepers', 'Stomach sleepers'] },
@@ -302,7 +297,7 @@ export const homeLineProducts: Product[] = [
       { level: 'Plush', description: 'Soft surface with coil support', recommended: ['Side sleepers', 'Lighter body types'] },
       { level: 'XPlush', description: 'Deep pillowtop enveloping comfort', recommended: ['Side sleepers', 'Pressure relief seekers'] },
     ],
-    selectedFirmness: 'Plush',
+    selectedFirmness: 'XPlush',
     features: [
       'Adjustable base compatible',
       'Roll-pack delivery',
@@ -339,8 +334,7 @@ export const homeLineProducts: Product[] = [
     type: 'Crib Mattress',
     tagline: 'Safe, supportive sleep from day one',
     description: 'The Nest is designed from the ground up for your baby\'s safety and comfort. A firm, flat sleep surface meets infant safety standards while breathable materials keep little ones cool and comfortable through every nap and night.',
-    price: 299,
-    originalPrice: 598,
+    price: 389,
     rating: 4.9,
     reviewCount: 0,
     images: [
@@ -348,7 +342,7 @@ export const homeLineProducts: Product[] = [
       '/images/products/Nest/busby-nest-crib-mattress-corner.png',
     ],
     sizes: [
-      { name: 'Standard Crib', dimensions: '28" x 52"', price: 299, inStock: true },
+      { name: 'Standard Crib', dimensions: '28" x 52"', price: 389, inStock: true },
     ],
     firmness: [
       { level: 'Infant Firm', description: 'AAP-recommended firm surface for safe infant sleep', recommended: ['Newborns', 'Infants'] },
@@ -388,9 +382,8 @@ export const homeLineProducts: Product[] = [
     type: 'Foam',
     tagline: 'The essentials of comfort and support',
     description:
-      'Studio 10 delivers essential comfort at an accessible price point. With 3 carefully designed foam layers — gel-infused comfort, cooling memory foam, and a high-density support core — this mattress provides the foundation for quality sleep without unnecessary complexity.',
-    price: 1348,
-    originalPrice: 1696,
+      'Studio 10 delivers essential comfort and support. With 3 carefully designed foam layers — gel-infused comfort, cooling memory foam, and a high-density support core — this mattress provides the foundation for quality sleep without unnecessary complexity.',
+    price: 1752,
     rating: 0,
     reviewCount: 0,
     images: [
@@ -401,11 +394,11 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/studio-10-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 848, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 898, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1148, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1348, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1598, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1102, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 1167, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1492, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1752, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2077, inStock: true },
     ],
     firmness: [
       { level: 'Soft', description: 'Plush, pressure-relieving comfort', recommended: ['Side sleepers', 'Lighter body types'] },
@@ -440,11 +433,10 @@ export const homeLineProducts: Product[] = [
     brand: 'busby',
     line: 'studio',
     type: 'Foam',
-    tagline: 'Balances affordability and comfort',
+    tagline: 'Quiet by design',
     description:
-      'Studio 12 strikes the perfect balance between value and performance. Its 3-layer design with a motion-isolating core ensures undisturbed sleep for you and your partner.',
-    price: 2148,
-    originalPrice: 2696,
+      'Studio 12 is built for quiet nights. Its 3-layer design with a motion-isolating core ensures undisturbed sleep for you and your partner.',
+    price: 2792,
     rating: 0,
     reviewCount: 0,
     images: [
@@ -455,11 +447,11 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/studio-12-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1348, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 1548, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1748, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 2148, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 2448, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1752, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 2012, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 2272, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 2792, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 3182, inStock: true },
     ],
     firmness: [
       { level: 'Soft', description: 'Plush comfort with motion isolation', recommended: ['Side sleepers', 'Lighter body types'] },
@@ -475,7 +467,7 @@ export const homeLineProducts: Product[] = [
       'CertiPUR-US certified foams',
       'Made in the USA',
     ],
-    bestFor: ['Couples', 'Light sleepers', 'Budget-conscious'],
+    bestFor: ['Couples', 'Light sleepers', 'Motion-sensitive sleepers'],
     components: [
       { name: 'Support Core', description: 'Motion-isolating core absorbs movement so partners sleep undisturbed', materials: 'Viscoelastic foam' },
       { name: 'Comfort Layer', description: 'Responsive comfort layer provides pressure relief and contouring', materials: 'Memory foam' },
@@ -497,8 +489,7 @@ export const homeLineProducts: Product[] = [
     tagline: 'Balanced hybrid comfort, medium feel',
     description:
       'Studio Hybrid is built across 7 precision-engineered layers, combining premium foams with a pocketed-coil core for balanced, medium-feel comfort with zero motion transfer and complete pressure relief. Want a firmer surface? Meet its sibling, the Studio Hybrid Firm.',
-    price: 2448,
-    originalPrice: 2696,
+    price: 3182,
     rating: 0,
     reviewCount: 0,
     images: [
@@ -509,11 +500,11 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/studio-hybrid-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1348, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 1828, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1848, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 2448, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 2748, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1752, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 2376, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 2402, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 3182, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 3572, inStock: true },
     ],
     firmness: [
       { level: 'Soft', description: 'Plush comfort with coil support', recommended: ['Side sleepers', 'Lighter body types'] },
@@ -558,8 +549,7 @@ export const homeLineProducts: Product[] = [
     tagline: 'Same hybrid build, firmer feel',
     description:
       'Studio Hybrid Firm shares the same 7-layer pocketed-coil build as the Studio Hybrid, finished with a firmer comfort layer up top for a flatter, more supportive surface — ideal for back and stomach sleepers who want the Studio Hybrid in a firmer feel.',
-    price: 2448,
-    originalPrice: 2696,
+    price: 3182,
     rating: 0,
     reviewCount: 0,
     images: [
@@ -570,11 +560,11 @@ export const homeLineProducts: Product[] = [
       poster: '/Videos/studio-hybrid-firm-poster.jpg',
     },
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1348, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 1828, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1848, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 2448, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 2748, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1752, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 2376, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 2402, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 3182, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 3572, inStock: true },
     ],
     firmness: [
       { level: 'Medium', description: 'Balanced hybrid comfort', recommended: ['All sleep positions', 'Couples'] },
@@ -610,29 +600,37 @@ export const homeLineProducts: Product[] = [
       { name: 'HD Base Foam', source: 'North Carolina, USA', certification: 'CertiPUR-US', description: 'Durable foundation layer' },
     ],
   },
-  // Which bed this is isn't confirmed yet, so type, feel, components and
-  // materials stay empty and the site shows "Coming soon" in their place. Fill
-  // them in (and the features list) once the build is confirmed.
+  // All foam and medium firm are confirmed, but the exact build isn't, so components
+  // and materials stay empty. The site says "All foam" in place of a layer count, and
+  // "Coming soon" for certifications. Fill them in (and the features list) if that changes.
   {
     id: STUDIO_GO_ID,
     slug: 'studio-go',
     name: 'Studio Go',
     brand: 'busby',
     line: 'studio',
-    type: '',
-    tagline: 'A great queen mattress, ready in days',
+    type: 'Foam',
+    tagline: 'A great all-foam queen, ready in days',
     description:
-      'An online-only special from our Studio line. A queen mattress made in the USA, ready for pickup at our Elmhurst showroom in 72 hours or delivered in 96.',
-    price: 599,
-    originalPrice: 599,
+      'An online-only special from our Studio line. An all-foam, medium-firm queen mattress made in the USA, ready for pickup at our Elmhurst showroom in 72 hours or delivered in 96.',
+    price: 779,
     rating: 0,
     reviewCount: 0,
     images: ['/images/products/studio/studio-go.webp'],
-    sizes: [{ name: 'Queen', dimensions: '60" x 80"', price: 599, inStock: true }],
-    firmness: [],
-    selectedFirmness: '',
-    features: ['Queen size', 'Store pickup in 72 hours', 'Free delivery in 96 hours', 'Made in the USA'],
-    bestFor: ['Value seekers', 'Guest rooms', 'First apartments'],
+    video: {
+      src: '/Videos/studio-go-explainer.mp4',
+      poster: '/Videos/studio-go-poster.jpg',
+    },
+    sizes: [{ name: 'Queen', dimensions: '60" x 80"', price: 779, inStock: true }],
+    firmness: [
+      { level: 'Soft', description: 'Plush comfort', recommended: ['Side sleepers', 'Lighter body types'] },
+      { level: 'Medium', description: 'Balanced support and comfort', recommended: ['All sleep positions', 'Couples'] },
+      { level: 'Medium Firm', description: 'Supportive, with some cushion', recommended: ['Back sleepers'] },
+      { level: 'Firm', description: 'Supportive feel', recommended: ['Back sleepers', 'Stomach sleepers'] },
+    ],
+    selectedFirmness: 'Medium Firm',
+    features: ['All foam', 'Medium firm', 'Queen size', 'Store pickup in 72 hours', 'Free delivery in 96 hours', 'Made in the USA'],
+    bestFor: ['Everyday sleep', 'Guest rooms', 'New homes'],
     components: [],
     materials: [],
   },
@@ -648,18 +646,17 @@ export const accessoryProducts: Product[] = [
     type: 'Mattress Encasement',
     tagline: 'Total protection. Luxurious feel.',
     description: 'The Busby Mattress Encasement delivers certified, lab-tested protection against bed bugs, dust mites, mold, and bacteria — wrapped in an impermeable yet breathable waterproof barrier with a luxurious feel. The 360° SecureZZZip® closure ensures complete encasement from every angle, and it\'s fully machine washable for lasting performance.',
-    price: 144,
-    originalPrice: 144,
+    price: 187,
     rating: 4.9,
     reviewCount: 0,
     images: [
       '/images/products/MattressEncasement/mattress-encasement.png',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 104, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 134, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 144, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 154, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 135, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 174, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 187, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 200, inStock: true },
     ],
     firmness: [],
     selectedFirmness: '',
@@ -694,8 +691,7 @@ export const accessoryProducts: Product[] = [
     // TODO(topper): add Tag-confirmed specs (thickness, fill, cover, care, origin).
     description:
       'The Busby Mattress Topper adds a soft, wave-quilted comfort layer to the top of your bed. It\'s the same plush surface you\'ll find on the beds in our Elmhurst showroom, and an easy way to soften a mattress that feels too firm or bring new life to one you already own.',
-    price: 399.99,
-    originalPrice: 399.99,
+    price: 519.99,
     rating: 0,
     reviewCount: 0,
     images: [
@@ -706,11 +702,11 @@ export const accessoryProducts: Product[] = [
     ],
     // One price for every size, per Tag (2026-09-25).
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 399.99, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 399.99, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 399.99, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 399.99, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 399.99, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 519.99, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 519.99, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 519.99, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 519.99, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 519.99, inStock: true },
     ],
     firmness: [],
     selectedFirmness: '',
@@ -728,7 +724,7 @@ export const accessoryProducts: Product[] = [
 ];
 
 // BedTech adjustable bases — sold through Busby as a brand partnership.
-// Prices per Tag (Sleep6), 2026-09-25; features/specs from BedTech's retail
+// Prices per Tag (Sleep6), 2026-09-25, raised 30% on 2026-11-06; features/specs from BedTech's retail
 // price cards. Split sizes are intentionally omitted until pricing is confirmed.
 export const adjustableBaseProducts: Product[] = [
   {
@@ -741,8 +737,7 @@ export const adjustableBaseProducts: Product[] = [
     tagline: 'Head and foot lift, set up in minutes — no tools required.',
     description:
       'The BedTech BTX4 is a versatile, easy-to-own adjustable base. Independent head and foot adjustment lets you find your spot for reading, watching TV, or simply taking pressure off your back, all from a wireless remote. Its center-folding frame arrives ready to go and sets up in minutes without a single tool.',
-    price: 1049,
-    originalPrice: 1049,
+    price: 1364,
     rating: 0,
     reviewCount: 0,
     images: [
@@ -756,11 +751,11 @@ export const adjustableBaseProducts: Product[] = [
       '/images/products/BedTech/btx4/btx4-remote.webp',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1049, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 1049, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1099, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1099, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 1599, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1364, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 1364, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 1429, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 1429, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 2079, inStock: true },
     ],
     firmness: [],
     selectedFirmness: '',
@@ -797,8 +792,7 @@ export const adjustableBaseProducts: Product[] = [
     tagline: 'Zero gravity, massage, and memory positions at the touch of a button.',
     description:
       'The BedTech BT3000 is a fully loaded adjustable base. Save your favorite positions, jump to Zero Gravity, TV, or Lounge with one touch, and unwind with three-level head and foot massage. Built-in USB charging, under-bed lighting, Bluetooth app control, and legs that set to 4", 8", or 12" make it as practical as it is comfortable.',
-    price: 1499,
-    originalPrice: 1499,
+    price: 1949,
     rating: 0,
     reviewCount: 0,
     images: [
@@ -811,11 +805,11 @@ export const adjustableBaseProducts: Product[] = [
       '/images/products/BedTech/bt3000/bt3000-remote.webp',
     ],
     sizes: [
-      { name: 'Twin', dimensions: '38" x 75"', price: 1499, inStock: true },
-      { name: 'Twin XL', dimensions: '38" x 80"', price: 1499, inStock: true },
-      { name: 'Full', dimensions: '54" x 75"', price: 1599, inStock: true },
-      { name: 'Queen', dimensions: '60" x 80"', price: 1599, inStock: true },
-      { name: 'King', dimensions: '76" x 80"', price: 2399, inStock: true },
+      { name: 'Twin', dimensions: '38" x 75"', price: 1949, inStock: true },
+      { name: 'Twin XL', dimensions: '38" x 80"', price: 1949, inStock: true },
+      { name: 'Full', dimensions: '54" x 75"', price: 2079, inStock: true },
+      { name: 'Queen', dimensions: '60" x 80"', price: 2079, inStock: true },
+      { name: 'King', dimensions: '76" x 80"', price: 3119, inStock: true },
     ],
     firmness: [],
     selectedFirmness: '',
@@ -904,7 +898,6 @@ export function getProductsByLine(line: ProductLine): Product[] {
 export interface ResolvedLineItem {
   name: string;
   price: number;
-  originalPrice: number;
   image: string;
   quantity: number;
 }
@@ -935,7 +928,6 @@ export function resolveLineItem(input: {
   return {
     name: `${product.name} - ${size.name}`,
     price: size.price,
-    originalPrice: product.originalPrice,
     image: product.images[0] ?? '',
     quantity,
   };
