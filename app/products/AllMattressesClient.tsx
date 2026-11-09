@@ -8,6 +8,7 @@ import { ArrowRight, CalendarCheck, Check, X } from 'lucide-react';
 import { productLines, type Product, type ProductLine } from '@/data/products';
 import { MAX_COMPARE } from '@/lib/compare';
 import LineTag from '@/components/product/LineTag';
+import WasPrice from '@/components/product/WasPrice';
 
 type Construction = 'Hybrid' | 'Foam';
 type SortKey = 'recommended' | 'price-asc' | 'price-desc';
@@ -253,6 +254,7 @@ export default function AllMattressesClient({ products }: { products: Product[] 
                     <div className="mt-auto pt-5 flex items-end justify-between gap-3">
                       <p className="text-navy">
                         <span className="text-xl font-semibold">${p.price.toLocaleString()}</span>
+                        <WasPrice value={p.compareAtPrice} />
                         <span className="ml-1 text-xs text-gray-600">Queen</span>
                       </p>
                       {/* Sits above the stretched link so it stays clickable */}
@@ -315,7 +317,15 @@ export default function AllMattressesClient({ products }: { products: Product[] 
                 { label: 'Line', value: (p: Product) => <LineTag line={p.line} /> },
                 { label: 'Type', value: typeLabel },
                 { label: 'Layers', value: layerCount },
-                { label: 'Queen price', value: (p: Product) => `$${p.price.toLocaleString()}` },
+                {
+                  label: 'Queen price',
+                  value: (p: Product) => (
+                    <>
+                      ${p.price.toLocaleString()}
+                      <WasPrice value={p.compareAtPrice} />
+                    </>
+                  ),
+                },
                 { label: 'Best for', value: bestFor },
               ].map((row) => (
                 <tr key={row.label}>

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Trash2 } from 'lucide-react';
 import { useCart, CartItem as CartItemType } from '@/contexts/CartContext';
+import WasPrice from '@/components/product/WasPrice';
+import { regularPriceFor } from '@/data/products';
 
 interface CartItemProps {
   item: CartItemType;
@@ -55,7 +57,10 @@ export default function CartItem({ item, expanded = false }: CartItemProps) {
         <p className="text-xs text-gray-600 mt-0.5">{item.productType}</p>
 
         {/* Price */}
-        <p className="text-navy font-medium mt-2">${item.price.toLocaleString()}</p>
+        <p className="text-navy font-medium mt-2">
+          ${item.price.toLocaleString()}
+          <WasPrice value={regularPriceFor(item.productId, item.size)} />
+        </p>
       </div>
 
       {/* Remove */}

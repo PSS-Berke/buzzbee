@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/data/products';
+import WasPrice from '@/components/product/WasPrice';
 
 export default function StudioSpecCard({
   product,
@@ -43,7 +44,10 @@ export default function StudioSpecCard({
         <span>
           <span className="text-navy font-medium">{product.components.length}</span> layers
         </span>
-        <span>From ${product.price.toLocaleString()}</span>
+        <span>
+          From ${product.price.toLocaleString()}
+          <WasPrice value={product.compareAtPrice} />
+        </span>
       </div>
 
       <span className="text-clay-deep flex items-center gap-2 mt-5 text-sm font-medium group-hover:gap-3 transition-all">

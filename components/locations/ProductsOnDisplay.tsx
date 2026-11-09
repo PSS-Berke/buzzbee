@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import WasPrice from '@/components/product/WasPrice';
+import { livePrices } from '@/data/products';
 
 const models = [
   {
@@ -8,7 +10,7 @@ const models = [
     name: 'Busby Dream',
     type: 'Hybrid',
     keyBenefit: 'Cooling CoolGel Quilting',
-    price: 2599,
+    ...livePrices('dream'),
     image: '/images/products/Dream/dream-bed.webp',
   },
   {
@@ -16,7 +18,7 @@ const models = [
     name: 'Busby Slumber',
     type: 'Hybrid',
     keyBenefit: 'Deep Pressure Relief',
-    price: 2209,
+    ...livePrices('slumber'),
     image: '/images/products/Slumber/slumber-bed.webp',
   },
   {
@@ -24,7 +26,7 @@ const models = [
     name: 'Busby Nod',
     type: 'Hybrid',
     keyBenefit: 'Built to Last',
-    price: 1949,
+    ...livePrices('nod'),
     image: '/images/products/Nod/nod-bed.webp',
   },
   {
@@ -32,7 +34,7 @@ const models = [
     name: 'Busby Doze',
     type: 'Hybrid',
     keyBenefit: 'Enhanced Comfort',
-    price: 1689,
+    ...livePrices('doze'),
     image: '/images/products/Doze/doze-bed.webp',
   },
 ];
@@ -73,7 +75,10 @@ export default function ProductsOnDisplay() {
                 <p className="text-lg font-semibold text-navy mb-1">{m.name}</p>
                 <p className="text-sm text-gray-600 mb-3">{m.keyBenefit}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-navy">From ${m.price}</span>
+                  <span className="text-sm font-medium text-navy">
+                    From ${m.price.toLocaleString()}
+                    <WasPrice value={m.compareAtPrice} />
+                  </span>
                   <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>

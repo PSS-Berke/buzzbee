@@ -1,7 +1,11 @@
+import { sale, applySaleDiscount } from './sale';
+
 export interface Size {
   name: string;
   dimensions: string;
   price: number;
+  /** Regular price, set only while this size is on sale (`price` is then the sale price). */
+  compareAtPrice?: number;
   inStock: boolean;
 }
 
@@ -48,6 +52,8 @@ export interface Product {
   tagline: string;
   description: string;
   price: number;
+  /** Regular price, set only while this product is on sale (`price` is then the sale price). */
+  compareAtPrice?: number;
   rating: number;
   reviewCount: number;
   images: string[];
@@ -99,8 +105,9 @@ export const productLines: Record<ProductLine, ProductLineMeta> = {
 // keep that name so reports stay continuous across the rename.
 export const STUDIO_GO_ID = 'offer-grab-and-go';
 
-// Sleep6 — Busby home line
-export const homeLineProducts: Product[] = [
+// Sleep6 — Busby home line, at regular prices. Use `homeLineProducts` below,
+// which carries any active sale prices.
+const regularHomeLineProducts: Product[] = [
   {
     id: 'hl-1',
     slug: 'nod',
@@ -636,6 +643,27 @@ export const homeLineProducts: Product[] = [
   },
 ];
 
+/** Every bed in the home line is on sale except Studio Go. */
+export function isOnSale(product: Pick<Product, 'id'>): boolean {
+  return sale.active && !isStudioGo(product);
+}
+
+function withSalePrices(product: Product): Product {
+  if (!isOnSale(product)) return product;
+  return {
+    ...product,
+    price: applySaleDiscount(product.price),
+    compareAtPrice: product.price,
+    sizes: product.sizes.map((s) => ({
+      ...s,
+      price: applySaleDiscount(s.price),
+      compareAtPrice: s.price,
+    })),
+  };
+}
+
+export const homeLineProducts: Product[] = regularHomeLineProducts.map(withSalePrices);
+
 export const accessoryProducts: Product[] = [
   {
     id: 'acc-1',
@@ -931,6 +959,18 @@ export function resolveLineItem(input: {
     image: product.images[0] ?? '',
     quantity,
   };
+}
+
+/** Regular price of one size while it's on sale, else undefined. For cart lines. */
+export function regularPriceFor(productId: string, size: string): number | undefined {
+  return getProductById(productId)?.sizes.find((s) => s.name === size)?.compareAtPrice;
+}
+
+/** A product's current price (and regular price while on sale), for pages that keep their own copy. */
+export function livePrices(slug: string): { price: number; compareAtPrice?: number } {
+  const product = getProductBySlug(slug);
+  if (!product) throw new Error(`Unknown product slug: ${slug}`);
+  return { price: product.price, compareAtPrice: product.compareAtPrice };
 }
 
 export function getAllProductSlugs(): string[] {

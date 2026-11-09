@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Pause, Play } from 'lucide-react';
 import { getProductBySlug } from '@/data/products';
+import WasPrice from '@/components/product/WasPrice';
 
 // One file: the four Artisan explainer videos, each dissolving into the next bed, in the
 // same order as the cards above this. The last half second dissolves back into the start,
@@ -139,6 +140,7 @@ export default function ArtisanReel() {
                   </span>
                   <span className="text-sm tabular-nums text-gray-600">
                     {queen.name} ${queen.price.toLocaleString('en-US')}
+                    <WasPrice value={queen.compareAtPrice} className="ml-1.5" />
                   </span>
                 </button>
                 <Link

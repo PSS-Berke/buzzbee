@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react';
 import { isAdjustableBase, isStudioGo, isTopper, usesAccessoryLayout, type Product, type Size } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import StudioGoBuy from '@/components/studio-go/StudioGoBuy';
+import WasPrice from '@/components/product/WasPrice';
 
 interface ProductInfoProps {
   product: Product;
@@ -109,6 +110,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           <span className="text-3xl text-navy">
             ${selectedSize.price.toLocaleString()}
           </span>
+          <WasPrice value={selectedSize.compareAtPrice} className="text-gray-600 text-lg" />
           <span className="text-sm text-gray-600">
             {selectedSize.name}
           </span>
