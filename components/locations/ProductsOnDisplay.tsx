@@ -75,7 +75,7 @@ export default function ProductsOnDisplay() {
                 <p className="text-lg font-semibold text-navy mb-1">{m.name}</p>
                 <p className="text-sm text-gray-600 mb-3">{m.keyBenefit}</p>
                 <div className="flex items-center justify-between">
-                  <span className={priceClass(m.compareAtPrice, 'text-lg font-bold text-coral', 'text-sm font-medium text-navy')}>
+                  <span className={priceClass(m.compareAtPrice, 'text-xl font-bold text-coral', 'text-sm font-medium text-navy')}>
                     From ${m.price.toLocaleString()}
                     <WasPrice value={m.compareAtPrice} />
                   </span>
