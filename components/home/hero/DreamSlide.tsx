@@ -95,11 +95,11 @@ export default function DreamSlide({ active }: { active: boolean }) {
             ))}
           </dl>
 
-          <div className="scene-reveal mt-6 flex items-center gap-3" style={order(4)}>
+          <div className="scene-reveal mt-6 flex flex-wrap items-center gap-3" style={order(4)}>
             <span className="rounded-sm bg-gold px-3 py-1.5 font-sans text-4xl font-bold leading-none text-navy tabular-nums">
               ${queen.price.toLocaleString('en-US')}
             </span>
-            <WasPrice value={queen.compareAtPrice} className="text-xl text-white/75" />
+            <WasPrice value={queen.compareAtPrice} className="text-3xl" tone="dark" />
             <span className="text-sm text-white/75">
               {queen.name} · {queen.dimensions}
             </span>

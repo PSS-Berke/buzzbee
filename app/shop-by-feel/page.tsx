@@ -20,7 +20,7 @@ import { comparableProducts, compareHref, MAX_COMPARE } from '@/lib/compare';
 import LineTag from '@/components/product/LineTag';
 import StudioGoNudge from '@/components/studio-go/StudioGoNudge';
 import type { Product } from '@/data/products';
-import WasPrice from '@/components/product/WasPrice';
+import WasPrice, { priceClass } from '@/components/product/WasPrice';
 
 type Category = {
   slug: string;
@@ -308,7 +308,7 @@ export default function ShopByFeelPage() {
                         <div className="flex items-baseline justify-between gap-3">
                           <h3 className="text-lg font-semibold text-navy">{p.name}</h3>
                           <p className="text-navy">
-                            <span className="font-semibold">${p.price.toLocaleString()}</span>
+                            <span className={priceClass(p.compareAtPrice, 'text-2xl font-bold text-coral', 'font-semibold')}>${p.price.toLocaleString()}</span>
                             <WasPrice value={p.compareAtPrice} />
                             <span className="ml-1 text-xs text-gray-600">Queen</span>
                           </p>

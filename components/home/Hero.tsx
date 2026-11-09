@@ -13,19 +13,27 @@ import StudioGoWhySlide from './hero/StudioGoWhySlide';
 import Studio12WhySlide from './hero/Studio12WhySlide';
 import VideoSlide from './hero/VideoSlide';
 import DreamSlide from './hero/DreamSlide';
+import SaleSlide from './hero/SaleSlide';
+import { sale } from '@/data/sale';
 
 // Left to right, as they sit on the track. Studio Go stays first: a scroller always opens
 // at its far left, so it's what paints before any JavaScript runs. The hero rotates
 // rightward and wraps back to it. Labels are for screen readers. On screen the dots carry
-// no names.
-const slides = [
+// no names. The sale slide comes second, and only while the sale is on.
+const allSlides = [
   { id: 'why', label: 'Why Studio Go' },
+  { id: 'sale', label: `Mattress sale, ${sale.label}` },
   { id: 'video', label: 'Watch' },
   { id: 'dream', label: 'Busby Dream' },
   { id: 'studio12', label: 'Studio 12' },
 ] as const;
+type SlideId = (typeof allSlides)[number]['id'];
+const slides = allSlides.filter((s) => s.id !== 'sale' || sale.active);
 
 const ROTATE_MS = 30_000;
+// Slides that hold for less than the usual time. Studio Go gets half, so the hero reaches
+// the sale sooner.
+const HOLD_MS: Partial<Record<SlideId, number>> = { why: 15_000 };
 // The video slide moves on after its plays finish instead. This only catches a video
 // that never gets there, because it failed to load or the browser blocked it.
 const VIDEO_BACKSTOP_MS = 90_000;
@@ -43,7 +51,7 @@ function subscribeRotate(onChange: () => void) {
 /**
  * The home hero: a row of slides on a native scroll-snap track, so swiping just works.
  * Only the active slide is interactive (the rest are inert). Each slide holds for 30
- * seconds, except the video, which gets two full plays. Rotation stops for good once
+ * seconds, except Studio Go, which holds for 15, and the video, which gets two full plays. Rotation stops for good once
  * the visitor takes control, and holds under keyboard focus or off screen. The mouse
  * only holds it from on top of a button or link: the hero fills most of a desktop
  * screen, so holding on any hover would mean it rarely rotated at all.
@@ -98,7 +106,8 @@ export default function Hero() {
         goTo((active + 1) % slides.length);
       }
     };
-    const wait = !onVideo ? ROTATE_MS : videoPlayed ? 0 : VIDEO_BACKSTOP_MS;
+    const hold = HOLD_MS[slides[active].id] ?? ROTATE_MS;
+    const wait = !onVideo ? hold : videoPlayed ? 0 : VIDEO_BACKSTOP_MS;
     timer = window.setTimeout(advance, wait);
     return () => window.clearTimeout(timer);
   }, [running, active, onVideo, videoPlayed, goTo]);
@@ -140,7 +149,8 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
-  const panels: Record<(typeof slides)[number]['id'], ReactNode> = {
+  const panels: Record<SlideId, ReactNode> = {
+    sale: <SaleSlide />,
     video: (
       <VideoSlide
         active={onVideo && inView}

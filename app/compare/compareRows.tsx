@@ -5,7 +5,7 @@
 import { Play } from 'lucide-react';
 import type { Product } from '@/data/products';
 import LineTag from '@/components/product/LineTag';
-import WasPrice from '@/components/product/WasPrice';
+import WasPrice, { priceClass } from '@/components/product/WasPrice';
 
 export const SIZE_ORDER = ['Twin', 'Twin XL', 'Full', 'Queen', 'King'];
 
@@ -124,7 +124,7 @@ export const ROWS: CompareRow[] = [
     render: (p, { size }) => {
       const s = sizePrice(p, size);
       return s ? (
-        <span className="text-lg font-semibold text-navy">
+        <span className={priceClass(s.compareAtPrice, 'text-xl font-bold text-coral', 'text-lg font-semibold text-navy')}>
           ${s.price.toLocaleString()}
           <WasPrice value={s.compareAtPrice} />
         </span>
