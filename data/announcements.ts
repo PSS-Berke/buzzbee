@@ -42,7 +42,7 @@ export const announcement: Announcement = {
 export const temporaryNotice: Announcement | null = sale.active
   ? {
       version: 4,
-      copy: `Mattress sale: ${sale.label} every bed except Studio Go →`,
+      copy: `Mattress sale: ${sale.label} select beds →`,
       href: '/products',
     }
   : null;

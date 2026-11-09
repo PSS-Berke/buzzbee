@@ -33,8 +33,8 @@ export default function SaleSlide() {
             {sale.percentOff}%
             <span className="block">off</span>
           </h2>
-          <p className="mt-5 text-2xl font-semibold leading-snug">Every bed except Studio Go.</p>
-          <p className="mt-2 text-lg text-white">The sale price is the price you pay at checkout.</p>
+          <p className="mt-5 text-3xl font-bold leading-snug">Sleep better for less.</p>
+          <p className="mt-2 text-lg text-white">On select mattresses.</p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <Link
