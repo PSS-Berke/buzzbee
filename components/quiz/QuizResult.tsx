@@ -6,7 +6,7 @@ import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { QuizResult as QuizResultType, productDetails } from '@/lib/quiz-logic';
 import QuizEmailCapture from './QuizEmailCapture';
 import StudioGoNudge from '@/components/studio-go/StudioGoNudge';
-import WasPrice from '@/components/product/WasPrice';
+import WasPrice, { priceClass } from '@/components/product/WasPrice';
 import { getProductBySlug } from '@/data/products';
 
 interface QuizResultProps {
@@ -68,7 +68,7 @@ export default function QuizResult({ result, onRetake }: QuizResultProps) {
             </div>
           )}
 
-          <div className="text-3xl font-light text-navy">
+          <div className={priceClass(live?.compareAtPrice, 'text-4xl font-bold text-coral', 'text-3xl font-light text-navy')}>
             From ${(live?.price ?? product.price).toLocaleString()}
             <WasPrice value={live?.compareAtPrice} />
             <span className="text-sm text-gray-600 ml-2">Queen</span>

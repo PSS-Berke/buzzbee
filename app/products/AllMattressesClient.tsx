@@ -8,7 +8,7 @@ import { ArrowRight, CalendarCheck, Check, X } from 'lucide-react';
 import { productLines, type Product, type ProductLine } from '@/data/products';
 import { MAX_COMPARE } from '@/lib/compare';
 import LineTag from '@/components/product/LineTag';
-import WasPrice from '@/components/product/WasPrice';
+import WasPrice, { priceClass } from '@/components/product/WasPrice';
 
 type Construction = 'Hybrid' | 'Foam';
 type SortKey = 'recommended' | 'price-asc' | 'price-desc';
@@ -253,7 +253,7 @@ export default function AllMattressesClient({ products }: { products: Product[] 
 
                     <div className="mt-auto pt-5 flex items-end justify-between gap-3">
                       <p className="text-navy">
-                        <span className="text-xl font-semibold">${p.price.toLocaleString()}</span>
+                        <span className={priceClass(p.compareAtPrice, 'text-2xl font-bold text-coral', 'text-xl font-semibold')}>${p.price.toLocaleString()}</span>
                         <WasPrice value={p.compareAtPrice} />
                         <span className="ml-1 text-xs text-gray-600">Queen</span>
                       </p>
@@ -321,7 +321,7 @@ export default function AllMattressesClient({ products }: { products: Product[] 
                   label: 'Queen price',
                   value: (p: Product) => (
                     <>
-                      ${p.price.toLocaleString()}
+                      <span className={priceClass(p.compareAtPrice, 'font-bold text-coral', '')}>${p.price.toLocaleString()}</span>
                       <WasPrice value={p.compareAtPrice} />
                     </>
                   ),

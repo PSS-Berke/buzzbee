@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
-import WasPrice from '@/components/product/WasPrice';
+import WasPrice, { priceClass } from '@/components/product/WasPrice';
 
 export const metadata = {
   title: 'The Artisan Collection | Busby',
@@ -146,7 +146,10 @@ export default function HomeLinePage() {
 
                     {/* Price */}
                     <div className="flex items-center gap-4 mb-8">
-                      <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}<WasPrice value={flagship.compareAtPrice} /></span>
+                      <span className={priceClass(flagship.compareAtPrice, 'text-4xl font-bold text-coral', 'text-3xl text-navy')}>
+                        From ${flagship.price.toLocaleString()}
+                        <WasPrice value={flagship.compareAtPrice} className="ml-3 text-[0.6em]" />
+                      </span>
                       <span className="text-gray-600 text-sm">Queen</span>
                     </div>
 
@@ -201,9 +204,9 @@ export default function HomeLinePage() {
                     </h3>
                     <p className="text-gold-light text-xs font-medium italic mb-2">{product.tierDescription}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-medium text-white">
+                      <span className={priceClass(product.compareAtPrice, 'text-2xl font-bold text-gold-light', 'text-lg font-medium text-white')}>
                         From ${product.price.toLocaleString()}
-                        <WasPrice value={product.compareAtPrice} className="ml-2 text-gray-300 text-[0.7em]" />
+                        <WasPrice value={product.compareAtPrice} className="ml-2 text-[0.65em]" tone="dark" />
                       </span>
                       <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-gold group-hover:translate-x-1 transition-all duration-300" />
                     </div>
@@ -283,7 +286,7 @@ export default function HomeLinePage() {
 
                       {/* Price + CTA */}
                       <div className="flex items-center justify-between">
-                        <span className="text-xl font-medium text-navy">
+                        <span className={priceClass(product.compareAtPrice, 'text-2xl font-bold text-coral', 'text-xl font-medium text-navy')}>
                           From ${product.price.toLocaleString()}
                           <WasPrice value={product.compareAtPrice} />
                         </span>

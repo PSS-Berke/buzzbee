@@ -201,7 +201,7 @@ export default function CheckoutPage() {
                         </p>
                         <p className="text-sm text-navy mt-1">
                           ${item.price.toLocaleString()}
-                          <WasPrice value={regularPriceFor(item.productId, item.size)} />
+                          <WasPrice value={regularPriceFor(item.productId, item.size)} badge={false} />
                         </p>
                       </div>
                     </div>

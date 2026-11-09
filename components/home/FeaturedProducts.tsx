@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import ArtisanReel from './ArtisanReel';
-import WasPrice from '@/components/product/WasPrice';
+import WasPrice, { priceClass } from '@/components/product/WasPrice';
 import { livePrices } from '@/data/products';
 
 // Product data with luxury positioning
@@ -117,7 +117,10 @@ export default function FeaturedProducts() {
 
                 {/* Price */}
                 <div className="flex items-center gap-4 mb-8">
-                  <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}<WasPrice value={flagship.compareAtPrice} /></span>
+                  <span className={priceClass(flagship.compareAtPrice, 'text-4xl font-bold text-coral', 'text-3xl text-navy')}>
+                    From ${flagship.price.toLocaleString()}
+                    <WasPrice value={flagship.compareAtPrice} className="ml-3 text-[0.6em]" />
+                  </span>
                   <span className="text-gray-600 text-sm">Queen</span>
                 </div>
 
@@ -164,7 +167,7 @@ export default function FeaturedProducts() {
 
                 {/* Price and arrow */}
                 <div className="flex items-center justify-between">
-                  <span className="text-lg font-medium text-navy">
+                  <span className={priceClass(product.compareAtPrice, 'text-xl font-bold text-coral', 'text-lg font-medium text-navy')}>
                     From ${product.price.toLocaleString()}
                     <WasPrice value={product.compareAtPrice} />
                   </span>

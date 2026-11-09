@@ -59,7 +59,7 @@ export default function CartItem({ item, expanded = false }: CartItemProps) {
         {/* Price */}
         <p className="text-navy font-medium mt-2">
           ${item.price.toLocaleString()}
-          <WasPrice value={regularPriceFor(item.productId, item.size)} />
+          <WasPrice value={regularPriceFor(item.productId, item.size)} badge={false} />
         </p>
       </div>
 

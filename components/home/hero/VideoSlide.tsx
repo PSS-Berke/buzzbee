@@ -172,7 +172,7 @@ export default function VideoSlide({
               <h2 className="font-sans text-xl font-semibold">{bed.product.name}</h2>
               <p className="text-sm text-gray-300">
                 {bed.line} {queen.name} for ${queen.price.toLocaleString('en-US')}
-                <WasPrice value={queen.compareAtPrice} className="ml-1.5" />.
+                <WasPrice value={queen.compareAtPrice} className="ml-1.5" tone="dark" />.
               </p>
             </div>
             <SlideButtons
