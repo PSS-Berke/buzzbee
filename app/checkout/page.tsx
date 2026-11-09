@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, ShoppingBag, Lock } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import WasPrice from '@/components/product/WasPrice';
+import { regularPriceFor } from '@/data/products';
 
 export default function CheckoutPage() {
   const { state, subtotal } = useCart();
@@ -197,7 +199,10 @@ export default function CheckoutPage() {
                         <p className="text-xs text-gray-600">
                           {item.size}
                         </p>
-                        <p className="text-sm text-navy mt-1">${item.price.toLocaleString()}</p>
+                        <p className="text-sm text-navy mt-1">
+                          ${item.price.toLocaleString()}
+                          <WasPrice value={regularPriceFor(item.productId, item.size)} />
+                        </p>
                       </div>
                     </div>
                   ))}

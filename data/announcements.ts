@@ -1,4 +1,5 @@
 import { elmhurstStore, type LaunchPhase } from './store';
+import { sale } from './sale';
 
 export interface Announcement {
   version: number;
@@ -38,12 +39,13 @@ export const announcement: Announcement = {
 // above; afterwards the site falls back to `announcement` on its own. Keep the
 // dates in sync with WEEK_OVERRIDE in lib/availability.ts, and bump `version`
 // so people who dismissed the previous pill see this one.
-export const temporaryNotice: Announcement | null = {
-  version: 3,
-  copy: 'Showroom closed Sat–Sun, Aug 29–30 · Book a weekday visit →',
-  href: '/appointment',
-  until: '2026-08-30',
-};
+export const temporaryNotice: Announcement | null = sale.active
+  ? {
+      version: 4,
+      copy: `Mattress sale: ${sale.label} every bed except Studio Go →`,
+      href: '/products',
+    }
+  : null;
 
 /** The announcement to show on `todayISO` (YYYY-MM-DD, local). */
 export function activeAnnouncement(todayISO: string): Announcement {

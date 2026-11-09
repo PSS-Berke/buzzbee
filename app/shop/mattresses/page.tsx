@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { homeLineProducts } from '@/data/products';
+import WasPrice from '@/components/product/WasPrice';
 
 export const metadata = {
   title: 'Shop Mattresses | Busby',
@@ -146,7 +147,7 @@ export default function MattressesPage() {
 
                     {/* Price */}
                     <div className="flex items-center gap-4 mb-8">
-                      <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}</span>
+                      <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}<WasPrice value={flagship.compareAtPrice} /></span>
                       <span className="text-gray-600 text-sm">Queen</span>
                     </div>
 
@@ -203,6 +204,7 @@ export default function MattressesPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-medium text-white">
                         From ${product.price.toLocaleString()}
+                        <WasPrice value={product.compareAtPrice} className="ml-2 text-gray-300 text-[0.7em]" />
                       </span>
                       <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-gold group-hover:translate-x-1 transition-all duration-300" />
                     </div>
@@ -304,6 +306,7 @@ export default function MattressesPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-xl font-medium text-navy">
                           From ${product.price.toLocaleString()}
+                          <WasPrice value={product.compareAtPrice} />
                         </span>
                         <div className="flex items-center gap-2 text-gold-dark group-hover:gap-4 transition-all duration-500">
                           <span className="font-medium text-sm">Shop Now</span>

@@ -1,4 +1,5 @@
 import { isStudioGo, type Product } from '@/data/products';
+import { sale } from '@/data/sale';
 
 const DELIVERY_STEPS = [
   { title: 'Order', desc: 'Production begins the moment you order — nothing sits in a warehouse.' },
@@ -65,7 +66,12 @@ export default function StudioSpecSheet({ product }: { product: Product }) {
     ...(product.components.length > 0 ? [['Layers', String(product.components.length)] as [string, string]] : []),
     ['Sizes', product.sizes.map((s) => s.name).join(' · ')],
     ['Best for', product.bestFor.join(' · ')],
-    ['From', `$${product.price.toLocaleString()}`],
+    [
+      'From',
+      product.compareAtPrice
+        ? `$${product.price.toLocaleString()} (${sale.label} $${product.compareAtPrice.toLocaleString()})`
+        : `$${product.price.toLocaleString()}`,
+    ],
   ];
 
   return (

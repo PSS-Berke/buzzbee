@@ -2,6 +2,7 @@
 
 import { getProductBySlug } from '@/data/products';
 import WhySlide, { type WhyContent } from './WhySlide';
+import { sale } from '@/data/sale';
 
 const product = getProductBySlug('studio-12')!;
 const money = (n: number) => `$${n.toLocaleString('en-US')}`;
@@ -42,6 +43,9 @@ const content: WhyContent = {
   ],
   summary: { label: `${product.name} ${queen.name}`, value: money(queen.price) },
   rows: [
+    ...(queen.compareAtPrice
+      ? [{ label: `Regular price, now ${sale.label}`, value: money(queen.compareAtPrice) }]
+      : []),
     { label: 'Twin to King', value: `${money(Math.min(...prices))} to ${money(Math.max(...prices))}` },
     { label: 'Feels', value: 'Soft, medium or firm' },
     { label: 'Delivery', value: 'Free' },

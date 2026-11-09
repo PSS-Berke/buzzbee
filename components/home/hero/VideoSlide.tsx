@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Pause, Play } from 'lucide-react';
 import { getProductBySlug } from '@/data/products';
 import SlideButtons from './SlideButtons';
+import WasPrice from '@/components/product/WasPrice';
 
 // One file: the two beds' explainer videos, each cut before its price screen and dissolving
 // into the next bed, because a price burned into a video goes stale. The only price here is
@@ -170,7 +171,8 @@ export default function VideoSlide({
             <div>
               <h2 className="font-sans text-xl font-semibold">{bed.product.name}</h2>
               <p className="text-sm text-gray-300">
-                {bed.line} {queen.name} for ${queen.price.toLocaleString('en-US')}.
+                {bed.line} {queen.name} for ${queen.price.toLocaleString('en-US')}
+                <WasPrice value={queen.compareAtPrice} className="ml-1.5" />.
               </p>
             </div>
             <SlideButtons

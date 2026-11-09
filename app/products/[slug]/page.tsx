@@ -24,6 +24,7 @@ import AccessorySpecSheet from '@/components/product/AccessorySpecSheet';
 import CompleteYourSetup from '@/components/product/CompleteYourSetup';
 import LayerSwitcher from '@/components/home/LayerSwitcher';
 import { Check } from 'lucide-react';
+import WasPrice from '@/components/product/WasPrice';
 
 interface ProductPageProps {
   params: Promise<{
@@ -331,6 +332,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   <div className="flex items-center justify-between">
                     <span className="text-lg font-medium text-navy">
                       From ${relatedProduct.price.toLocaleString()}
+                      <WasPrice value={relatedProduct.compareAtPrice} />
                     </span>
                     <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-[var(--accent)] group-hover:translate-x-1 transition-all duration-300" />
                   </div>

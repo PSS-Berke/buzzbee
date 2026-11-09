@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { getProductBySlug } from '@/data/products';
 import { order, SceneCallouts, useSceneActive, type Callout } from './scene';
+import WasPrice from '@/components/product/WasPrice';
 
 const dream = getProductBySlug('dream')!;
 const queen = dream.sizes.find((s) => s.name === 'Queen')!;
@@ -98,6 +99,7 @@ export default function DreamSlide({ active }: { active: boolean }) {
             <span className="rounded-sm bg-gold px-3 py-1.5 font-sans text-4xl font-bold leading-none text-navy tabular-nums">
               ${queen.price.toLocaleString('en-US')}
             </span>
+            <WasPrice value={queen.compareAtPrice} className="text-xl text-white/75" />
             <span className="text-sm text-white/75">
               {queen.name} · {queen.dimensions}
             </span>

@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import ArtisanReel from './ArtisanReel';
+import WasPrice from '@/components/product/WasPrice';
+import { livePrices } from '@/data/products';
 
 // Product data with luxury positioning
 const flagship = {
@@ -14,7 +16,7 @@ const flagship = {
     'Individually wrapped coils meet advanced foam layers for the kind of performance you expect from a luxury mattress — at a price that doesn\'t require compromise.',
   layers: 7,
   keyBenefit: 'Cooling CoolGel Quilting',
-  price: 2599,
+  ...livePrices('dream'),
   image: '/images/products/Dream/dream-bed.webp',
 };
 
@@ -26,7 +28,7 @@ const supportingProducts = [
     type: 'Hybrid',
     tagline: 'Rich, plush comfort that envelops you',
     keyBenefit: 'Deep Pressure Relief',
-    price: 2209,
+    ...livePrices('slumber'),
     image: '/images/products/Slumber/slumber-bed.webp',
   },
   {
@@ -36,7 +38,7 @@ const supportingProducts = [
     type: 'Hybrid',
     tagline: 'Plush comfort, built to last.',
     keyBenefit: 'Enhanced Comfort',
-    price: 1689,
+    ...livePrices('doze'),
     image: '/images/products/Doze/doze-bed.webp',
   },
   {
@@ -46,7 +48,7 @@ const supportingProducts = [
     type: 'Hybrid',
     tagline: 'Dependable comfort, night after night',
     keyBenefit: 'Built to Last',
-    price: 1949,
+    ...livePrices('nod'),
     image: '/images/products/Nod/nod-bed.webp',
   },
 ];
@@ -115,7 +117,7 @@ export default function FeaturedProducts() {
 
                 {/* Price */}
                 <div className="flex items-center gap-4 mb-8">
-                  <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}</span>
+                  <span className="text-3xl text-navy">From ${flagship.price.toLocaleString()}<WasPrice value={flagship.compareAtPrice} /></span>
                   <span className="text-gray-600 text-sm">Queen</span>
                 </div>
 
@@ -164,6 +166,7 @@ export default function FeaturedProducts() {
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-medium text-navy">
                     From ${product.price.toLocaleString()}
+                    <WasPrice value={product.compareAtPrice} />
                   </span>
                   <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-navy group-hover:translate-x-1 transition-all duration-300" />
                 </div>
