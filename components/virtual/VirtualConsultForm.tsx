@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Loader2 } from 'lucide-react';
 import { SOURCE_VIRTUAL_NATIONAL } from '@/lib/consult';
-import { formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
 import { chicagoWallClockToUtc } from '@/lib/calendar';
 
@@ -19,17 +19,6 @@ interface FieldErrors {
   name?: string;
   email?: string;
   phone?: string;
-}
-
-function todayLocalISO(): string {
-  const now = new Date();
-  return new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
-}
-
-function localISOPlusDays(days: number): string {
-  const now = new Date();
-  now.setDate(now.getDate() + days);
-  return new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 }
 
 interface Zone {
@@ -358,8 +347,8 @@ export default function VirtualConsultForm() {
           name="date"
           type="date"
           required
-          min={todayLocalISO()}
-          max={localISOPlusDays(MAX_BOOKING_DAYS_AHEAD)}
+          min={earliestBookingDate()}
+          max={latestBookingDate()}
           value={date}
           onChange={(e) => setDate(e.target.value)}
           className={inputClass}
