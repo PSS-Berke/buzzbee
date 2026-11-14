@@ -3,27 +3,13 @@ import { canonicalizeEmail, isValidEmail, normalizePhone } from '@/lib/submissio
 import { elmhurstStore } from '@/data/store';
 import { insertReservation, SlotTakenError } from '@/lib/db';
 import { sendAdminReservationEmail, sendUserReservationEmail } from '@/lib/email';
-import { isValidSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { earliestBookingDate, isValidSlot, latestBookingDate, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
 import { isOpenSlot } from '@/lib/availability';
 import { getClientIp, rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-// Today's date (YYYY-MM-DD) in the showroom's timezone, for past-date rejection.
-function chicagoToday(): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Chicago' }).format(new Date());
-}
-
-// Latest bookable date (YYYY-MM-DD), MAX_BOOKING_DAYS_AHEAD past today.
-function latestBookingDate(): string {
-  const [y, m, d] = chicagoToday().split('-').map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d + MAX_BOOKING_DAYS_AHEAD));
-  const mm = String(dt.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(dt.getUTCDate()).padStart(2, '0');
-  return `${dt.getUTCFullYear()}-${mm}-${dd}`;
-}
 
 // DATE_RE is structural only — '2026-13-45' passes it. Confirm the value is a
 // real calendar date so a bad date 400s cleanly instead of 500-ing at the insert.
@@ -128,8 +114,9 @@ export async function POST(req: NextRequest) {
   if (!date || !DATE_RE.test(date) || !isRealDate(date)) {
     return bad('Please choose a valid date.');
   }
-  if (date < chicagoToday()) {
-    return bad('Please choose a date that is not in the past.');
+  // No same-day (or past) bookings: the earliest date is tomorrow, showroom time.
+  if (date < earliestBookingDate()) {
+    return bad('Visits need to be booked at least a day ahead. Please choose tomorrow or later.');
   }
   if (date > latestBookingDate()) {
     return bad(`Please choose a date within the next ${MAX_BOOKING_DAYS_AHEAD} days.`);

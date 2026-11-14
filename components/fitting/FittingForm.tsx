@@ -2,8 +2,8 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
-import { localISOPlusDays, todayLocalISO, useAvailability } from '@/hooks/useAvailability';
+import { earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
+import { useAvailability } from '@/hooks/useAvailability';
 
 declare global {
   interface Window {
@@ -221,8 +221,8 @@ export default function FittingForm() {
           name="date"
           type="date"
           required
-          min={todayLocalISO()}
-          max={localISOPlusDays(MAX_BOOKING_DAYS_AHEAD)}
+          min={earliestBookingDate()}
+          max={latestBookingDate()}
           value={date}
           onChange={(e) => setDate(e.target.value)}
           className={inputClass}

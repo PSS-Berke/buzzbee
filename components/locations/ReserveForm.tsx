@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Store, Video } from 'lucide-react';
-import { formatSlot, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
 import { type ConsultMode, SOURCE_IN_PERSON, SOURCE_VIRTUAL } from '@/lib/consult';
 
@@ -47,19 +47,6 @@ const MODES: {
 // No 'success' state — a booking redirects to /appointment/confirmed, so the
 // form stays in 'submitting' until the browser leaves the page.
 type Status = 'idle' | 'submitting' | 'error';
-
-function todayLocalISO(): string {
-  const now = new Date();
-  const tz = now.getTimezoneOffset() * 60_000;
-  return new Date(now.getTime() - tz).toISOString().slice(0, 10);
-}
-
-function localISOPlusDays(days: number): string {
-  const now = new Date();
-  now.setDate(now.getDate() + days);
-  const tz = now.getTimezoneOffset() * 60_000;
-  return new Date(now.getTime() - tz).toISOString().slice(0, 10);
-}
 
 export default function ReserveForm() {
   // In-person is the default: the showroom is the thing we actually have, and
@@ -359,8 +346,8 @@ export default function ReserveForm() {
             name="date"
             type="date"
             required
-            min={todayLocalISO()}
-            max={localISOPlusDays(MAX_BOOKING_DAYS_AHEAD)}
+            min={earliestBookingDate()}
+            max={latestBookingDate()}
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"

@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
-import { formatSlot } from '@/lib/slots';
+import { formatSlot, showroomDatePlusDays } from '@/lib/slots';
 import { isHeldBack, scheduledSlotsForDate } from '@/lib/availability';
 import { SOURCE_IN_PERSON } from '@/lib/consult';
 
@@ -16,20 +16,10 @@ declare global {
 // How many days the mini picker shows, starting tomorrow (no same-day visits:
 // a Sleep Guide has to be scheduled to meet each guest).
 const DAYS_SHOWN = 7;
-const SHOWROOM_TZ = 'America/Chicago';
 
 type Status = 'idle' | 'submitting' | 'error';
 
 // Dates are YYYY-MM-DD in the showroom's calendar, matching /api/reserve.
-function showroomToday(): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: SHOWROOM_TZ }).format(new Date());
-}
-
-function plusDays(iso: string, n: number): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
-}
-
 function dayParts(iso: string) {
   const dt = new Date(`${iso}T12:00:00Z`);
   const fmt = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('en-US', { ...o, timeZone: 'UTC' }).format(dt);
@@ -37,8 +27,7 @@ function dayParts(iso: string) {
 }
 
 function upcomingDays(): string[] {
-  const today = showroomToday();
-  return Array.from({ length: DAYS_SHOWN }, (_, i) => plusDays(today, i + 1));
+  return Array.from({ length: DAYS_SHOWN }, (_, i) => showroomDatePlusDays(i + 1));
 }
 
 // Why book, all as promised on /appointment. Studio Go is left out on purpose: it

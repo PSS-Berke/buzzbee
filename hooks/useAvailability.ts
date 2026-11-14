@@ -53,16 +53,3 @@ export function useAvailability(date: string) {
 
   return { openSlots, booked, state, refresh };
 }
-
-/** Today in the visitor's own calendar, as YYYY-MM-DD, for a date input's min. */
-export function todayLocalISO(): string {
-  const now = new Date();
-  return new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
-}
-
-/** `days` from today in the visitor's calendar, for a date input's max. */
-export function localISOPlusDays(days: number): string {
-  const now = new Date();
-  now.setDate(now.getDate() + days);
-  return new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
-}
