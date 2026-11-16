@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Store, Video } from 'lucide-react';
-import { earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
+import { bookingDateError, earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
 import { type ConsultMode, SOURCE_IN_PERSON, SOURCE_VIRTUAL } from '@/lib/consult';
 
@@ -56,7 +56,11 @@ export default function ReserveForm() {
   const isVirtual = mode === 'virtual';
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const [date, setDate] = useState('');
+  // The raw value of the date input. `date` is that value only once it's a
+  // bookable day, so an out-of-range pick never loads times or submits.
+  const [dateInput, setDateInput] = useState('');
+  const dateError = dateInput ? bookingDateError(dateInput) : null;
+  const date = dateError ? '' : dateInput;
   const [slot, setSlot] = useState('');
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [availabilityState, setAvailabilityState] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -348,8 +352,10 @@ export default function ReserveForm() {
             required
             min={earliestBookingDate()}
             max={latestBookingDate()}
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={dateInput}
+            onChange={(e) => setDateInput(e.target.value)}
+            aria-invalid={dateError ? true : undefined}
+            aria-describedby={dateError ? 'reserve-date-error' : undefined}
             className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
         </label>
@@ -357,7 +363,12 @@ export default function ReserveForm() {
 
       <fieldset>
         <legend className="block text-sm font-medium text-navy mb-2">Pick a time</legend>
-        {!date && (
+        {dateError && (
+          <p id="reserve-date-error" role="alert" className="text-sm text-red-600">
+            {dateError}
+          </p>
+        )}
+        {!dateInput && (
           <p className="text-sm text-gray-600">Choose a date above to see available times.</p>
         )}
         {date && availabilityState === 'loading' && (

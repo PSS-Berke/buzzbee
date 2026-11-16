@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
+import { bookingDateError, earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { useAvailability } from '@/hooks/useAvailability';
 
 declare global {
@@ -22,7 +22,11 @@ interface FieldErrors {
 export default function FittingForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const [date, setDate] = useState('');
+  // The raw value of the date input. `date` is that value only once it's a
+  // bookable day, so an out-of-range pick never loads times or submits.
+  const [dateInput, setDateInput] = useState('');
+  const dateError = dateInput ? bookingDateError(dateInput) : null;
+  const date = dateError ? '' : dateInput;
   const [slot, setSlot] = useState('');
   const { openSlots, booked, state: availability, refresh } = useAvailability(date);
   // Held in a ref, not state: it is never rendered, only read at submit time.
@@ -223,8 +227,10 @@ export default function FittingForm() {
           required
           min={earliestBookingDate()}
           max={latestBookingDate()}
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          value={dateInput}
+          onChange={(e) => setDateInput(e.target.value)}
+          aria-invalid={dateError ? true : undefined}
+          aria-describedby={dateError ? 'fit-date-error' : undefined}
           className={inputClass}
         />
       </div>
@@ -232,7 +238,12 @@ export default function FittingForm() {
       <fieldset>
         <legend className="block text-sm font-medium text-navy mb-2">Pick a time</legend>
 
-        {!date && <p className="text-sm text-gray-600">Choose a day above to see open times.</p>}
+        {dateError && (
+          <p id="fit-date-error" role="alert" className="text-sm text-red-600">
+            {dateError}
+          </p>
+        )}
+        {!dateInput && <p className="text-sm text-gray-600">Choose a day above to see open times.</p>}
         {date && availability === 'loading' && (
           <p className="text-sm text-gray-600">Loading times…</p>
         )}
