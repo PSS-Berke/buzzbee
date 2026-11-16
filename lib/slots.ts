@@ -37,6 +37,21 @@ export function latestBookingDate(): string {
   return showroomDatePlusDays(MAX_BOOKING_DAYS_AHEAD);
 }
 
+/**
+ * Why `date` (YYYY-MM-DD) can't be booked, or null if it can. Shared by
+ * /api/reserve and every booking form: a date input's min/max only limits the
+ * calendar popup, so a typed date or a phone's date wheel can still pick today.
+ */
+export function bookingDateError(date: string): string | null {
+  if (date < earliestBookingDate()) {
+    return 'Visits need to be booked at least a day ahead. Please choose tomorrow or later.';
+  }
+  if (date > latestBookingDate()) {
+    return `Please choose a date within the next ${MAX_BOOKING_DAYS_AHEAD} days.`;
+  }
+  return null;
+}
+
 function buildSlots(): string[] {
   const out: string[] = [];
   for (let h = FIRST_HOUR; h < LAST_HOUR; h++) {

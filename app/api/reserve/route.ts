@@ -3,7 +3,7 @@ import { canonicalizeEmail, isValidEmail, normalizePhone } from '@/lib/submissio
 import { elmhurstStore } from '@/data/store';
 import { insertReservation, SlotTakenError } from '@/lib/db';
 import { sendAdminReservationEmail, sendUserReservationEmail } from '@/lib/email';
-import { earliestBookingDate, isValidSlot, latestBookingDate, MAX_BOOKING_DAYS_AHEAD } from '@/lib/slots';
+import { bookingDateError, isValidSlot } from '@/lib/slots';
 import { isOpenSlot } from '@/lib/availability';
 import { getClientIp, rateLimit } from '@/lib/rate-limit';
 
@@ -114,12 +114,10 @@ export async function POST(req: NextRequest) {
   if (!date || !DATE_RE.test(date) || !isRealDate(date)) {
     return bad('Please choose a valid date.');
   }
-  // No same-day (or past) bookings: the earliest date is tomorrow, showroom time.
-  if (date < earliestBookingDate()) {
-    return bad('Visits need to be booked at least a day ahead. Please choose tomorrow or later.');
-  }
-  if (date > latestBookingDate()) {
-    return bad(`Please choose a date within the next ${MAX_BOOKING_DAYS_AHEAD} days.`);
+  // No same-day (or past) bookings, nothing past the booking window.
+  const dateError = bookingDateError(date);
+  if (dateError) {
+    return bad(dateError);
   }
   if (!isValidSlot(timeSlot)) {
     return bad('Please choose a valid time slot.');
