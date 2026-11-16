@@ -23,7 +23,12 @@ export function showroomToday(): string {
 
 /** `days` after today (YYYY-MM-DD) in the showroom's calendar. */
 export function showroomDatePlusDays(days: number): string {
-  const [y, m, d] = showroomToday().split('-').map(Number);
+  return addDays(showroomToday(), days);
+}
+
+/** `iso` (YYYY-MM-DD) moved by `days` calendar days. */
+export function addDays(iso: string, days: number): string {
+  const [y, m, d] = iso.split('-').map(Number);
   return new Date(Date.UTC(y, m - 1, d + days)).toISOString().slice(0, 10);
 }
 

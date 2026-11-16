@@ -1,9 +1,9 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
-import { formatSlot, showroomDatePlusDays } from '@/lib/slots';
+import { addDays, bookingDateError, formatSlot, showroomToday } from '@/lib/slots';
 import { isHeldBack, scheduledSlotsForDate } from '@/lib/availability';
 import { SOURCE_IN_PERSON } from '@/lib/consult';
 
@@ -26,8 +26,8 @@ function dayParts(iso: string) {
   return { weekday: fmt({ weekday: 'short' }), day: fmt({ day: 'numeric' }), long: fmt({ weekday: 'long', month: 'long', day: 'numeric' }) };
 }
 
-function upcomingDays(): string[] {
-  return Array.from({ length: DAYS_SHOWN }, (_, i) => showroomDatePlusDays(i + 1));
+function upcomingDays(today: string): string[] {
+  return Array.from({ length: DAYS_SHOWN }, (_, i) => addDays(today, i + 1));
 }
 
 // Why book, all as promised on /appointment. Studio Go is left out on purpose: it
@@ -122,7 +122,12 @@ export default function QuickBook() {
 }
 
 function Picker() {
-  const [days] = useState(upcomingDays);
+  // The showroom's today. A page left open past midnight rolls the strip forward
+  // (checked every minute and whenever the tab is shown again), so it never offers
+  // a day that has since become today.
+  const [today, setToday] = useState(showroomToday);
+  const todayRef = useRef(today);
+  const days = useMemo(() => upcomingDays(today), [today]);
   // null = still loading; a failed fetch falls back to [] so the picker stays usable
   // and the server's unique index still catches a clash at submit.
   const [booked, setBooked] = useState<Record<string, string[]> | null>(null);
@@ -130,15 +135,18 @@ function Picker() {
   const [slot, setSlot] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  // Shown when a submit finds its day has rolled into today; the contact form is
+  // hidden by then (no time is picked), so it can't carry the message itself.
+  const [notice, setNotice] = useState('');
   const [fieldErrors, setFieldErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const gclidRef = useRef('');
 
-  const loadBooked = async () => {
+  const loadBooked = async (forDays: string[]) => {
     const entries = await Promise.all(
-      days.map(async (d) => {
+      forDays.map(async (d) => {
         try {
           const res = await fetch(`/api/availability?date=${d}`);
           const json = (await res.json()) as { ok: boolean; booked?: string[] };
@@ -151,14 +159,41 @@ function Picker() {
     return Object.fromEntries(entries) as Record<string, string[]>;
   };
 
+  const rollOver = useCallback(() => {
+    const now = showroomToday();
+    if (now === todayRef.current) return;
+    todayRef.current = now;
+    setToday(now);
+    setBooked(null);
+    setDate('');
+    setSlot('');
+  }, []);
+
+  useEffect(() => {
+    const id = window.setInterval(rollOver, 60_000);
+    document.addEventListener('visibilitychange', rollOver);
+    return () => {
+      window.clearInterval(id);
+      document.removeEventListener('visibilitychange', rollOver);
+    };
+  }, [rollOver]);
+
+  // Load who's booked for the days shown, again whenever the strip rolls forward.
   useEffect(() => {
     let cancelled = false;
-    loadBooked().then((b) => {
+    loadBooked(days).then((b) => {
       if (cancelled) return;
       setBooked(b);
       // Open on the first day that still has a free time.
       setDate((current) => current || days.find((d) => slotsFor(d, b).some((s) => s.free)) || days[0]);
     });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [days]);
+
+  useEffect(() => {
     // Same Google Ads attribution as the full booking form (see ReserveForm).
     try {
       const fromUrl = new URLSearchParams(window.location.search).get('gclid');
@@ -167,10 +202,6 @@ function Picker() {
     } catch {
       /* sessionStorage unavailable — attribution is best effort */
     }
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function slotsFor(d: string, b: Record<string, string[]> | null = booked) {
@@ -200,6 +231,13 @@ function Picker() {
       return;
     }
 
+    // Midnight may have passed since the strip last rolled forward.
+    if (bookingDateError(date)) {
+      rollOver();
+      setNotice('That day can’t be booked anymore. Please pick another day and time.');
+      return;
+    }
+
     setStatus('submitting');
     setErrorMsg('');
     try {
@@ -223,7 +261,7 @@ function Picker() {
       if (!json.ok) {
         const taken = res.status === 409 || json.code === 'slot_taken';
         if (taken) {
-          setBooked(await loadBooked());
+          setBooked(await loadBooked(days));
           setSlot('');
         }
         setStatus('error');
@@ -300,7 +338,10 @@ function Picker() {
                 disabled={!free || booked === null}
                 aria-pressed={selected}
                 aria-label={free ? formatSlot(s) : `${formatSlot(s)}, unavailable`}
-                onClick={() => setSlot(s)}
+                onClick={() => {
+                  setSlot(s);
+                  setNotice('');
+                }}
                 className={`min-h-11 rounded-full border-2 px-2 text-sm transition-colors ${
                   !free
                     ? 'cursor-not-allowed border-gray-100 bg-gray-50 text-gray-400 line-through'
@@ -315,6 +356,12 @@ function Picker() {
           })}
         </div>
       </fieldset>
+
+      {notice && !slot && (
+        <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+          {notice}
+        </p>
+      )}
 
       {/* Contact — appears once a time is picked */}
       {slot && (
