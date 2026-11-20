@@ -13,6 +13,7 @@ import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot, isValidSlot } from '@/lib/slots';
 import { parseMode } from '@/lib/consult';
 import { Video } from 'lucide-react';
+import BookingConfirmedTracker from '@/components/booking/BookingConfirmedTracker';
 
 export const metadata: Metadata = {
   title: 'Your consultation is booked | Busby Elmhurst Showroom',
@@ -74,6 +75,7 @@ export default async function AppointmentConfirmedPage({
       />
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
+        <BookingConfirmedTracker date={date} slot={slot} mode={isVirtual ? 'virtual' : 'in-person'} />
         {/* ── Confirmation ── */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 bg-gold/15 rounded-2xl flex items-center justify-center mx-auto mb-6">
