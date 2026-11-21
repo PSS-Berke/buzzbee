@@ -163,7 +163,7 @@ body {
 .quilted-wave-overlay {
   position: fixed;
   inset: 0;
-  background-image: url('/patterns/quilted-wave.jpg');
+  background-image: url('/patterns/quilted-wave-tile.jpg'); /* 1000px tile, 2x the 500px display size */
   background-size: 500px;
   background-repeat: repeat;
   opacity: 0.025;
