@@ -81,10 +81,11 @@ function toConfirmation(
 }
 
 export async function POST(req: NextRequest) {
+  // The body can only be read once, so pick the parser from the content type.
+  // (Trying JSON first and falling back to formData() threw "Body has already
+  // been read", so every no-JS form post 500'd.)
   let payload: ReservePayload;
-  try {
-    payload = (await req.json()) as ReservePayload;
-  } catch {
+  if (isFormPost(req)) {
     const form = await req.formData();
     payload = {
       name: form.get('name')?.toString(),
@@ -99,6 +100,13 @@ export async function POST(req: NextRequest) {
       gclid: form.get('gclid')?.toString(),
       bb_check: form.get('bb_check')?.toString(),
     };
+  } else {
+    try {
+      payload = (await req.json()) as ReservePayload;
+      if (!payload || typeof payload !== 'object') throw new Error('not an object');
+    } catch {
+      return NextResponse.json({ ok: false, error: 'Invalid request body.' }, { status: 400 });
+    }
   }
 
   // Honeypot — bot filled the hidden field. Pretend success, do nothing.

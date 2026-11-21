@@ -57,10 +57,11 @@ function isFormPost(req: NextRequest): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  // The body can only be read once, so pick the parser from the content type.
+  // (Trying JSON first and falling back to formData() threw "Body has already
+  // been read", so every no-JS form post 500'd.)
   let payload: SubscribePayload;
-  try {
-    payload = (await req.json()) as SubscribePayload;
-  } catch {
+  if (isFormPost(req)) {
     const form = await req.formData();
     payload = {
       email: form.get('email')?.toString(),
@@ -70,6 +71,13 @@ export async function POST(req: NextRequest) {
       utm_campaign: form.get('utm_campaign')?.toString(),
       bb_check: form.get('bb_check')?.toString(),
     };
+  } else {
+    try {
+      payload = (await req.json()) as SubscribePayload;
+      if (!payload || typeof payload !== 'object') throw new Error('not an object');
+    } catch {
+      return NextResponse.json({ ok: false, error: 'Invalid request body.' }, { status: 400 });
+    }
   }
 
   // Honeypot — bot filled the hidden field. Pretend success, do nothing.
