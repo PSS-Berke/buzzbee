@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
-import https from 'https';
 import { resolveLineItem } from '@/data/products';
+import { getStripe } from '@/lib/stripe';
 
 export const runtime = 'nodejs';
-
-const stripeAgent = new https.Agent({ keepAlive: false });
 
 interface CheckoutItemInput {
   productId: string;
@@ -18,12 +15,10 @@ interface CheckoutItemInput {
 type Fulfillment = 'pickup' | 'delivery';
 
 export async function POST(req: NextRequest) {
-  if (!process.env.STRIPE_SECRET_KEY) {
+  const stripe = getStripe();
+  if (!stripe) {
     return NextResponse.json({ error: 'Stripe key not configured' }, { status: 500 });
   }
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    httpAgent: stripeAgent,
-  });
   try {
     const { items, email, fulfillment: rawFulfillment } = (await req.json()) as {
       items?: CheckoutItemInput[];
@@ -105,9 +100,11 @@ export async function POST(req: NextRequest) {
         enabled: true,
       },
       allow_promotion_codes: true,
+      // Stripe fills in {CHECKOUT_SESSION_ID}; the success page uses it to
+      // confirm payment before firing purchase analytics.
       success_url: fulfillment
-        ? `${origin}/checkout/success?fulfillment=${fulfillment}`
-        : `${origin}/checkout/success`,
+        ? `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&fulfillment=${fulfillment}`
+        : `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       // The Studio Go page is the only caller that sets fulfillment; send
       // shoppers who back out there instead of to the cart.
       cancel_url: fulfillment

@@ -4,7 +4,7 @@ import { env } from './env';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot } from './slots';
 import { isVirtualSource } from './consult';
-import { listNotificationRecipients } from './db';
+import { listNotificationRecipients, type OrderInput } from './db';
 import { formatPhone, isValidEmail } from './submissions';
 import { buildIcs, googleCalendarUrl, outlookCalendarUrl, type CalendarEvent } from './calendar';
 
@@ -1425,5 +1425,135 @@ export async function sendAdminReservationEmail(payload: ReservationPayload): Pr
       html,
       text,
     })
+  );
+}
+
+// ── Orders ──────────────────────────────────────────────────────────────────
+
+
+
+function formatMoney(cents: number, currency: string): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase() }).format(
+    cents / 100
+  );
+}
+
+function fulfillmentText(f: OrderInput['fulfillment']): string {
+  if (f === 'pickup') return 'Store pickup in Elmhurst (ready in 72 hours)';
+  if (f === 'delivery') return 'Local delivery (within 96 hours)';
+  return 'Shipping';
+}
+
+function addressLines(order: OrderInput): string[] {
+  const a = order.shipping_address;
+  if (!a) return [];
+  return [
+    a.line1,
+    a.line2,
+    [a.city, a.state].filter(Boolean).join(', ') + (a.postal_code ? ` ${a.postal_code}` : ''),
+  ].filter((l): l is string => !!l && l.trim() !== '');
+}
+
+const orderTextStyle =
+  "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#203552;font-size:15px;line-height:1.6;";
+
+function orderLinesHtml(order: OrderInput): string {
+  return order.line_items
+    .map(
+      (l) =>
+        `<tr><td style="${orderTextStyle}padding:4px 0;">${escapeHtml(l.name)} × ${l.quantity}</td>` +
+        `<td style="${orderTextStyle}padding:4px 0;text-align:right;">${escapeHtml(formatMoney(l.amount_total, order.currency))}</td></tr>`
+    )
+    .join('');
+}
+
+export function renderAdminOrderEmail(order: OrderInput): { subject: string; html: string; text: string } {
+  const total = formatMoney(order.amount_total, order.currency);
+  const subject = `New order: ${total}${order.name ? ` from ${order.name}` : ''}`;
+  const addr = addressLines(order);
+  const text = [
+    'New paid order',
+    '',
+    `Total:       ${total}`,
+    `Fulfillment: ${fulfillmentText(order.fulfillment)}`,
+    order.name ? `Name:        ${order.name}` : '',
+    order.email ? `Email:       ${order.email}` : '',
+    order.phone ? `Phone:       ${formatPhone(order.phone)}` : '',
+    addr.length ? `Address:     ${addr.join(', ')}` : '',
+    '',
+    ...order.line_items.map((l) => `  ${l.name} x ${l.quantity}  ${formatMoney(l.amount_total, order.currency)}`),
+    '',
+    `Stripe session: ${order.stripe_session_id}`,
+  ]
+    .filter((l, i, all) => l !== '' || (all[i - 1] ?? '') !== '')
+    .join('\n');
+  const html = `<div style="${orderTextStyle}">
+  <p><strong>New paid order — ${escapeHtml(total)}</strong></p>
+  <p>${escapeHtml(fulfillmentText(order.fulfillment))}<br/>
+  ${order.name ? `${escapeHtml(order.name)}<br/>` : ''}
+  ${order.email ? `${escapeHtml(order.email)}<br/>` : ''}
+  ${order.phone ? `${escapeHtml(formatPhone(order.phone))}<br/>` : ''}
+  ${addr.map(escapeHtml).join('<br/>')}</p>
+  <table cellpadding="0" cellspacing="0" style="width:100%;max-width:480px;">${orderLinesHtml(order)}</table>
+  <p style="color:#4a5568;font-size:13px;">Stripe session: ${escapeHtml(order.stripe_session_id)}</p>
+</div>`;
+  return { subject, html, text };
+}
+
+export function renderUserOrderEmail(order: OrderInput): { subject: string; html: string; text: string } {
+  const total = formatMoney(order.amount_total, order.currency);
+  const store = elmhurstStore;
+  const next =
+    order.fulfillment === 'pickup'
+      ? `Your order will be ready at our Elmhurst showroom, ${formatAddress(store.address)}, within 72 hours. We'll reach out to set a pickup time.`
+      : order.fulfillment === 'delivery'
+        ? "We'll reach out to set a delivery window. Delivery is within 96 hours."
+        : "We'll email you when your order ships.";
+  const subject = 'Your Busby order is confirmed';
+  const text = [
+    `Thanks${order.name ? `, ${order.name.split(' ')[0]}` : ''}. Your order is confirmed.`,
+    '',
+    ...order.line_items.map((l) => `${l.name} x ${l.quantity}  ${formatMoney(l.amount_total, order.currency)}`),
+    `Total: ${total}`,
+    '',
+    next,
+    '',
+    `Questions? Call us at ${store.phone}.`,
+  ].join('\n');
+  const html = `<div style="${orderTextStyle}max-width:520px;">
+  <h1 style="font-family:Georgia,serif;font-weight:normal;font-size:26px;margin:0 0 16px;">Your order is confirmed${order.name ? `, ${escapeHtml(order.name.split(' ')[0])}` : ''}.</h1>
+  <table cellpadding="0" cellspacing="0" style="width:100%;">${orderLinesHtml(order)}
+    <tr><td style="${orderTextStyle}padding-top:8px;border-top:1px solid #e2e8f0;"><strong>Total</strong></td>
+    <td style="${orderTextStyle}padding-top:8px;border-top:1px solid #e2e8f0;text-align:right;"><strong>${escapeHtml(total)}</strong></td></tr>
+  </table>
+  <p>${escapeHtml(next)}</p>
+  <p>Questions? Call us at <a href="tel:${escapeHtml(store.phoneE164)}" style="color:#203552;">${escapeHtml(store.phone)}</a>.</p>
+  <p style="color:#4a5568;font-size:13px;">${escapeHtml(store.name)} · ${escapeHtml(formatAddress(store.address))}</p>
+</div>`;
+  return { subject, html, text };
+}
+
+/** Team alert for a paid order. Goes to the same list as booking alerts. */
+export async function sendAdminOrderEmail(order: OrderInput): Promise<void> {
+  const to = await reservationRecipients();
+  if (to.length === 0) return;
+  const { subject, html, text } = renderAdminOrderEmail(order);
+  assertSent(
+    await client().emails.send({
+      from: env.EMAIL_FROM,
+      to,
+      ...(order.email ? { replyTo: order.email } : {}),
+      subject,
+      html,
+      text,
+    })
+  );
+}
+
+export async function sendUserOrderEmail(order: OrderInput): Promise<void> {
+  if (!order.email || !isValidEmail(order.email)) return;
+  const { subject, html, text } = renderUserOrderEmail(order);
+  assertSent(
+    await client().emails.send({ from: env.EMAIL_FROM, to: order.email, subject, html, text })
   );
 }

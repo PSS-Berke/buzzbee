@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
@@ -56,12 +56,37 @@ export default function CheckoutSuccessPage() {
 
 // Set by the Studio Go checkout, which offers store pickup or delivery.
 function FulfillmentNote() {
-  const fulfillment = useSearchParams().get('fulfillment');
+  const params = useSearchParams();
+  const fulfillment = params.get('fulfillment');
+  const sessionId = params.get('session_id');
   const isOffer = fulfillment === 'pickup' || fulfillment === 'delivery';
+  const fired = useRef(false);
 
+  // Fire the purchase event only once Stripe confirms this session was paid,
+  // so reloads, shared links and hand-typed URLs don't count as sales.
   useEffect(() => {
-    if (isOffer) window.gtag?.('event', 'grab_and_go_purchase', { fulfillment });
-  }, [isOffer, fulfillment]);
+    if (!isOffer || !sessionId || fired.current) return;
+    fired.current = true;
+    fetch(`/api/checkout/status?session_id=${encodeURIComponent(sessionId)}`)
+      .then((r) => r.json())
+      .then((s: { paid?: boolean; fulfillment?: string | null; value?: number; currency?: string }) => {
+        if (!s.paid) return;
+        const key = `bb_purchase_${sessionId}`;
+        try {
+          if (sessionStorage.getItem(key)) return;
+          sessionStorage.setItem(key, '1');
+        } catch {
+          // Storage blocked: still record the purchase once for this page view.
+        }
+        window.gtag?.('event', 'grab_and_go_purchase', {
+          fulfillment: s.fulfillment ?? fulfillment,
+          value: s.value,
+          currency: s.currency,
+          transaction_id: sessionId,
+        });
+      })
+      .catch(() => {});
+  }, [isOffer, sessionId, fulfillment]);
 
   if (!isOffer) return null;
 
