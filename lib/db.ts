@@ -324,3 +324,119 @@ export async function listAllReservations(): Promise<ReservationRow[]> {
     order by created_at desc
   `) as ReservationRow[];
 }
+
+// ── Orders (paid Stripe Checkout Sessions) ──────────────────────────────────
+
+export interface OrderLine {
+  name: string;
+  quantity: number;
+  amount_total: number; // cents, for the whole line
+}
+
+export interface OrderAddress {
+  line1: string | null;
+  line2: string | null;
+  city: string | null;
+  state: string | null;
+  postal_code: string | null;
+}
+
+export interface OrderInput {
+  stripe_session_id: string;
+  email: string | null;
+  name: string | null;
+  phone: string | null;
+  amount_total: number; // cents
+  currency: string;
+  fulfillment: 'pickup' | 'delivery' | 'ship';
+  shipping_address: OrderAddress | null;
+  line_items: OrderLine[];
+}
+
+export interface OrderRow extends OrderInput {
+  created_at: string;
+}
+
+/**
+ * Record a paid order. Returns false if this session was already recorded —
+ * Stripe retries webhooks, so callers send emails only when this is true.
+ */
+export async function insertOrder(input: OrderInput): Promise<boolean> {
+  const rows = (await sql()`
+    insert into orders (stripe_session_id, email, name, phone, amount_total, currency,
+                        fulfillment, shipping_address, line_items)
+    values (${input.stripe_session_id}, ${input.email}, ${input.name}, ${input.phone},
+            ${input.amount_total}, ${input.currency}, ${input.fulfillment},
+            ${input.shipping_address ? JSON.stringify(input.shipping_address) : null}::jsonb,
+            ${JSON.stringify(input.line_items)}::jsonb)
+    on conflict (stripe_session_id) do nothing
+    returning stripe_session_id
+  `) as Array<{ stripe_session_id: string }>;
+  return rows.length > 0;
+}
+
+/** Undo a recorded order so a failed webhook run can be retried by Stripe. */
+export async function deleteOrder(sessionId: string): Promise<void> {
+  await sql()`delete from orders where stripe_session_id = ${sessionId}`;
+}
+
+export async function listOrders(limit = 200): Promise<OrderRow[]> {
+  return (await sql()`
+    select stripe_session_id, email, name, phone, amount_total, currency, fulfillment,
+           shipping_address, line_items, created_at
+    from orders
+    order by created_at desc
+    limit ${limit}
+  `) as OrderRow[];
+}
+
+export async function listAllOrders(): Promise<OrderRow[]> {
+  return (await sql()`
+    select stripe_session_id, email, name, phone, amount_total, currency, fulfillment,
+           shipping_address, line_items, created_at
+    from orders
+    order by created_at desc
+  `) as OrderRow[];
+}
+
+// ── Customer-facing error log ───────────────────────────────────────────────
+
+export interface ErrorEventInput {
+  code: string;
+  form: string;
+  path: string | null;
+  email: string | null;
+  detail: string | null;
+}
+
+export interface ErrorEventRow extends ErrorEventInput {
+  id: number;
+  created_at: string;
+}
+
+export async function insertErrorEvent(input: ErrorEventInput): Promise<void> {
+  await sql()`
+    insert into error_events (code, form, path, email, detail)
+    values (${input.code}, ${input.form}, ${input.path}, ${input.email}, ${input.detail})
+  `;
+}
+
+export async function listErrorEvents(limit = 100): Promise<ErrorEventRow[]> {
+  return (await sql()`
+    select id, code, form, path, email, detail, created_at
+    from error_events
+    order by created_at desc
+    limit ${limit}
+  `) as ErrorEventRow[];
+}
+
+/** How often each code was shown, over the last `days` days. */
+export async function countErrorEvents(days = 7): Promise<Array<{ code: string; count: number }>> {
+  return (await sql()`
+    select code, count(*)::int as count
+    from error_events
+    where created_at > now() - make_interval(days => ${days})
+    group by code
+    order by count desc
+  `) as Array<{ code: string; count: number }>;
+}

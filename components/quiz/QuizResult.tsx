@@ -106,9 +106,7 @@ export default function QuizResult({ result, onRetake }: QuizResultProps) {
 
       <QuizEmailCapture
         productSlug={result.product}
-        productName={product.name}
         firmness={result.recommendedFirmness}
-        headline={result.headline}
       />
 
       <button

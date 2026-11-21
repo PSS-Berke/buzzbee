@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Loader2 } from 'lucide-react';
 import { SOURCE_VIRTUAL_NATIONAL } from '@/lib/consult';
+import { FRIENDLY_ERRORS } from '@/lib/friendly-errors';
+import { showError } from '@/lib/report-error';
 import { bookingDateError, earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
 import { chicagoWallClockToUtc } from '@/lib/calendar';
@@ -104,6 +106,8 @@ function localDayNote(date: string, slot: string): string | null {
   }
 }
 
+const FORM_NAME = 'virtual-consult-form';
+
 export default function VirtualConsultForm() {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -180,16 +184,21 @@ export default function VirtualConsultForm() {
     const phone = data.get('phone')?.toString().trim() || '';
 
     const errors: FieldErrors = {};
-    if (!name) errors.name = 'Please enter your name.';
+    if (!name) errors.name = FRIENDLY_ERRORS.name_missing;
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Please enter a valid email address.';
+      errors.email = FRIENDLY_ERRORS.email_invalid;
     }
     if (phone.replace(/\D/g, '').length < 10) {
-      errors.phone = 'Please enter a phone number we can reach you on.';
+      errors.phone = phone ? FRIENDLY_ERRORS.phone_invalid : FRIENDLY_ERRORS.phone_missing;
     }
     setFieldErrors(errors);
     if (errors.name || errors.email || errors.phone) {
       (errors.name ? nameRef : errors.email ? emailRef : phoneRef).current?.focus();
+      showError(
+        errors.name ? 'name_missing' : errors.email ? 'email_invalid' : phone ? 'phone_invalid' : 'phone_missing',
+        FORM_NAME,
+        { email }
+      );
       return;
     }
 
@@ -226,9 +235,7 @@ export default function VirtualConsultForm() {
         }
         setStatus('error');
         setErrorMsg(
-          res.status === 409 || json.code === 'slot_taken'
-            ? 'That time was just taken. Your selection was cleared, please pick another.'
-            : json.error || 'Something went wrong on our end. Try once more, or call (844) 886-1640.'
+          showError(res.status === 409 ? 'slot_taken' : json.code, FORM_NAME, { serverLogged: true })
         );
         return;
       }
@@ -239,7 +246,7 @@ export default function VirtualConsultForm() {
       globalThis.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
-      setErrorMsg('We couldn’t reach the server. Try once more, or call (844) 886-1640.');
+      setErrorMsg(showError('network_error', FORM_NAME, { email }));
     }
   };
 
@@ -380,13 +387,12 @@ export default function VirtualConsultForm() {
         )}
         {date && availabilityState === 'error' && openSlots.length > 0 && (
           <p className="text-sm text-red-600">
-            Couldn&rsquo;t load availability. Pick a time anyway and we&rsquo;ll confirm by email if
-            there&rsquo;s a clash.
+            {FRIENDLY_ERRORS.availability_unavailable}
           </p>
         )}
         {date && availabilityState !== 'loading' && openSlots.length === 0 && (
           <p className="text-sm text-gray-600">
-            No times are available that day. Please choose another.
+            No open times that day. Try another and we’ll fit you in.
           </p>
         )}
 

@@ -1,5 +1,12 @@
 import Link from 'next/link';
-import { listReservations, listSubscribes } from '@/lib/db';
+import {
+  countErrorEvents,
+  listErrorEvents,
+  listOrders,
+  listReservations,
+  listSubscribes,
+} from '@/lib/db';
+import { friendlyError } from '@/lib/friendly-errors';
 import { formatSlot } from '@/lib/slots';
 import { formatPhone } from '@/lib/submissions';
 
@@ -39,7 +46,21 @@ function fmtVisitDate(value: string | Date | null): string {
 }
 
 export default async function AdminPage() {
-  const [subs, reservs] = await Promise.all([listSubscribes(200), listReservations(200)]);
+  const [subs, reservs, orders, errorCounts, errorEvents] = await Promise.all([
+    listSubscribes(200),
+    listReservations(200),
+    // null until scripts/migrate-orders.mjs has created the table.
+    listOrders(200).catch((err) => {
+      console.error('[admin] could not load orders', err);
+      return null;
+    }),
+    // null until scripts/migrate-error-log.mjs has created the table.
+    countErrorEvents(7).catch(() => null),
+    listErrorEvents(100).catch((err) => {
+      console.error('[admin] could not load error events', err);
+      return null;
+    }),
+  ]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
@@ -65,6 +86,12 @@ export default async function AdminPage() {
               Notification recipients
             </Link>
             <a
+              href="/api/admin/export?type=orders"
+              className="px-4 py-2 bg-white border border-gray-200 text-navy rounded-full text-sm font-medium hover:bg-gray-50"
+            >
+              Export orders (CSV)
+            </a>
+            <a
               href="/api/admin/export?type=subscribes"
               className="px-4 py-2 bg-navy text-white rounded-full text-sm font-medium hover:bg-navy/90"
             >
@@ -78,6 +105,140 @@ export default async function AdminPage() {
             </a>
           </div>
         </header>
+
+        <section className="mb-12">
+          <h2 className="text-xl font-serif text-navy mb-3">
+            Orders{' '}
+            <span className="text-gray-600 text-base">({orders ? orders.length : '—'})</span>
+          </h2>
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label="Orders table"
+            className="bg-white rounded-xl border border-gray-200 overflow-x-auto"
+          >
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-200 text-left">
+                <tr>
+                  <th className="px-4 py-3 font-semibold text-navy">When</th>
+                  <th className="px-4 py-3 font-semibold text-navy">Customer</th>
+                  <th className="px-4 py-3 font-semibold text-navy">Items</th>
+                  <th className="px-4 py-3 font-semibold text-navy">Fulfillment</th>
+                  <th className="px-4 py-3 font-semibold text-navy text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders === null && (
+                  <tr>
+                    <td colSpan={5} className="px-4 py-8 text-center text-gray-600">
+                      Orders table not found. Run <code>scripts/migrate-orders.mjs</code>.
+                    </td>
+                  </tr>
+                )}
+                {orders?.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="px-4 py-8 text-center text-gray-600">
+                      No orders recorded yet.
+                    </td>
+                  </tr>
+                )}
+                {orders?.map((o) => (
+                  <tr key={o.stripe_session_id} className="border-b border-gray-100 last:border-0 align-top">
+                    <td className="px-4 py-2.5 text-gray-600 whitespace-nowrap">{fmtDate(o.created_at)}</td>
+                    <td className="px-4 py-2.5">
+                      <div className="font-medium text-navy">{o.name || '—'}</div>
+                      <div className="text-gray-600 text-xs">
+                        {[o.email, o.phone ? formatPhone(o.phone) : null].filter(Boolean).join(' · ')}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5 text-gray-600">
+                      {o.line_items.map((l) => `${l.name} × ${l.quantity}`).join(', ')}
+                    </td>
+                    <td className="px-4 py-2.5 text-gray-600 capitalize">{o.fulfillment}</td>
+                    <td className="px-4 py-2.5 text-navy font-medium text-right whitespace-nowrap">
+                      {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: o.currency.toUpperCase(),
+                      }).format(o.amount_total / 100)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="mb-12">
+          <h2 className="text-xl font-serif text-navy mb-1">Errors customers saw</h2>
+          <p className="text-sm text-gray-600 mb-3">
+            Every error message shown on the site. Last 7 days by type, then the latest 100.
+          </p>
+          {errorEvents === null ? (
+            <p className="bg-white rounded-xl border border-gray-200 px-4 py-8 text-center text-gray-600 text-sm">
+              Error log table not found. Run <code>scripts/migrate-error-log.mjs</code>.
+            </p>
+          ) : (
+            <>
+              {errorCounts && errorCounts.length > 0 && (
+                <ul className="flex flex-wrap gap-2 mb-4">
+                  {errorCounts.map((c) => (
+                    <li
+                      key={c.code}
+                      title={friendlyError(c.code)}
+                      className="px-3 py-1.5 bg-white border border-gray-200 rounded-full text-sm text-navy"
+                    >
+                      <span className="font-semibold">{c.count}</span> × {c.code}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div
+                tabIndex={0}
+                role="region"
+                aria-label="Error log table"
+                className="bg-white rounded-xl border border-gray-200 overflow-x-auto"
+              >
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 border-b border-gray-200 text-left">
+                    <tr>
+                      <th className="px-4 py-3 font-semibold text-navy">When</th>
+                      <th className="px-4 py-3 font-semibold text-navy">Error</th>
+                      <th className="px-4 py-3 font-semibold text-navy">Where</th>
+                      <th className="px-4 py-3 font-semibold text-navy">Email</th>
+                      <th className="px-4 py-3 font-semibold text-navy">Detail</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {errorEvents.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="px-4 py-8 text-center text-gray-600">
+                          No errors recorded. Sweet dreams.
+                        </td>
+                      </tr>
+                    )}
+                    {errorEvents.map((e) => (
+                      <tr key={e.id} className="border-b border-gray-100 last:border-0 align-top">
+                        <td className="px-4 py-2.5 text-gray-600 whitespace-nowrap">{fmtDate(e.created_at)}</td>
+                        <td className="px-4 py-2.5">
+                          <div className="font-medium text-navy">{e.code}</div>
+                          <div className="text-gray-600 text-xs max-w-xs">{friendlyError(e.code)}</div>
+                        </td>
+                        <td className="px-4 py-2.5 text-gray-600">
+                          {e.form}
+                          {e.path && <div className="text-xs">{e.path}</div>}
+                        </td>
+                        <td className="px-4 py-2.5 text-gray-600">{e.email || '—'}</td>
+                        <td className="px-4 py-2.5 text-gray-600 text-xs max-w-sm break-words">
+                          {e.detail || '—'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </section>
 
         <section className="mb-12">
           <h2 className="text-xl font-serif text-navy mb-3">

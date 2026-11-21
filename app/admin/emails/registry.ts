@@ -1,12 +1,15 @@
 import 'server-only';
 import {
+  renderAdminOrderEmail,
   renderAdminReservationEmail,
+  renderUserOrderEmail,
   renderUserReminderEmail,
   renderUserReservationEmail,
   renderUserSleepGuideEmail,
   renderUserStartingSoonEmail,
 } from '@/lib/email';
 import {
+  SAMPLE_ORDER,
   SAMPLE_RESERVATION,
   SAMPLE_SLEEP_GUIDE_TO,
 } from '@/lib/email-fixtures';
@@ -57,6 +60,20 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     recipient: 'RESERVATIONS_INBOX_EMAIL (team)',
     trigger: 'POST /api/reserve (every booking)',
     render: () => renderAdminReservationEmail(SAMPLE_RESERVATION),
+  },
+  'user-order': {
+    title: 'User — order confirmation',
+    description: 'Sent when Stripe reports a paid checkout: items, total, and pickup/delivery next steps.',
+    recipient: 'Customer (Stripe checkout email)',
+    trigger: 'POST /api/stripe/webhook (checkout paid)',
+    render: () => renderUserOrderEmail(SAMPLE_ORDER),
+  },
+  'admin-order': {
+    title: 'Internal — new order notification',
+    description: 'Sent to the booking-alert list on every paid order. Reply-to is the customer.',
+    recipient: 'Notification recipients (team)',
+    trigger: 'POST /api/stripe/webhook (checkout paid)',
+    render: () => renderAdminOrderEmail(SAMPLE_ORDER),
   },
 };
 

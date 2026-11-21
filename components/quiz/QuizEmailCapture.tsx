@@ -2,6 +2,7 @@
 
 import { FormEvent, useRef, useState } from 'react';
 import { Check, Loader2, Mail } from 'lucide-react';
+import { showError } from '@/lib/report-error';
 
 declare global {
   interface Window {
@@ -13,9 +14,7 @@ type Status = 'idle' | 'submitting' | 'done' | 'error';
 
 interface QuizEmailCaptureProps {
   productSlug: string;
-  productName: string;
   firmness: string;
-  headline: string;
 }
 
 /**
@@ -29,9 +28,7 @@ interface QuizEmailCaptureProps {
  */
 export default function QuizEmailCapture({
   productSlug,
-  productName,
   firmness,
-  headline,
 }: QuizEmailCaptureProps) {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -44,7 +41,7 @@ export default function QuizEmailCapture({
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setStatus('error');
-      setErrorMsg('Please enter a valid email address.');
+      setErrorMsg(showError('email_invalid', 'quiz-email', { email }));
       inputRef.current?.focus();
       return;
     }
@@ -60,13 +57,14 @@ export default function QuizEmailCapture({
           email,
           source: 'quiz-result',
           bb_check: data.get('bb_check')?.toString() || '',
-          quiz: { productSlug, productName, firmness, headline },
+          // The server rebuilds the name and headline from the slug.
+          quiz: { productSlug, firmness },
         }),
       });
-      const json = (await res.json()) as { ok: boolean; error?: string };
+      const json = (await res.json()) as { ok: boolean; error?: string; code?: string };
       if (!json.ok) {
         setStatus('error');
-        setErrorMsg(json.error || 'Something went wrong. Try once more.');
+        setErrorMsg(showError(json.code, 'quiz-email', { serverLogged: true }));
         return;
       }
       // Secondary conversion only. Never make this a primary bidding target —
@@ -75,7 +73,7 @@ export default function QuizEmailCapture({
       setStatus('done');
     } catch {
       setStatus('error');
-      setErrorMsg('We couldn’t reach the server. Try once more.');
+      setErrorMsg(showError('network_error', 'quiz-email', { email }));
     }
   };
 

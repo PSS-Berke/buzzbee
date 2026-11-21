@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
-import https from 'https';
 import { resolveLineItem } from '@/data/products';
+import { getStripe } from '@/lib/stripe';
+import { friendlyError, type ErrorCode } from '@/lib/friendly-errors';
+import { recordError } from '@/lib/error-log';
 
 export const runtime = 'nodejs';
-
-const stripeAgent = new https.Agent({ keepAlive: false });
 
 interface CheckoutItemInput {
   productId: string;
@@ -17,13 +16,19 @@ interface CheckoutItemInput {
 // today; the regular cart leaves it unset and always ships.
 type Fulfillment = 'pickup' | 'delivery';
 
+// Customers only ever see the friendly message; the technical reason goes to
+// the /admin error log.
+async function fail(req: NextRequest, code: ErrorCode, status: number, form: string, detail: string) {
+  await recordError(req, code, form, { detail });
+  return NextResponse.json({ code, error: friendlyError(code) }, { status });
+}
+
 export async function POST(req: NextRequest) {
-  if (!process.env.STRIPE_SECRET_KEY) {
-    return NextResponse.json({ error: 'Stripe key not configured' }, { status: 500 });
+  const stripe = getStripe();
+  if (!stripe) {
+    return fail(req, 'checkout_failed', 500, 'checkout', 'STRIPE_SECRET_KEY not configured');
   }
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    httpAgent: stripeAgent,
-  });
+  let form = 'checkout';
   try {
     const { items, email, fulfillment: rawFulfillment } = (await req.json()) as {
       items?: CheckoutItemInput[];
@@ -31,13 +36,14 @@ export async function POST(req: NextRequest) {
       fulfillment?: string;
     };
 
+    if (rawFulfillment !== undefined) form = 'studio-go-checkout';
     if (rawFulfillment !== undefined && rawFulfillment !== 'pickup' && rawFulfillment !== 'delivery') {
-      return NextResponse.json({ error: 'Invalid fulfillment option' }, { status: 400 });
+      return fail(req, 'bad_request', 400, form, `bad fulfillment: ${String(rawFulfillment).slice(0, 40)}`);
     }
     const fulfillment = rawFulfillment as Fulfillment | undefined;
 
     if (!Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: 'Cart is empty' }, { status: 400 });
+      return fail(req, 'cart_empty', 400, form, 'no items');
     }
 
     const origin = req.nextUrl.origin;
@@ -54,10 +60,11 @@ export async function POST(req: NextRequest) {
     );
 
     if (resolved.some((r) => r === null)) {
-      return NextResponse.json(
-        { error: 'One or more items are invalid or unavailable' },
-        { status: 400 }
-      );
+      const badItems = items
+        .filter((_, i) => resolved[i] === null)
+        .map((it) => `${String(it?.productId).slice(0, 40)}/${String(it?.size).slice(0, 20)}x${String(it?.quantity).slice(0, 5)}`)
+        .join(', ');
+      return fail(req, 'item_unavailable', 400, form, `unresolvable: ${badItems}`);
     }
 
     const line_items = resolved.map((item) => ({
@@ -105,9 +112,11 @@ export async function POST(req: NextRequest) {
         enabled: true,
       },
       allow_promotion_codes: true,
+      // Stripe fills in {CHECKOUT_SESSION_ID}; the success page uses it to
+      // confirm payment before firing purchase analytics.
       success_url: fulfillment
-        ? `${origin}/checkout/success?fulfillment=${fulfillment}`
-        : `${origin}/checkout/success`,
+        ? `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}&fulfillment=${fulfillment}`
+        : `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       // The Studio Go page is the only caller that sets fulfillment; send
       // shoppers who back out there instead of to the cart.
       cancel_url: fulfillment
@@ -118,9 +127,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error('Stripe checkout error:', error);
-    return NextResponse.json(
-      { error: 'Failed to create checkout session' },
-      { status: 500 }
+    return fail(
+      req,
+      'checkout_failed',
+      500,
+      form,
+      `stripe: ${error instanceof Error ? error.message : String(error)}`
     );
   }
 }

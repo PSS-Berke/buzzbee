@@ -11,9 +11,9 @@ export default function NotFound() {
     <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <p className="text-gold font-semibold text-sm uppercase tracking-widest mb-4">404</p>
-        <h1 className="text-4xl font-serif text-navy mb-4">Page Not Found</h1>
+        <h1 className="text-4xl font-serif text-navy mb-4">This page must be sleepwalking.</h1>
         <p className="text-gray-600 mb-8">
-          The page you were looking for doesn&apos;t exist. Let&apos;s get you back to better sleep.
+          We couldn&apos;t find what you were looking for. Let&apos;s get you back to better sleep.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

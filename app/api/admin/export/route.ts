@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { listAllReservations, listAllSubscribes } from '@/lib/db';
+import { listAllOrders, listAllReservations, listAllSubscribes } from '@/lib/db';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -10,6 +10,10 @@ function csvCell(value: unknown): string {
   if (value instanceof Date) s = value.toISOString();
   else if (Array.isArray(value)) s = value.join('; ');
   else s = String(value);
+  // Names and notes come from public forms. A cell starting with = + - @ (or a
+  // tab/CR that some apps skip past) runs as a formula when staff open the file
+  // in Excel or Sheets, so prefix it with ' to keep it plain text.
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   if (/[",\r\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
   return s;
 }
@@ -44,6 +48,36 @@ export async function GET(req: NextRequest) {
     return csvResponse(`subscribes-${today}.csv`, csv);
   }
 
+  if (type === 'orders') {
+    const rows = (await listAllOrders()).map((o) => ({
+      created_at: o.created_at,
+      name: o.name,
+      email: o.email,
+      phone: o.phone,
+      total: (o.amount_total / 100).toFixed(2),
+      currency: o.currency.toUpperCase(),
+      fulfillment: o.fulfillment,
+      items: o.line_items.map((l) => `${l.name} x ${l.quantity}`),
+      address: o.shipping_address
+        ? [
+            o.shipping_address.line1,
+            o.shipping_address.line2,
+            o.shipping_address.city,
+            o.shipping_address.state,
+            o.shipping_address.postal_code,
+          ]
+            .filter(Boolean)
+            .join(', ')
+        : '',
+      stripe_session_id: o.stripe_session_id,
+    }));
+    const csv = toCsv(
+      ['created_at', 'name', 'email', 'phone', 'total', 'currency', 'fulfillment', 'items', 'address', 'stripe_session_id'],
+      rows
+    );
+    return csvResponse(`orders-${today}.csv`, csv);
+  }
+
   if (type === 'reservations') {
     const rows = await listAllReservations();
     const csv = toCsv(
@@ -65,7 +99,7 @@ export async function GET(req: NextRequest) {
   }
 
   return NextResponse.json(
-    { ok: false, error: 'Pass ?type=subscribes or ?type=reservations.' },
+    { ok: false, error: 'Pass ?type=orders, ?type=subscribes or ?type=reservations.' },
     { status: 400 }
   );
 }

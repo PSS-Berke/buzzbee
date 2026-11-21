@@ -7,6 +7,7 @@ import { ArrowLeft, ArrowRight, ShoppingBag, Lock } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import WasPrice from '@/components/product/WasPrice';
 import { regularPriceFor } from '@/data/products';
+import { showError } from '@/lib/report-error';
 
 export default function CheckoutPage() {
   const { state, subtotal } = useCart();
@@ -35,15 +36,18 @@ export default function CheckoutPage() {
         body: JSON.stringify({ items, email }),
       });
 
-      const data = await res.json();
+      const data = (await res.json()) as { url?: string; code?: string };
 
       if (!res.ok || !data.url) {
-        throw new Error(data.error || 'Something went wrong');
+        // The server logged the real reason; the shopper gets the friendly one.
+        setError(showError(data.code ?? 'checkout_failed', 'checkout', { email, serverLogged: res.ok === false }));
+        setLoading(false);
+        return;
       }
 
       window.location.href = data.url;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } catch {
+      setError(showError('network_error', 'checkout', { email }));
       setLoading(false);
     }
   };

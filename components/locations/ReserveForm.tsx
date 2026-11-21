@@ -5,6 +5,8 @@ import { Check, Store, Video } from 'lucide-react';
 import { bookingDateError, earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
 import { type ConsultMode, SOURCE_IN_PERSON, SOURCE_VIRTUAL } from '@/lib/consult';
+import { FRIENDLY_ERRORS, friendlyError, isErrorCode } from '@/lib/friendly-errors';
+import { showError } from '@/lib/report-error';
 
 declare global {
   interface Window {
@@ -48,6 +50,8 @@ const MODES: {
 // form stays in 'submitting' until the browser leaves the page.
 type Status = 'idle' | 'submitting' | 'error';
 
+const FORM_NAME = 'appointment-form';
+
 export default function ReserveForm() {
   // In-person is the default: the showroom is the thing we actually have, and
   // walking in is what has produced sales. Video is the lower-friction fallback
@@ -75,6 +79,17 @@ export default function ReserveForm() {
     const picks = requested.split(',').filter((m) => mattressOptions.includes(m));
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (picks.length) setToTry(picks);
+  }, []);
+
+  // A form submitted before the page hydrated posts natively; on failure the
+  // server sends it back here with ?reserve=<error code> (already logged). Show why.
+  useEffect(() => {
+    const flag = new URLSearchParams(window.location.search).get('reserve');
+    if (isErrorCode(flag)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setStatus('error');
+      setErrorMsg(friendlyError(flag));
+    }
   }, []);
 
   // Capture the Google Ads click id so every booking can be traced back to the
@@ -144,21 +159,26 @@ export default function ReserveForm() {
     const email = data.get('email')?.toString().trim() || '';
     const phone = data.get('phone')?.toString().trim() || '';
     const errors: { name?: string; email?: string; phone?: string } = {};
-    if (!name) errors.name = 'Please enter your name.';
+    if (!name) errors.name = FRIENDLY_ERRORS.name_missing;
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Please enter a valid email address.';
+      errors.email = FRIENDLY_ERRORS.email_invalid;
     }
     // Mirrors normalizePhone() on the server — 10 NANP digits, optional +1.
     const phoneDigits = phone.replace(/\D/g, '');
     const phoneNational =
       phoneDigits.length === 11 && phoneDigits.startsWith('1') ? phoneDigits.slice(1) : phoneDigits;
     if (!phone) {
-      errors.phone = 'Please enter a phone number.';
+      errors.phone = FRIENDLY_ERRORS.phone_missing;
     } else if (!/^[2-9]\d{2}[2-9]\d{6}$/.test(phoneNational)) {
-      errors.phone = 'Please enter a valid 10-digit US phone number.';
+      errors.phone = FRIENDLY_ERRORS.phone_invalid;
     }
     setFieldErrors(errors);
     if (errors.name || errors.email || errors.phone) {
+      showError(
+        errors.name ? 'name_missing' : errors.email ? 'email_invalid' : phone ? 'phone_invalid' : 'phone_missing',
+        FORM_NAME,
+        { email }
+      );
       (errors.name ? nameInputRef : errors.email ? emailInputRef : phoneInputRef).current?.focus();
       return;
     }
@@ -195,10 +215,7 @@ export default function ReserveForm() {
         }
         setStatus('error');
         setErrorMsg(
-          res.status === 409 || json.code === 'slot_taken'
-            ? 'That time was just taken by someone else — your selection was cleared, please pick another slot.'
-            : json.error ||
-                'Something went wrong on our end. Try once more, or email showroom@mybusby.com.'
+          showError(res.status === 409 ? 'slot_taken' : json.code, FORM_NAME, { serverLogged: true })
         );
         return;
       }
@@ -216,7 +233,7 @@ export default function ReserveForm() {
       window.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
-      setErrorMsg('We couldn’t reach the server. Try once more, or email showroom@mybusby.com.');
+      setErrorMsg(showError('network_error', FORM_NAME, { email }));
     }
   };
 
@@ -376,12 +393,12 @@ export default function ReserveForm() {
         )}
         {date && availabilityState === 'error' && openSlots.length > 0 && (
           <p className="text-sm text-red-600">
-            Couldn’t load availability. Pick a time anyway and we’ll confirm by email if there’s a clash.
+            {FRIENDLY_ERRORS.availability_unavailable}
           </p>
         )}
         {date && availabilityState !== 'loading' && openSlots.length === 0 && (
           <p className="text-sm text-gray-600">
-            No appointment times are available on this date. Please choose another day.
+            No open times that day. Try another and we’ll fit you in.
           </p>
         )}
         {date && openSlots.length > 0 && (

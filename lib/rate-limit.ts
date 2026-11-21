@@ -17,7 +17,9 @@ export const LIMITS = {
   subscribe: { limit: 8, windowSec: 600 }, // 8 / 10 min per IP
   reserve: { limit: 6, windowSec: 600 }, // 6 / 10 min per IP
   reserveEmail: { limit: 5, windowSec: 86_400 }, // 5 / day per recipient address
+  quizEmail: { limit: 3, windowSec: 86_400 }, // 3 / day per recipient address
   availability: { limit: 60, windowSec: 60 }, // 60 / min per IP (fires on each date change)
+  errorLog: { limit: 30, windowSec: 600 }, // 30 / 10 min per IP: caps error_events writes
 } as const;
 
 /**
