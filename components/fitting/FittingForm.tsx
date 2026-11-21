@@ -3,6 +3,8 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { bookingDateError, earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
+import { FRIENDLY_ERRORS } from '@/lib/friendly-errors';
+import { showError } from '@/lib/report-error';
 import { useAvailability } from '@/hooks/useAvailability';
 
 declare global {
@@ -18,6 +20,8 @@ interface FieldErrors {
   phone?: string;
   email?: string;
 }
+
+const FORM_NAME = 'fitting-form';
 
 export default function FittingForm() {
   const [status, setStatus] = useState<Status>('idle');
@@ -64,16 +68,21 @@ export default function FittingForm() {
     const email = data.get('email')?.toString().trim() || '';
 
     const errors: FieldErrors = {};
-    if (!name) errors.name = 'Please enter your name.';
+    if (!name) errors.name = FRIENDLY_ERRORS.name_missing;
     if (phone.replace(/\D/g, '').length < 10) {
-      errors.phone = 'Please enter a phone number we can reach you on.';
+      errors.phone = phone ? FRIENDLY_ERRORS.phone_invalid : FRIENDLY_ERRORS.phone_missing;
     }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Please enter a valid email address.';
+      errors.email = FRIENDLY_ERRORS.email_invalid;
     }
     setFieldErrors(errors);
     if (errors.name || errors.phone || errors.email) {
       (errors.name ? nameRef : errors.phone ? phoneRef : emailRef).current?.focus();
+      showError(
+        errors.name ? 'name_missing' : errors.phone ? (phone ? 'phone_invalid' : 'phone_missing') : 'email_invalid',
+        FORM_NAME,
+        { email }
+      );
       return;
     }
 
@@ -108,9 +117,7 @@ export default function FittingForm() {
         }
         setStatus('error');
         setErrorMsg(
-          res.status === 409 || json.code === 'slot_taken'
-            ? 'That time was just taken. Your selection was cleared, please pick another.'
-            : json.error || 'Something went wrong on our end. Try once more, or call (844) 886-1640.'
+          showError(res.status === 409 ? 'slot_taken' : json.code, FORM_NAME, { serverLogged: true })
         );
         return;
       }
@@ -121,7 +128,7 @@ export default function FittingForm() {
       globalThis.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
-      setErrorMsg('We couldn’t reach the server. Try once more, or call (844) 886-1640.');
+      setErrorMsg(showError('network_error', FORM_NAME, { email }));
     }
   };
 
@@ -249,8 +256,7 @@ export default function FittingForm() {
         )}
         {date && availability === 'error' && openSlots.length > 0 && (
           <p className="text-sm text-red-600">
-            Couldn&rsquo;t load availability. Pick a time anyway and we&rsquo;ll confirm by email if
-            there&rsquo;s a clash.
+            {FRIENDLY_ERRORS.availability_unavailable}
           </p>
         )}
         {date && availability !== 'loading' && openSlots.length === 0 && (

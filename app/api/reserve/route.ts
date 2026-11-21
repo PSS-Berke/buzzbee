@@ -3,7 +3,9 @@ import { canonicalizeEmail, isValidEmail, normalizePhone } from '@/lib/submissio
 import { elmhurstStore } from '@/data/store';
 import { insertReservation, SlotTakenError } from '@/lib/db';
 import { sendAdminReservationEmail, sendUserReservationEmail } from '@/lib/email';
-import { bookingDateError, isValidSlot } from '@/lib/slots';
+import { bookingDateErrorCode, isValidSlot } from '@/lib/slots';
+import { friendlyError, type ErrorCode } from '@/lib/friendly-errors';
+import { recordError } from '@/lib/error-log';
 import { isOpenSlot } from '@/lib/availability';
 import { getClientIp, rateLimit } from '@/lib/rate-limit';
 import { modeFromSource } from '@/lib/consult';
@@ -47,9 +49,9 @@ function isFormPost(req: NextRequest): boolean {
 }
 
 // No-JS form posts land back on the page they came from (same-origin Referer
-// only, so this can't be used as an open redirect), with ?reserve=<flag>.
+// only, so this can't be used as an open redirect), with ?reserve=<error code>.
 // Falls back to /appointment, where the booking form lives.
-function backToForm(req: NextRequest, flag: 'error' | 'slot_taken' | 'rate'): NextResponse {
+function backToForm(req: NextRequest, flag: ErrorCode): NextResponse {
   let path = '/appointment';
   const referer = req.headers.get('referer');
   if (referer) {
@@ -105,7 +107,11 @@ export async function POST(req: NextRequest) {
       payload = (await req.json()) as ReservePayload;
       if (!payload || typeof payload !== 'object') throw new Error('not an object');
     } catch {
-      return NextResponse.json({ ok: false, error: 'Invalid request body.' }, { status: 400 });
+      await recordError(req, 'bad_request', 'reserve', { detail: 'unparseable JSON body' });
+      return NextResponse.json(
+        { ok: false, code: 'bad_request', error: friendlyError('bad_request') },
+        { status: 400 }
+      );
     }
   }
 
@@ -119,11 +125,12 @@ export async function POST(req: NextRequest) {
 
   const rl = await rateLimit('reserve', getClientIp(req));
   if (!rl.allowed) {
+    await recordError(req, 'too_many_tries', 'reserve', { email: payload.email });
     if (isFormPost(req)) {
-      return backToForm(req, 'rate');
+      return backToForm(req, 'too_many_tries');
     }
     return NextResponse.json(
-      { ok: false, error: 'Too many requests. Please wait a moment and try again.' },
+      { ok: false, code: 'too_many_tries', error: friendlyError('too_many_tries') },
       { status: 429, headers: { 'Retry-After': String(rl.resetSec) } }
     );
   }
@@ -141,21 +148,27 @@ export async function POST(req: NextRequest) {
   // null date/slot; the partial unique index tolerates them.
   const normalizedEmail = email?.trim().toLowerCase() ?? '';
 
-  // Invalid input → 400 (JSON) or back to the page with an error flag (no-JS form).
-  const bad = (msg: string) =>
-    isFormPost(req)
-      ? backToForm(req, 'error')
-      : NextResponse.json({ ok: false, error: msg }, { status: 400 });
+  // Invalid input → 400 (JSON) or back to the page with the code (no-JS form).
+  // Every one is logged so /admin shows where people get stuck.
+  const bad = async (code: ErrorCode, detail?: string) => {
+    await recordError(req, code, source?.trim() || 'reserve', { email: normalizedEmail, detail });
+    return isFormPost(req)
+      ? backToForm(req, code)
+      : NextResponse.json({ ok: false, code, error: friendlyError(code) }, { status: 400 });
+  };
 
-  if (!name?.trim() || !normalizedEmail || !isValidEmail(normalizedEmail)) {
-    return bad('Name and a valid email are required.');
+  if (!name?.trim()) {
+    return bad('name_missing');
+  }
+  if (!normalizedEmail || !isValidEmail(normalizedEmail)) {
+    return bad('email_invalid');
   }
 
   // Phone is required — it's how the showroom chases no-shows and reaches
   // someone who's running late. Stored E.164 so it's dialable as-is.
   const normalizedPhone = normalizePhone(phone ?? '');
   if (!normalizedPhone) {
-    return bad('Please enter a valid 10-digit US phone number.');
+    return bad(phone?.trim() ? 'phone_invalid' : 'phone_missing');
   }
 
   // Date and slot are REQUIRED and validated here. They can't be optional: the
@@ -163,21 +176,21 @@ export async function POST(req: NextRequest) {
   // date+slot collide), so a null/invalid pair would insert an unconstrained row
   // on every request — previously an unlimited booking + confirmation-email flood.
   if (!date || !DATE_RE.test(date) || !isRealDate(date)) {
-    return bad('Please choose a valid date.');
+    return bad('date_missing', date ? `bad date: ${date}` : undefined);
   }
   // No same-day (or past) bookings, nothing past the booking window.
-  const dateError = bookingDateError(date);
+  const dateError = bookingDateErrorCode(date);
   if (dateError) {
-    return bad(dateError);
+    return bad(dateError, date);
   }
   if (!isValidSlot(timeSlot)) {
-    return bad('Please choose a valid time slot.');
+    return bad('slot_missing', timeSlot ? `bad slot: ${timeSlot}` : undefined);
   }
   // The slot must also be one the showroom is open for on that date (schedule
   // layer, separate from double-booking). Guards against stale forms, direct
   // POSTs to a closed time, and dates closed after someone loaded the page.
   if (!isOpenSlot(date, timeSlot)) {
-    return bad('That time isn’t available on the selected date. Please choose an open slot.');
+    return bad('slot_closed', `${date} ${timeSlot}`);
   }
 
   // Stash the Google Ads click id alongside the notes. The reservations table
@@ -212,18 +225,26 @@ export async function POST(req: NextRequest) {
     await insertReservation(record);
   } catch (err) {
     if (err instanceof SlotTakenError) {
+      await recordError(req, 'slot_taken', record.source, {
+        email: normalizedEmail,
+        detail: `${date} ${timeSlot}`,
+      });
       if (isFormPost(req)) return backToForm(req, 'slot_taken');
       return NextResponse.json(
-        { ok: false, error: 'That time was just booked. Please pick another.', code: 'slot_taken' },
+        { ok: false, code: 'slot_taken', error: friendlyError('slot_taken') },
         { status: 409 }
       );
     }
     console.error('[reserve] db insert failed', err);
+    await recordError(req, 'server_error', record.source, {
+      email: normalizedEmail,
+      detail: `insert failed: ${err instanceof Error ? err.message : String(err)}`,
+    });
     if (isFormPost(req)) {
-      return backToForm(req, 'error');
+      return backToForm(req, 'server_error');
     }
     return NextResponse.json(
-      { ok: false, error: 'Something on our end. Try again in a moment.' },
+      { ok: false, code: 'server_error', error: friendlyError('server_error') },
       { status: 500 }
     );
   }

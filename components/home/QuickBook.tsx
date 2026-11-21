@@ -6,6 +6,8 @@ import { ArrowRight, Check } from 'lucide-react';
 import { addDays, bookingDateError, formatSlot, showroomToday } from '@/lib/slots';
 import { isHeldBack, scheduledSlotsForDate } from '@/lib/availability';
 import { SOURCE_IN_PERSON } from '@/lib/consult';
+import { FRIENDLY_ERRORS } from '@/lib/friendly-errors';
+import { showError } from '@/lib/report-error';
 
 declare global {
   interface Window {
@@ -46,6 +48,8 @@ const visitReasons = [
     body: 'Same prices as online and the same 100-night home trial, whether you buy that day or not.',
   },
 ];
+
+const FORM_NAME = 'quick-book';
 
 export default function QuickBook() {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -220,21 +224,26 @@ function Picker() {
 
     // Mirrors ReserveForm / the server's normalizePhone().
     const errors: typeof fieldErrors = {};
-    if (!name) errors.name = 'Please enter your name.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = 'Please enter a valid email address.';
+    if (!name) errors.name = FRIENDLY_ERRORS.name_missing;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = FRIENDLY_ERRORS.email_invalid;
     const digits = phone.replace(/\D/g, '');
     const national = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits;
-    if (!/^[2-9]\d{2}[2-9]\d{6}$/.test(national)) errors.phone = 'Please enter a valid 10-digit US phone number.';
+    if (!/^[2-9]\d{2}[2-9]\d{6}$/.test(national)) errors.phone = phone ? FRIENDLY_ERRORS.phone_invalid : FRIENDLY_ERRORS.phone_missing;
     setFieldErrors(errors);
     if (errors.name || errors.email || errors.phone) {
       (errors.name ? nameRef : errors.email ? emailRef : phoneRef).current?.focus();
+      showError(
+        errors.name ? 'name_missing' : errors.email ? 'email_invalid' : phone ? 'phone_invalid' : 'phone_missing',
+        FORM_NAME,
+        { email }
+      );
       return;
     }
 
     // Midnight may have passed since the strip last rolled forward.
     if (bookingDateError(date)) {
       rollOver();
-      setNotice('That day can’t be booked anymore. Please pick another day and time.');
+      setNotice(showError('date_too_soon', FORM_NAME, { email, detail: `stale day ${date}` }));
       return;
     }
 
@@ -265,11 +274,7 @@ function Picker() {
           setSlot('');
         }
         setStatus('error');
-        setErrorMsg(
-          taken
-            ? 'That time was just taken. Please pick another.'
-            : json.error || 'Something went wrong on our end. Try once more, or email showroom@mybusby.com.',
-        );
+        setErrorMsg(showError(taken ? 'slot_taken' : json.code, FORM_NAME, { serverLogged: true }));
         return;
       }
       window.gtag?.('event', 'store_reserve_submit', { method: 'home_quick_book' });
@@ -277,7 +282,7 @@ function Picker() {
       window.location.assign(`/appointment/confirmed?${new URLSearchParams({ date, slot, mode: 'in-person' })}`);
     } catch {
       setStatus('error');
-      setErrorMsg('We couldn’t reach the server. Try once more, or email showroom@mybusby.com.');
+      setErrorMsg(showError('network_error', FORM_NAME, { email }));
     }
   };
 

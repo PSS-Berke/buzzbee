@@ -3,6 +3,8 @@ import { canonicalizeEmail, isValidEmail } from '@/lib/submissions';
 import { claimWelcome, insertSubscribe } from '@/lib/db';
 import { sendUserQuizMatchEmail, sendUserSleepGuideEmail } from '@/lib/email';
 import { getClientIp, rateLimit } from '@/lib/rate-limit';
+import { friendlyError } from '@/lib/friendly-errors';
+import { recordError } from '@/lib/error-log';
 import { getProductBySlug } from '@/data/products';
 import { isRecommendedProduct, quizHeadlineFor } from '@/lib/quiz-logic';
 
@@ -76,7 +78,11 @@ export async function POST(req: NextRequest) {
       payload = (await req.json()) as SubscribePayload;
       if (!payload || typeof payload !== 'object') throw new Error('not an object');
     } catch {
-      return NextResponse.json({ ok: false, error: 'Invalid request body.' }, { status: 400 });
+      await recordError(req, 'bad_request', 'subscribe', { detail: 'unparseable JSON body' });
+      return NextResponse.json(
+        { ok: false, code: 'bad_request', error: friendlyError('bad_request') },
+        { status: 400 }
+      );
     }
   }
 
@@ -90,11 +96,12 @@ export async function POST(req: NextRequest) {
 
   const rl = await rateLimit('subscribe', getClientIp(req));
   if (!rl.allowed) {
+    await recordError(req, 'too_many_tries', payload.source ?? 'subscribe', { email: payload.email });
     if (isFormPost(req)) {
       return NextResponse.redirect(new URL('/sleep-guide/thanks?error=rate', req.url), 303);
     }
     return NextResponse.json(
-      { ok: false, error: 'Too many requests. Please wait a bit and try again.' },
+      { ok: false, code: 'too_many_tries', error: friendlyError('too_many_tries') },
       { status: 429, headers: { 'Retry-After': String(rl.resetSec) } }
     );
   }
@@ -103,6 +110,7 @@ export async function POST(req: NextRequest) {
   const source = clip(payload.source, MAX_SOURCE) ?? 'unknown';
 
   if (!email || !isValidEmail(email)) {
+    await recordError(req, 'email_invalid', source, { email, detail: email ? undefined : 'empty' });
     if (isFormPost(req)) {
       return NextResponse.redirect(
         new URL(`/sleep-guide/thanks?error=email`, req.url),
@@ -110,7 +118,7 @@ export async function POST(req: NextRequest) {
       );
     }
     return NextResponse.json(
-      { ok: false, error: 'Please enter a valid email address.' },
+      { ok: false, code: 'email_invalid', error: friendlyError('email_invalid') },
       { status: 400 }
     );
   }
@@ -139,6 +147,10 @@ export async function POST(req: NextRequest) {
     }
   } catch (err) {
     console.error('[subscribe] db insert failed', err);
+    await recordError(req, 'server_error', source, {
+      email,
+      detail: `insert failed: ${err instanceof Error ? err.message : String(err)}`,
+    });
     if (isFormPost(req)) {
       return NextResponse.redirect(
         new URL('/sleep-guide/thanks?error=server', req.url),
@@ -146,7 +158,7 @@ export async function POST(req: NextRequest) {
       );
     }
     return NextResponse.json(
-      { ok: false, error: 'Something on our end. Try again in a moment.' },
+      { ok: false, code: 'server_error', error: friendlyError('server_error') },
       { status: 500 }
     );
   }

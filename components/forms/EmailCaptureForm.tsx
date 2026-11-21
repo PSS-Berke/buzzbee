@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useId, useRef, useState } from 'react';
+import { showError } from '@/lib/report-error';
 
 declare global {
   interface Window {
@@ -57,7 +58,7 @@ export default function EmailCaptureForm({
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setStatus('error');
-      setErrorMsg('That email doesn’t look right — could you double-check?');
+      setErrorMsg(showError('email_invalid', `email-capture:${source}`, { email }));
       return;
     }
 
@@ -77,22 +78,17 @@ export default function EmailCaptureForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const json = (await res.json()) as { ok: boolean; error?: string };
+      const json = (await res.json()) as { ok: boolean; error?: string; code?: string };
       if (!json.ok) {
         setStatus('error');
-        setErrorMsg(
-          json.error ||
-            'Something on our end. Try once more, or email newsletter@mybusby.com and we’ll add you manually.'
-        );
+        setErrorMsg(showError(json.code, `email-capture:${source}`, { serverLogged: true }));
         return;
       }
       window.gtag?.('event', 'lp_form_submit', { form_position: formPosition, source });
       setStatus('success');
     } catch {
       setStatus('error');
-      setErrorMsg(
-        'We couldn’t reach the server. Try once more, or email newsletter@mybusby.com.'
-      );
+      setErrorMsg(showError('network_error', `email-capture:${source}`, { email }));
     }
   };
 

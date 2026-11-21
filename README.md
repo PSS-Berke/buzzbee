@@ -30,7 +30,12 @@ Migrations are one-shot, idempotent scripts in `scripts/`. Run any you haven't y
 
 ```bash
 node --env-file=.env.local scripts/migrate-orders.mjs
+node --env-file=.env.local scripts/migrate-error-log.mjs
 ```
+
+## Error messages
+
+Every error a customer can see lives in `lib/friendly-errors.ts`, keyed by a stable code. Edit the wording there. Each time one is shown it's recorded in `error_events` (listed on `/admin` under "Errors customers saw") and sent to Google Analytics as a `form_error` event with `error_code` and `form`.
 
 ## Stripe webhook
 

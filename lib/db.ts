@@ -398,3 +398,45 @@ export async function listAllOrders(): Promise<OrderRow[]> {
     order by created_at desc
   `) as OrderRow[];
 }
+
+// ── Customer-facing error log ───────────────────────────────────────────────
+
+export interface ErrorEventInput {
+  code: string;
+  form: string;
+  path: string | null;
+  email: string | null;
+  detail: string | null;
+}
+
+export interface ErrorEventRow extends ErrorEventInput {
+  id: number;
+  created_at: string;
+}
+
+export async function insertErrorEvent(input: ErrorEventInput): Promise<void> {
+  await sql()`
+    insert into error_events (code, form, path, email, detail)
+    values (${input.code}, ${input.form}, ${input.path}, ${input.email}, ${input.detail})
+  `;
+}
+
+export async function listErrorEvents(limit = 100): Promise<ErrorEventRow[]> {
+  return (await sql()`
+    select id, code, form, path, email, detail, created_at
+    from error_events
+    order by created_at desc
+    limit ${limit}
+  `) as ErrorEventRow[];
+}
+
+/** How often each code was shown, over the last `days` days. */
+export async function countErrorEvents(days = 7): Promise<Array<{ code: string; count: number }>> {
+  return (await sql()`
+    select code, count(*)::int as count
+    from error_events
+    where created_at > now() - make_interval(days => ${days})
+    group by code
+    order by count desc
+  `) as Array<{ code: string; count: number }>;
+}

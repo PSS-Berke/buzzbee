@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Store, Truck, Loader2, Lock } from 'lucide-react';
 import { studioGoProduct } from '@/data/products';
+import { showError } from '@/lib/report-error';
 
 declare global {
   interface Window {
@@ -48,6 +49,7 @@ export default function StudioGoBuy({ inline = false }: { inline?: boolean }) {
   const size = product.sizes[0];
   const [fulfillment, setFulfillment] = useState<Fulfillment>('pickup');
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
 
   function choose(value: Fulfillment) {
     setFulfillment(value);
@@ -71,10 +73,15 @@ export default function StudioGoBuy({ inline = false }: { inline?: boolean }) {
           fulfillment,
         }),
       });
-      const data = (await res.json()) as { url?: string };
-      if (!res.ok || !data.url) throw new Error('checkout failed');
+      const data = (await res.json()) as { url?: string; code?: string };
+      if (!res.ok || !data.url) {
+        setErrorMsg(showError(data.code ?? 'checkout_failed', 'studio-go-checkout', { serverLogged: !res.ok }));
+        setStatus('error');
+        return;
+      }
       window.location.href = data.url;
     } catch {
+      setErrorMsg(showError('network_error', 'studio-go-checkout'));
       setStatus('error');
     }
   }
@@ -177,7 +184,7 @@ export default function StudioGoBuy({ inline = false }: { inline?: boolean }) {
 
       {status === 'error' && (
         <p role="alert" className="mt-3 text-sm text-coral text-center">
-          We couldn&rsquo;t open checkout. Please try again, or call us at (844) 886-1640.
+          {errorMsg}
         </p>
       )}
     </div>

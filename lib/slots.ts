@@ -1,6 +1,8 @@
 // Reservation time slots for the Elmhurst showroom.
 // 30-minute slots, 9:00 AM through 7:00 PM (last slot starts 6:30 PM).
 
+import { FRIENDLY_ERRORS } from './friendly-errors';
+
 const FIRST_HOUR = 9;
 const LAST_HOUR = 19; // exclusive — last slot starts at 18:30, ends at 19:00
 
@@ -43,18 +45,21 @@ export function latestBookingDate(): string {
 }
 
 /**
- * Why `date` (YYYY-MM-DD) can't be booked, or null if it can. Shared by
- * /api/reserve and every booking form: a date input's min/max only limits the
- * calendar popup, so a typed date or a phone's date wheel can still pick today.
+ * Why `date` (YYYY-MM-DD) can't be booked, as an error code, or null if it can.
+ * Shared by /api/reserve and every booking form: a date input's min/max only
+ * limits the calendar popup, so a typed date or a phone's date wheel can still
+ * pick today.
  */
-export function bookingDateError(date: string): string | null {
-  if (date < earliestBookingDate()) {
-    return 'Visits need to be booked at least a day ahead. Please choose tomorrow or later.';
-  }
-  if (date > latestBookingDate()) {
-    return `Please choose a date within the next ${MAX_BOOKING_DAYS_AHEAD} days.`;
-  }
+export function bookingDateErrorCode(date: string): 'date_too_soon' | 'date_too_far' | null {
+  if (date < earliestBookingDate()) return 'date_too_soon';
+  if (date > latestBookingDate()) return 'date_too_far';
   return null;
+}
+
+/** The customer-facing message for {@link bookingDateErrorCode}, or null. */
+export function bookingDateError(date: string): string | null {
+  const code = bookingDateErrorCode(date);
+  return code ? FRIENDLY_ERRORS[code] : null;
 }
 
 function buildSlots(): string[] {
