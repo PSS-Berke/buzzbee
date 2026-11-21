@@ -13,9 +13,7 @@ type Status = 'idle' | 'submitting' | 'done' | 'error';
 
 interface QuizEmailCaptureProps {
   productSlug: string;
-  productName: string;
   firmness: string;
-  headline: string;
 }
 
 /**
@@ -29,9 +27,7 @@ interface QuizEmailCaptureProps {
  */
 export default function QuizEmailCapture({
   productSlug,
-  productName,
   firmness,
-  headline,
 }: QuizEmailCaptureProps) {
   const [status, setStatus] = useState<Status>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -60,7 +56,8 @@ export default function QuizEmailCapture({
           email,
           source: 'quiz-result',
           bb_check: data.get('bb_check')?.toString() || '',
-          quiz: { productSlug, productName, firmness, headline },
+          // The server rebuilds the name and headline from the slug.
+          quiz: { productSlug, firmness },
         }),
       });
       const json = (await res.json()) as { ok: boolean; error?: string };

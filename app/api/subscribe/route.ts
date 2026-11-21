@@ -3,16 +3,42 @@ import { canonicalizeEmail, isValidEmail } from '@/lib/submissions';
 import { claimWelcome, insertSubscribe } from '@/lib/db';
 import { sendUserQuizMatchEmail, sendUserSleepGuideEmail } from '@/lib/email';
 import { getClientIp, rateLimit } from '@/lib/rate-limit';
+import { getProductBySlug } from '@/data/products';
+import { isRecommendedProduct, quizHeadlineFor } from '@/lib/quiz-logic';
 
 export const runtime = 'nodejs';
 
 // A quiz result, when the capture came from the end of /quiz. Present only on
 // that path; its absence is what makes this an ordinary sleep-guide signup.
+// Only the slug and firmness are read. The product name and headline that go
+// into the email are rebuilt on the server, so this route can't be used to
+// send arbitrary text to arbitrary inboxes under our name.
 interface QuizMatch {
   productSlug?: string;
-  productName?: string;
   firmness?: string;
-  headline?: string;
+}
+
+const FIRMNESS = ['Soft', 'Medium', 'Firm'] as const;
+const MAX_SOURCE = 80;
+const MAX_UTM = 200;
+
+function clip(value: string | undefined, max: number): string | null {
+  const v = value?.trim();
+  return v ? v.slice(0, max) : null;
+}
+
+/** The match to email, built from trusted data, or null if the input isn't a real result. */
+function resolveQuizMatch(quiz: QuizMatch | undefined) {
+  if (!quiz || !isRecommendedProduct(quiz.productSlug)) return null;
+  const firmness = FIRMNESS.find((f) => f === quiz.firmness);
+  const product = getProductBySlug(quiz.productSlug);
+  if (!firmness || !product) return null;
+  return {
+    productSlug: quiz.productSlug,
+    productName: product.name,
+    firmness,
+    headline: quizHeadlineFor(quiz.productSlug),
+  };
 }
 
 interface SubscribePayload {
@@ -66,7 +92,7 @@ export async function POST(req: NextRequest) {
   }
 
   const email = payload.email?.trim().toLowerCase() ?? '';
-  const source = payload.source ?? 'unknown';
+  const source = clip(payload.source, MAX_SOURCE) ?? 'unknown';
 
   if (!email || !isValidEmail(email)) {
     if (isFormPost(req)) {
@@ -83,17 +109,17 @@ export async function POST(req: NextRequest) {
 
   // Decided before the insert, because it changes whether we consume this
   // inbox's once-ever guide welcome.
-  const quiz = payload.quiz;
-  const hasQuizMatch = !!(quiz?.productSlug && quiz.productName && quiz.firmness);
+  const quizMatch = resolveQuizMatch(payload.quiz);
+  const hasQuizMatch = quizMatch !== null;
 
   let shouldWelcome = false;
   try {
     await insertSubscribe({
       email,
       source,
-      utm_source: payload.utm_source ?? null,
-      utm_medium: payload.utm_medium ?? null,
-      utm_campaign: payload.utm_campaign ?? null,
+      utm_source: clip(payload.utm_source, MAX_UTM),
+      utm_medium: clip(payload.utm_medium, MAX_UTM),
+      utm_campaign: clip(payload.utm_campaign, MAX_UTM),
     });
     // Atomically claim the once-ever welcome for this inbox (canonical form, so
     // source rotation and gmail aliases can't re-trigger it). Race-proof: only
@@ -121,15 +147,17 @@ export async function POST(req: NextRequest) {
   // guide. It is NOT gated on `shouldWelcome`: someone who took the quiz twice
   // asked for their result twice. The once-ever guide welcome is deliberately
   // left unclaimed here, so a quiz taker can still request the guide later and
-  // actually receive it.
-  if (hasQuizMatch) {
-    await sendUserQuizMatchEmail({
-      email,
-      productSlug: quiz!.productSlug!,
-      productName: quiz!.productName!,
-      firmness: quiz!.firmness!,
-      headline: quiz!.headline ?? '',
-    }).catch((err) => console.error('[subscribe] quiz match email failed', err));
+  // actually receive it. It IS capped per recipient (like booking
+  // confirmations), so one inbox can't be flooded from many IPs.
+  if (quizMatch) {
+    const emailRl = await rateLimit('quizEmail', canonicalizeEmail(email));
+    if (emailRl.allowed) {
+      await sendUserQuizMatchEmail({ email, ...quizMatch }).catch((err) =>
+        console.error('[subscribe] quiz match email failed', err)
+      );
+    } else {
+      console.warn('[subscribe] per-recipient quiz email cap reached; signup saved without email');
+    }
   } else if (shouldWelcome) {
     // Welcome email fires at most once per inbox, ever. Failures are logged, not fatal.
     await sendUserSleepGuideEmail(email).catch((err) =>

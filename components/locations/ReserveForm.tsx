@@ -77,6 +77,22 @@ export default function ReserveForm() {
     if (picks.length) setToTry(picks);
   }, []);
 
+  // A form submitted before the page hydrated posts natively; on failure the
+  // server sends it back here with ?reserve=<flag>. Show why.
+  useEffect(() => {
+    const flag = new URLSearchParams(window.location.search).get('reserve');
+    const messages: Record<string, string> = {
+      slot_taken: 'That time was just booked. Please pick another.',
+      rate: 'Too many requests. Please wait a moment and try again.',
+      error: 'We couldn’t book that. Please check your details and try again.',
+    };
+    if (flag && messages[flag]) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setStatus('error');
+      setErrorMsg(messages[flag]);
+    }
+  }, []);
+
   // Capture the Google Ads click id so every booking can be traced back to the
   // exact campaign / keyword that produced it. Persisted for the session so it
   // survives navigation away from the ad landing URL.

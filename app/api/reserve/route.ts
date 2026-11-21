@@ -6,10 +6,19 @@ import { sendAdminReservationEmail, sendUserReservationEmail } from '@/lib/email
 import { bookingDateError, isValidSlot } from '@/lib/slots';
 import { isOpenSlot } from '@/lib/availability';
 import { getClientIp, rateLimit } from '@/lib/rate-limit';
+import { modeFromSource } from '@/lib/consult';
 
 export const runtime = 'nodejs';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+// Caps on free-text fields. Real bookings come nowhere near these; they stop a
+// scripted POST from stuffing megabytes into the table and the team's inbox.
+const MAX_NAME = 120;
+const MAX_NOTES = 2000;
+const MAX_SOURCE = 80;
+const MAX_MATTRESSES = 12;
+const MAX_MATTRESS_NAME = 80;
 
 // DATE_RE is structural only — '2026-13-45' passes it. Confirm the value is a
 // real calendar date so a bad date 400s cleanly instead of 500-ing at the insert.
@@ -37,6 +46,40 @@ function isFormPost(req: NextRequest): boolean {
   return req.headers.get('content-type')?.includes('form') ?? false;
 }
 
+// No-JS form posts land back on the page they came from (same-origin Referer
+// only, so this can't be used as an open redirect), with ?reserve=<flag>.
+// Falls back to /appointment, where the booking form lives.
+function backToForm(req: NextRequest, flag: 'error' | 'slot_taken' | 'rate'): NextResponse {
+  let path = '/appointment';
+  const referer = req.headers.get('referer');
+  if (referer) {
+    try {
+      const ref = new URL(referer);
+      if (ref.origin === req.nextUrl.origin && !ref.pathname.startsWith('/api/')) path = ref.pathname;
+    } catch {
+      // Malformed Referer: use the fallback.
+    }
+  }
+  const url = new URL(path, req.url);
+  url.searchParams.set('reserve', flag);
+  return NextResponse.redirect(url, 303);
+}
+
+// A no-JS booking that succeeded goes to the same confirmation page the JS form
+// uses, so the Ads conversion trigger on that URL fires for both.
+function toConfirmation(
+  req: NextRequest,
+  date: string | undefined,
+  slot: string | undefined,
+  source: string | undefined
+): NextResponse {
+  const url = new URL('/appointment/confirmed', req.url);
+  if (date) url.searchParams.set('date', date);
+  if (slot) url.searchParams.set('slot', slot);
+  url.searchParams.set('mode', modeFromSource(source));
+  return NextResponse.redirect(url, 303);
+}
+
 export async function POST(req: NextRequest) {
   let payload: ReservePayload;
   try {
@@ -61,7 +104,7 @@ export async function POST(req: NextRequest) {
   // Honeypot — bot filled the hidden field. Pretend success, do nothing.
   if (payload.bb_check && payload.bb_check.trim() !== '') {
     if (isFormPost(req)) {
-      return NextResponse.redirect(new URL('/locations/elmhurst?reserve=ok', req.url), 303);
+      return toConfirmation(req, payload.date, payload.timeSlot, payload.source);
     }
     return NextResponse.json({ ok: true });
   }
@@ -69,7 +112,7 @@ export async function POST(req: NextRequest) {
   const rl = await rateLimit('reserve', getClientIp(req));
   if (!rl.allowed) {
     if (isFormPost(req)) {
-      return NextResponse.redirect(new URL('/locations/elmhurst?reserve=error', req.url), 303);
+      return backToForm(req, 'rate');
     }
     return NextResponse.json(
       { ok: false, error: 'Too many requests. Please wait a moment and try again.' },
@@ -93,10 +136,10 @@ export async function POST(req: NextRequest) {
   // Invalid input → 400 (JSON) or back to the page with an error flag (no-JS form).
   const bad = (msg: string) =>
     isFormPost(req)
-      ? NextResponse.redirect(new URL('/locations/elmhurst?reserve=error', req.url), 303)
+      ? backToForm(req, 'error')
       : NextResponse.json({ ok: false, error: msg }, { status: 400 });
 
-  if (!name || !normalizedEmail || !isValidEmail(normalizedEmail)) {
+  if (!name?.trim() || !normalizedEmail || !isValidEmail(normalizedEmail)) {
     return bad('Name and a valid email are required.');
   }
 
@@ -132,7 +175,7 @@ export async function POST(req: NextRequest) {
   // Stash the Google Ads click id alongside the notes. The reservations table
   // has a fixed column set, so folding it in here gives us per-lead attribution
   // (which campaign / keyword produced this booking) without a schema migration.
-  const cleanNotes = notes?.trim() || '';
+  const cleanNotes = notes?.trim().slice(0, MAX_NOTES) || '';
   const cleanGclid = gclid?.trim().slice(0, 200) || '';
   const cleanPreferred = preferredTime?.trim().slice(0, 300) || '';
   const notesParts = [
@@ -143,14 +186,17 @@ export async function POST(req: NextRequest) {
   const notesWithAttribution = notesParts.join('\n\n');
 
   const record = {
-    name: name.trim(),
+    name: name.trim().slice(0, MAX_NAME),
     email: normalizedEmail,
     phone: normalizedPhone,
     preferred_date: date,
     time_slot: timeSlot,
-    mattresses: mattresses ?? [],
+    mattresses: (Array.isArray(mattresses) ? mattresses : [])
+      .filter((m): m is string => typeof m === 'string' && m.trim() !== '')
+      .slice(0, MAX_MATTRESSES)
+      .map((m) => m.trim().slice(0, MAX_MATTRESS_NAME)),
     notes: notesWithAttribution || null,
-    source: source || 'reserve-elmhurst',
+    source: source?.trim().slice(0, MAX_SOURCE) || 'reserve-elmhurst',
     location: elmhurstStore.slug,
   };
 
@@ -158,6 +204,7 @@ export async function POST(req: NextRequest) {
     await insertReservation(record);
   } catch (err) {
     if (err instanceof SlotTakenError) {
+      if (isFormPost(req)) return backToForm(req, 'slot_taken');
       return NextResponse.json(
         { ok: false, error: 'That time was just booked. Please pick another.', code: 'slot_taken' },
         { status: 409 }
@@ -165,10 +212,7 @@ export async function POST(req: NextRequest) {
     }
     console.error('[reserve] db insert failed', err);
     if (isFormPost(req)) {
-      return NextResponse.redirect(
-        new URL('/locations/elmhurst?reserve=error', req.url),
-        303
-      );
+      return backToForm(req, 'error');
     }
     return NextResponse.json(
       { ok: false, error: 'Something on our end. Try again in a moment.' },
@@ -202,7 +246,7 @@ export async function POST(req: NextRequest) {
   ]);
 
   if (isFormPost(req)) {
-    return NextResponse.redirect(new URL('/locations/elmhurst?reserve=ok', req.url), 303);
+    return toConfirmation(req, record.preferred_date, record.time_slot, record.source);
   }
 
   return NextResponse.json({ ok: true });

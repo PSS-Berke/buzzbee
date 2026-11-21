@@ -414,6 +414,29 @@ function getResultMessaging(
   return messages[product];
 }
 
+const RECOMMENDED_PRODUCTS: readonly RecommendedProduct[] = [
+  'nod',
+  'slumber',
+  'dream',
+  'studio-10',
+  'studio-12',
+  'studio-hybrid',
+  'studio-hybrid-firm',
+];
+
+export function isRecommendedProduct(value: unknown): value is RecommendedProduct {
+  return RECOMMENDED_PRODUCTS.includes(value as RecommendedProduct);
+}
+
+/**
+ * The result headline for a product. Headlines don't depend on scores, so the
+ * server can rebuild one from the slug alone instead of trusting text the
+ * browser sent.
+ */
+export function quizHeadlineFor(product: RecommendedProduct): string {
+  return getResultMessaging(product, { nod: 0, slumber: 0, dream: 0 }).headline;
+}
+
 export const productDetails: Record<
   RecommendedProduct,
   { name: string; price: number; tagline: string; features: string[] }
