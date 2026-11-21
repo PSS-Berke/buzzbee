@@ -10,6 +10,10 @@ function csvCell(value: unknown): string {
   if (value instanceof Date) s = value.toISOString();
   else if (Array.isArray(value)) s = value.join('; ');
   else s = String(value);
+  // Names and notes come from public forms. A cell starting with = + - @ (or a
+  // tab/CR that some apps skip past) runs as a formula when staff open the file
+  // in Excel or Sheets, so prefix it with ' to keep it plain text.
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   if (/[",\r\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
   return s;
 }
