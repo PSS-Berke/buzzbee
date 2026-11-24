@@ -32,9 +32,15 @@ function isFormPost(req: NextRequest): boolean {
 
 export async function POST(req: NextRequest) {
   let payload: SubscribePayload;
-  try {
-    payload = (await req.json()) as SubscribePayload;
-  } catch {
+  // The body can only be read once, so pick the parser from the content type
+  // rather than trying JSON and falling back (the fallback read always threw).
+  if (!isFormPost(req)) {
+    try {
+      payload = (await req.json()) as SubscribePayload;
+    } catch {
+      return NextResponse.json({ ok: false, error: 'Invalid request.' }, { status: 400 });
+    }
+  } else {
     const form = await req.formData();
     payload = {
       email: form.get('email')?.toString(),
