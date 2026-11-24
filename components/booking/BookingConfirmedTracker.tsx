@@ -5,11 +5,13 @@ import { useEffect } from 'react';
 declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
   }
 }
 
 /**
- * Sends one GA4 `generate_lead` event per booking when /appointment/confirmed
+ * Sends one GA4 `generate_lead` event and one Meta Pixel `Schedule` event per
+ * booking when /appointment/confirmed
  * loads. Every booking form (home pop-up, quick-book, /appointment,
  * /book-a-fitting, /virtual-consultation) redirects here, so this counts them
  * all in one place. Mark `generate_lead` as a key event in GA4 for it to show
@@ -39,6 +41,7 @@ export default function BookingConfirmedTracker({
       lead_source: 'booking',
       booking_type: mode,
     });
+    window.fbq?.('track', 'Schedule', { booking_type: mode });
   }, [date, slot, mode]);
   return null;
 }

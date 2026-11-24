@@ -10,6 +10,9 @@ import CartDrawer from "@/components/cart/CartDrawer";
 import ScrollToTop from "@/components/layout/ScrollToTop";
 import { Analytics } from "@vercel/analytics/next";
 
+// Meta Pixel for the "Busby Website" dataset (My Busby business in Events Manager).
+const META_PIXEL_ID = "1824635118812873";
+
 const lato = Lato({
   variable: "--font-lato",
   subsets: ["latin"],
@@ -108,8 +111,35 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Meta Pixel: "Busby Website" dataset in Meta Events Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '${META_PIXEL_ID}');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
       </head>
       <body className={`${lato.variable} ${josefinSans.variable} ${playfairDisplay.variable} antialiased`}>
+        <noscript>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
+            alt=""
+            src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+          />
+        </noscript>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-navy focus:px-5 focus:py-3 focus:font-semibold focus:text-white focus:shadow-lg"
