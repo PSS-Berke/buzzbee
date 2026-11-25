@@ -13,3 +13,11 @@ export const SAMPLE_RESERVATION: ReservationPayload = {
   source: 'product-page',
   location: 'elmhurst',
 };
+
+/** A booking from /senior-booking, for previewing the Senior Booking emails. */
+export const SAMPLE_SENIOR_RESERVATION: ReservationPayload = {
+  ...SAMPLE_RESERVATION,
+  mattresses: ['Nod', 'Dream'],
+  notes: 'Bringing my daughter.',
+  source: 'senior-booking',
+};

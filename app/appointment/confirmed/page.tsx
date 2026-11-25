@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot, isValidSlot } from '@/lib/slots';
-import { parseMode } from '@/lib/consult';
+import { parseMode, parseOffer } from '@/lib/consult';
 import { Video } from 'lucide-react';
 import BookingConfirmedTracker from '@/components/booking/BookingConfirmedTracker';
 
@@ -54,14 +54,16 @@ const virtualSteps = [
 export default async function AppointmentConfirmedPage({
   searchParams,
 }: {
-  searchParams: Promise<{ date?: string; slot?: string; mode?: string }>;
+  searchParams: Promise<{ date?: string; slot?: string; mode?: string; offer?: string }>;
 }) {
-  const { date, slot, mode } = await searchParams;
+  const { date, slot, mode, offer: offerParam } = await searchParams;
 
   const prettyDate = date ? formatBookedDate(date) : null;
   const prettySlot = slot && isValidSlot(slot) ? formatSlot(slot) : null;
   const isVirtual = parseMode(mode) === 'virtual';
   const nextSteps = isVirtual ? virtualSteps : inPersonSteps;
+  // Senior Booking (from /senior-booking). Only meaningful for a showroom visit.
+  const offer = isVirtual ? undefined : parseOffer(offerParam);
 
   return (
     <div className="min-h-screen bg-[#faf8f5] linen-texture relative">
@@ -75,7 +77,12 @@ export default async function AppointmentConfirmedPage({
       />
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
-        <BookingConfirmedTracker date={date} slot={slot} mode={isVirtual ? 'virtual' : 'in-person'} />
+        <BookingConfirmedTracker
+          date={date}
+          slot={slot}
+          mode={isVirtual ? 'virtual' : 'in-person'}
+          offer={offer}
+        />
         {/* ── Confirmation ── */}
         <div className="text-center mb-12">
           <div className="w-16 h-16 bg-gold/15 rounded-2xl flex items-center justify-center mx-auto mb-6">
@@ -106,6 +113,22 @@ export default async function AppointmentConfirmedPage({
             )}
           </p>
         </div>
+
+        {offer === 'senior' && (
+          <div className="rounded-3xl bg-navy text-white p-8 mb-8 text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gold">
+              Senior discount
+            </p>
+            <p className="mt-2 text-3xl md:text-4xl font-serif leading-tight">
+              <span className="text-gold">$300 off</span> is on your booking.
+            </p>
+            <p className="mt-3 text-gray-300 leading-relaxed max-w-lg mx-auto">
+              An extra $300 off any showroom bed for guests 65 and older, on top of 30% off
+              showroom beds through December 31. Your Sleep Guide takes it off your order at the
+              visit.
+            </p>
+          </div>
+        )}
 
         {/* ── Where to go / how to join ── */}
         {isVirtual ? (

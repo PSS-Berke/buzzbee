@@ -4,7 +4,12 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Store, Video } from 'lucide-react';
 import { bookingDateError, earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
-import { type ConsultMode, SOURCE_IN_PERSON, SOURCE_VIRTUAL } from '@/lib/consult';
+import {
+  type ConsultMode,
+  SOURCE_IN_PERSON,
+  SOURCE_SENIOR,
+  SOURCE_VIRTUAL,
+} from '@/lib/consult';
 
 declare global {
   interface Window {
@@ -48,7 +53,14 @@ const MODES: {
 // form stays in 'submitting' until the browser leaves the page.
 type Status = 'idle' | 'submitting' | 'error';
 
-export default function ReserveForm() {
+/**
+ * `variant="senior"` is the Senior Booking form on /senior-booking: showroom
+ * visits only, saved with source `senior-booking`, and the confirmation page is
+ * told (`?offer=senior`) so it shows the $300 and tags the conversion as a
+ * senior booking.
+ */
+export default function ReserveForm({ variant = 'standard' }: { variant?: 'standard' | 'senior' } = {}) {
+  const isSenior = variant === 'senior';
   // In-person is the default: the showroom is the thing we actually have, and
   // walking in is what has produced sales. Video is the lower-friction fallback
   // for someone who won't commit to a drive.
@@ -176,7 +188,7 @@ export default function ReserveForm() {
       mattresses: toTry,
       notes: data.get('notes')?.toString() || '',
       bb_check: data.get('bb_check')?.toString() || '',
-      source: isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON,
+      source: isSenior ? SOURCE_SENIOR : isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON,
     };
 
     try {
@@ -202,7 +214,10 @@ export default function ReserveForm() {
         );
         return;
       }
-      window.gtag?.('event', isVirtual ? 'virtual_consult_submit' : 'store_reserve_submit');
+      window.gtag?.(
+        'event',
+        isSenior ? 'senior_booking_submit' : isVirtual ? 'virtual_consult_submit' : 'store_reserve_submit'
+      );
       // Full page load (not router.push) so gtag.js re-runs and fires a page_view
       // for /appointment/confirmed. The tag only configures on initial document
       // load, so a client-side navigation would leave the Google Ads URL-based
@@ -213,6 +228,7 @@ export default function ReserveForm() {
         slot: payload.timeSlot,
         mode,
       });
+      if (isSenior) params.set('offer', 'senior');
       window.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
@@ -236,7 +252,11 @@ export default function ReserveForm() {
       aria-live="polite"
       noValidate
     >
-      <input type="hidden" name="source" value={isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON} />
+      <input
+        type="hidden"
+        name="source"
+        value={isSenior ? SOURCE_SENIOR : isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON}
+      />
       <input
         type="checkbox"
         name="bb_check"
@@ -245,6 +265,7 @@ export default function ReserveForm() {
         style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
       />
 
+      {!isSenior && (
       <fieldset>
         <legend className="block text-sm font-medium text-navy mb-2">
           How would you like to do this?
@@ -275,6 +296,7 @@ export default function ReserveForm() {
           })}
         </div>
       </fieldset>
+      )}
 
       {isVirtual && (
         <p className="text-xs leading-relaxed text-gray-600">
@@ -472,9 +494,11 @@ export default function ReserveForm() {
             ? 'Pick a date first'
             : !slot
               ? 'Pick a time'
-              : isVirtual
-                ? 'Book my video call'
-                : 'Reserve my visit'}
+              : isSenior
+                ? 'Book my visit with $300 off'
+                : isVirtual
+                  ? 'Book my video call'
+                  : 'Reserve my visit'}
       </button>
     </form>
   );

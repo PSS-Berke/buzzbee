@@ -8,6 +8,7 @@ import {
 } from '@/lib/email';
 import {
   SAMPLE_RESERVATION,
+  SAMPLE_SENIOR_RESERVATION,
   SAMPLE_SLEEP_GUIDE_TO,
 } from '@/lib/email-fixtures';
 
@@ -34,6 +35,14 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     trigger: 'POST /api/reserve',
     render: () => renderUserReservationEmail(SAMPLE_RESERVATION),
   },
+  'user-reservation-senior': {
+    title: 'User — Senior Booking confirmation',
+    description:
+      'The reservation confirmation for a booking from /senior-booking, with the $300 senior discount card under the date.',
+    recipient: 'Reservation submitter',
+    trigger: 'POST /api/reserve (source senior-booking)',
+    render: () => renderUserReservationEmail(SAMPLE_SENIOR_RESERVATION),
+  },
   'user-reminder': {
     title: 'User — day-of reminder',
     description:
@@ -57,6 +66,14 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     recipient: 'RESERVATIONS_INBOX_EMAIL (team)',
     trigger: 'POST /api/reserve (every booking)',
     render: () => renderAdminReservationEmail(SAMPLE_RESERVATION),
+  },
+  'admin-reservation-senior': {
+    title: 'Internal — Senior Booking notification',
+    description:
+      'The team notification for a booking from /senior-booking. Subject and Type say to take the extra $300 off.',
+    recipient: 'RESERVATIONS_INBOX_EMAIL (team)',
+    trigger: 'POST /api/reserve (source senior-booking)',
+    render: () => renderAdminReservationEmail(SAMPLE_SENIOR_RESERVATION),
   },
 };
 
