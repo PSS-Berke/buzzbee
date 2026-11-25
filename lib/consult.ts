@@ -32,3 +32,25 @@ export function modeFromSource(source: string | null | undefined): ConsultMode {
 export function parseMode(value: string | null | undefined): ConsultMode {
   return value === 'virtual' ? 'virtual' : 'in-person';
 }
+
+/**
+ * Booked in the showroom from /senior-booking, the landing page for the senior
+ * discount ads (internally "Senior Booking"). An in-person visit like any
+ * other, but its own source so senior bookings count separately in the admin
+ * list, the team email and the export, and so the store knows to take the
+ * extra $300 off a showroom bed.
+ */
+export const SOURCE_SENIOR = 'senior-booking';
+
+/** Whether a reservation `source` came from the Senior Booking page. */
+export function isSeniorSource(source: string | null | undefined): boolean {
+  return source === SOURCE_SENIOR;
+}
+
+/** Offers a booking can carry onto /appointment/confirmed via `?offer=`. */
+export type BookingOffer = 'senior';
+
+/** Narrow an untrusted string (e.g. a query param) to a BookingOffer. */
+export function parseOffer(value: string | null | undefined): BookingOffer | undefined {
+  return value === 'senior' ? 'senior' : undefined;
+}

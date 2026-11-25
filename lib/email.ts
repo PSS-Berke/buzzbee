@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import { env } from './env';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot } from './slots';
-import { isVirtualSource } from './consult';
+import { isSeniorSource, isVirtualSource } from './consult';
 import { listNotificationRecipients } from './db';
 import { formatPhone, isValidEmail } from './submissions';
 import { buildIcs, googleCalendarUrl, outlookCalendarUrl, type CalendarEvent } from './calendar';
@@ -584,6 +584,7 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
   const outlookUrl = calEvent ? outlookCalendarUrl(calEvent) : null;
 
   const noun = virtual ? 'call' : 'visit';
+  const senior = isSeniorSource(payload.source);
   const preheader = date
     ? `You're booked for ${date.full}${slotPretty ? ` at ${slotPretty}` : ''} — here are the details.`
     : `Your ${noun} is booked — here are the details.`;
@@ -607,6 +608,25 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
           </td>
         </tr>`
     : '';
+
+  // Booked from /senior-booking: show the discount right under the date so the
+  // customer sees it is attached to this visit.
+  const seniorDiscountCard = `
+          <tr>
+            <td class="px" style="padding:24px 40px 0 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#203552;border-radius:14px;">
+                <tr>
+                  <td style="padding:22px 24px;">
+                    <div style="font-family:Georgia,'Times New Roman',serif;color:#F3A51D;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Senior discount</div>
+                    <div style="margin-top:6px;font-family:Georgia,'Times New Roman',serif;color:#ffffff;font-size:26px;line-height:1.2;">$300 off is on your booking.</div>
+                    <div style="margin-top:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#d6dbe3;font-size:14px;line-height:1.5;">
+                      An extra $300 off any showroom bed for guests 65 and older, on top of 30% off showroom beds through December 31. Your Sleep Guide takes it off your order at the visit.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
 
   const mattressesRow = payload.mattresses.length
     ? `
@@ -728,6 +748,7 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
             </td>
           </tr>
           ${datePill}
+          ${senior ? seniorDiscountCard : ''}
           ${calendarCard}
           <tr>
             <td class="px" style="padding:24px 40px 0 40px;">
@@ -823,6 +844,15 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
     date
       ? `You're booked for ${date.full}${slotPretty ? ` at ${slotPretty}` : ''}.`
       : `Your ${noun} is booked.`,
+    ...(senior
+      ? [
+          '',
+          'SENIOR DISCOUNT',
+          '$300 off is on your booking: an extra $300 off any showroom bed for guests',
+          '65 and older, on top of 30% off showroom beds through December 31.',
+          'Your Sleep Guide takes it off your order at the visit.',
+        ]
+      : []),
     '',
     ...(virtual
       ? [
@@ -1321,12 +1351,25 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
   // notification preview, and at the top of the body so it can't be scrolled past.
   const virtual = isVirtualSource(payload.source);
 
-  const subject = `${virtual ? 'VIDEO CALL — send join link — ' : 'New booking — '}${payload.name}${
+  // Senior Booking: the store has to take the extra $300 off at the visit, so
+  // say so where nobody can miss it.
+  const senior = isSeniorSource(payload.source);
+
+  const subject = `${
+    virtual ? 'VIDEO CALL — send join link — ' : senior ? 'SENIOR BOOKING ($300 off) — ' : 'New booking — '
+  }${payload.name}${
     date ? `, ${date.full}` : ''
   }${slotPretty ? ` at ${slotPretty}` : ''}`;
 
   const rows: Array<[string, string]> = [
-    ['Type', virtual ? '<strong>Video call — send the join link</strong>' : 'In-person fitting'],
+    [
+      'Type',
+      virtual
+        ? '<strong>Video call — send the join link</strong>'
+        : senior
+          ? '<strong>Senior Booking: extra $300 off any showroom bed (65 and older)</strong>'
+          : 'In-person fitting',
+    ],
     ['When', escapeHtml(whenText)],
     ['Name', escapeHtml(payload.name)],
     [
@@ -1392,9 +1435,13 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
 </html>`;
 
   const text = [
-    virtual ? 'NEW VIDEO CALL — someone must send the join link' : 'New showroom booking',
+    virtual
+      ? 'NEW VIDEO CALL — someone must send the join link'
+      : senior
+        ? 'NEW SENIOR BOOKING — extra $300 off any showroom bed (65 and older)'
+        : 'New showroom booking',
     '',
-    `Type:       ${virtual ? 'Video call' : 'In-person fitting'}`,
+    `Type:       ${virtual ? 'Video call' : senior ? 'Senior Booking ($300 off)' : 'In-person fitting'}`,
     `When:       ${whenText}`,
     `Name:       ${payload.name}`,
     `Email:      ${payload.email}`,
