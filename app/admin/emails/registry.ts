@@ -8,6 +8,7 @@ import {
 } from '@/lib/email';
 import {
   SAMPLE_RESERVATION,
+  SAMPLE_SALE_RESERVATION,
   SAMPLE_SENIOR_RESERVATION,
   SAMPLE_SLEEP_GUIDE_TO,
 } from '@/lib/email-fixtures';
@@ -43,6 +44,14 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     trigger: 'POST /api/reserve (source senior-booking)',
     render: () => renderUserReservationEmail(SAMPLE_SENIOR_RESERVATION),
   },
+  'user-reservation-sale': {
+    title: 'User — Sale Booking confirmation',
+    description:
+      'The reservation confirmation for a booking from /sale-booking, with the 30% year-end sale card under the date.',
+    recipient: 'Reservation submitter',
+    trigger: 'POST /api/reserve (source sale-booking)',
+    render: () => renderUserReservationEmail(SAMPLE_SALE_RESERVATION),
+  },
   'user-reminder': {
     title: 'User — day-of reminder',
     description:
@@ -66,6 +75,14 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplateMeta> = {
     recipient: 'RESERVATIONS_INBOX_EMAIL (team)',
     trigger: 'POST /api/reserve (every booking)',
     render: () => renderAdminReservationEmail(SAMPLE_RESERVATION),
+  },
+  'admin-reservation-sale': {
+    title: 'Internal — Sale Booking notification',
+    description:
+      'The team notification for a booking from /sale-booking. Subject and Type name the page; Elmhurst and Studio Go bookings read the same with their own page name.',
+    recipient: 'RESERVATIONS_INBOX_EMAIL (team)',
+    trigger: 'POST /api/reserve (source sale-booking, elmhurst-booking or studio-go-booking)',
+    render: () => renderAdminReservationEmail(SAMPLE_SALE_RESERVATION),
   },
   'admin-reservation-senior': {
     title: 'Internal — Senior Booking notification',

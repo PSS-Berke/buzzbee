@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { CalendarCheck, CheckCircle, MapPin, Phone, ArrowRight } from 'lucide-react';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import ReserveForm from '@/components/locations/ReserveForm';
-import SeniorBookingView from '@/components/senior/SeniorBookingView';
+import BookingPageView from '@/components/booking/BookingPageView';
 
 // Senior Booking: landing page for the senior discount ads. Bookings made here
 // are saved with source `senior-booking` and tagged on /appointment/confirmed,
@@ -30,7 +30,7 @@ const perks = [
 export default function SeniorBookingPage() {
   return (
     <div className="min-h-screen bg-[#faf8f5]">
-      <SeniorBookingView />
+      <BookingPageView offer="senior" />
 
       {/* Hero: the $300 first */}
       <section className="relative bg-navy text-white overflow-hidden">

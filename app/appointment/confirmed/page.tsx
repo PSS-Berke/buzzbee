@@ -62,7 +62,8 @@ export default async function AppointmentConfirmedPage({
   const prettySlot = slot && isValidSlot(slot) ? formatSlot(slot) : null;
   const isVirtual = parseMode(mode) === 'virtual';
   const nextSteps = isVirtual ? virtualSteps : inPersonSteps;
-  // Senior Booking (from /senior-booking). Only meaningful for a showroom visit.
+  // Booked on a booking landing page (/senior-booking, /sale-booking, ...).
+  // Only meaningful for a showroom visit.
   const offer = isVirtual ? undefined : parseOffer(offerParam);
 
   return (
@@ -126,6 +127,36 @@ export default async function AppointmentConfirmedPage({
               An extra $300 off any showroom bed for guests 65 and older, on top of 30% off
               showroom beds through December 31. Your Sleep Guide takes it off your order at the
               visit.
+            </p>
+          </div>
+        )}
+
+        {offer === 'sale' && (
+          <div className="rounded-3xl bg-navy text-white p-8 mb-8 text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gold">
+              Year-end sale
+            </p>
+            <p className="mt-2 text-3xl md:text-4xl font-serif leading-tight">
+              <span className="text-gold">30% off</span> every showroom bed.
+            </p>
+            <p className="mt-3 text-gray-300 leading-relaxed max-w-lg mx-auto">
+              The sale runs through December 31, so the price you see at your visit is the sale
+              price. Studio Go is not included.
+            </p>
+          </div>
+        )}
+
+        {offer === 'studio-go' && (
+          <div className="rounded-3xl bg-navy text-white p-8 mb-8 text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-gold">
+              Studio Go, $599
+            </p>
+            <p className="mt-2 text-2xl md:text-3xl font-serif leading-tight">
+              Ask your Sleep Guide about Studio Go at your visit.
+            </p>
+            <p className="mt-3 text-gray-300 leading-relaxed max-w-lg mx-auto">
+              They can order it for you, or help you compare it with our showroom beds, which
+              are 30% off through December 31.
             </p>
           </div>
         )}

@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import { env } from './env';
 import { elmhurstStore, formatAddress } from '@/data/store';
 import { formatSlot } from './slots';
-import { isSeniorSource, isVirtualSource } from './consult';
+import { BOOKING_OFFERS, isSeniorSource, isVirtualSource, offerFromSource } from './consult';
 import { listNotificationRecipients } from './db';
 import { formatPhone, isValidEmail } from './submissions';
 import { buildIcs, googleCalendarUrl, outlookCalendarUrl, type CalendarEvent } from './calendar';
@@ -609,6 +609,25 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
         </tr>`
     : '';
 
+  // Booked from /sale-booking: say the sale price is waiting at the visit.
+  const sale = offerFromSource(payload.source) === 'sale';
+  const saleCard = `
+          <tr>
+            <td class="px" style="padding:24px 40px 0 40px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#203552;border-radius:14px;">
+                <tr>
+                  <td style="padding:22px 24px;">
+                    <div style="font-family:Georgia,'Times New Roman',serif;color:#F3A51D;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">Year-end sale</div>
+                    <div style="margin-top:6px;font-family:Georgia,'Times New Roman',serif;color:#ffffff;font-size:26px;line-height:1.2;">30% off every showroom bed.</div>
+                    <div style="margin-top:8px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#d6dbe3;font-size:14px;line-height:1.5;">
+                      The sale runs through December 31, so the price you see at your visit is the sale price. Studio Go is not included.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+
   // Booked from /senior-booking: show the discount right under the date so the
   // customer sees it is attached to this visit.
   const seniorDiscountCard = `
@@ -748,7 +767,7 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
             </td>
           </tr>
           ${datePill}
-          ${senior ? seniorDiscountCard : ''}
+          ${senior ? seniorDiscountCard : sale ? saleCard : ''}
           ${calendarCard}
           <tr>
             <td class="px" style="padding:24px 40px 0 40px;">
@@ -844,6 +863,13 @@ export function renderUserReservationEmail(payload: ReservationPayload): {
     date
       ? `You're booked for ${date.full}${slotPretty ? ` at ${slotPretty}` : ''}.`
       : `Your ${noun} is booked.`,
+    ...(sale
+      ? [
+          '',
+          'YEAR-END SALE',
+          '30% off every showroom bed through December 31. Studio Go is not included.',
+        ]
+      : []),
     ...(senior
       ? [
           '',
@@ -1355,8 +1381,19 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
   // say so where nobody can miss it.
   const senior = isSeniorSource(payload.source);
 
+  // Booked on one of the other booking landing pages (Sale, Elmhurst, Studio
+  // Go): name the page so the team knows which ad it came from.
+  const offer = offerFromSource(payload.source);
+  const pageName = offer && offer !== 'senior' ? BOOKING_OFFERS[offer].name : null;
+
   const subject = `${
-    virtual ? 'VIDEO CALL — send join link — ' : senior ? 'SENIOR BOOKING ($300 off) — ' : 'New booking — '
+    virtual
+      ? 'VIDEO CALL — send join link — '
+      : senior
+        ? 'SENIOR BOOKING ($300 off) — '
+        : pageName
+          ? `New booking (${pageName}) — `
+          : 'New booking — '
   }${payload.name}${
     date ? `, ${date.full}` : ''
   }${slotPretty ? ` at ${slotPretty}` : ''}`;
@@ -1368,7 +1405,9 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
         ? '<strong>Video call — send the join link</strong>'
         : senior
           ? '<strong>Senior Booking: extra $300 off any showroom bed (65 and older)</strong>'
-          : 'In-person fitting',
+          : pageName
+            ? `In-person fitting (${pageName} page)`
+            : 'In-person fitting',
     ],
     ['When', escapeHtml(whenText)],
     ['Name', escapeHtml(payload.name)],
@@ -1441,7 +1480,15 @@ export function renderAdminReservationEmail(payload: ReservationPayload): {
         ? 'NEW SENIOR BOOKING — extra $300 off any showroom bed (65 and older)'
         : 'New showroom booking',
     '',
-    `Type:       ${virtual ? 'Video call' : senior ? 'Senior Booking ($300 off)' : 'In-person fitting'}`,
+    `Type:       ${
+      virtual
+        ? 'Video call'
+        : senior
+          ? 'Senior Booking ($300 off)'
+          : pageName
+            ? `In-person fitting (${pageName} page)`
+            : 'In-person fitting'
+    }`,
     `When:       ${whenText}`,
     `Name:       ${payload.name}`,
     `Email:      ${payload.email}`,
