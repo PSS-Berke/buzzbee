@@ -401,7 +401,7 @@ export default function ReserveForm({
             </p>
           )}
         </label>
-        <label className="block">
+        <label className="block min-w-0">
           <span className="block text-sm font-medium text-navy mb-1.5">Preferred date</span>
           <input
             name="date"
@@ -413,7 +413,7 @@ export default function ReserveForm({
             onChange={(e) => setDateInput(e.target.value)}
             aria-invalid={dateError ? true : undefined}
             aria-describedby={dateError ? 'reserve-date-error' : undefined}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
+            className="date-input w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
         </label>
       </div>
