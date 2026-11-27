@@ -4,10 +4,12 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import { Check, Store, Video } from 'lucide-react';
 import { bookingDateError, earliestBookingDate, formatSlot, latestBookingDate } from '@/lib/slots';
 import { openSlotsForDate } from '@/lib/availability';
+import { track } from '@vercel/analytics';
 import {
+  BOOKING_OFFERS,
+  type BookingOffer,
   type ConsultMode,
   SOURCE_IN_PERSON,
-  SOURCE_SENIOR,
   SOURCE_VIRTUAL,
 } from '@/lib/consult';
 
@@ -53,14 +55,26 @@ const MODES: {
 // form stays in 'submitting' until the browser leaves the page.
 type Status = 'idle' | 'submitting' | 'error';
 
+// Button text on the booking landing pages.
+const OFFER_SUBMIT_LABEL: Record<BookingOffer, string> = {
+  senior: 'Book my visit with $300 off',
+  sale: 'Book my sale visit',
+  local: 'Book my private visit',
+  'studio-go': 'Book my visit',
+};
+
 /**
- * `variant="senior"` is the Senior Booking form on /senior-booking: showroom
- * visits only, saved with source `senior-booking`, and the confirmation page is
- * told (`?offer=senior`) so it shows the $300 and tags the conversion as a
- * senior booking.
+ * `variant` set to a BookingOffer is the form on that booking landing page
+ * (e.g. `variant="senior"` on /senior-booking): showroom visits only, saved
+ * with that page's source, and the confirmation page is told (`?offer=`) so it
+ * tags the conversion as that page's booking. See BOOKING_OFFERS.
  */
-export default function ReserveForm({ variant = 'standard' }: { variant?: 'standard' | 'senior' } = {}) {
-  const isSenior = variant === 'senior';
+export default function ReserveForm({
+  variant = 'standard',
+}: { variant?: 'standard' | BookingOffer } = {}) {
+  const offer = variant === 'standard' ? undefined : variant;
+  const isOffer = offer !== undefined;
+  const offerSource = offer ? BOOKING_OFFERS[offer].source : undefined;
   // In-person is the default: the showroom is the thing we actually have, and
   // walking in is what has produced sales. Video is the lower-friction fallback
   // for someone who won't commit to a drive.
@@ -107,6 +121,21 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
       /* sessionStorage unavailable — attribution is best effort */
     }
   }, []);
+
+  // Count the first time someone starts filling in the form, once per page
+  // load, so each landing page shows how many visitors begin a booking as well
+  // as how many finish one.
+  const startedRef = useRef(false);
+  const onFormStart = () => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    const page = offer ?? 'standard';
+    window.gtag?.('event', 'booking_form_start', { booking_page: page });
+    if (offer) {
+      window.fbq?.('trackCustom', 'BookingFormStart', { booking_page: page });
+      track('Booking Form Start', { page: BOOKING_OFFERS[offer].name });
+    }
+  };
 
   const fetchAvailability = async (forDate: string) => {
     if (!forDate) {
@@ -188,7 +217,7 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
       mattresses: toTry,
       notes: data.get('notes')?.toString() || '',
       bb_check: data.get('bb_check')?.toString() || '',
-      source: isSenior ? SOURCE_SENIOR : isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON,
+      source: offerSource ?? (isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON),
     };
 
     try {
@@ -216,7 +245,11 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
       }
       window.gtag?.(
         'event',
-        isSenior ? 'senior_booking_submit' : isVirtual ? 'virtual_consult_submit' : 'store_reserve_submit'
+        offer
+          ? `${BOOKING_OFFERS[offer].gaEvent}_submit`
+          : isVirtual
+            ? 'virtual_consult_submit'
+            : 'store_reserve_submit'
       );
       // Full page load (not router.push) so gtag.js re-runs and fires a page_view
       // for /appointment/confirmed. The tag only configures on initial document
@@ -228,7 +261,7 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
         slot: payload.timeSlot,
         mode,
       });
-      if (isSenior) params.set('offer', 'senior');
+      if (offer) params.set('offer', offer);
       window.location.assign(`/appointment/confirmed?${params}`);
     } catch {
       setStatus('error');
@@ -251,11 +284,13 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
       className="bg-white rounded-2xl p-6 md:p-8 border-2 border-gold/15 shadow-sm space-y-5"
       aria-live="polite"
       noValidate
+      onFocusCapture={onFormStart}
+      onChangeCapture={onFormStart}
     >
       <input
         type="hidden"
         name="source"
-        value={isSenior ? SOURCE_SENIOR : isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON}
+        value={offerSource ?? (isVirtual ? SOURCE_VIRTUAL : SOURCE_IN_PERSON)}
       />
       <input
         type="checkbox"
@@ -265,7 +300,7 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
         style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
       />
 
-      {!isSenior && (
+      {!isOffer && (
       <fieldset>
         <legend className="block text-sm font-medium text-navy mb-2">
           How would you like to do this?
@@ -366,7 +401,7 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
             </p>
           )}
         </label>
-        <label className="block">
+        <label className="block min-w-0">
           <span className="block text-sm font-medium text-navy mb-1.5">Preferred date</span>
           <input
             name="date"
@@ -378,7 +413,7 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
             onChange={(e) => setDateInput(e.target.value)}
             aria-invalid={dateError ? true : undefined}
             aria-describedby={dateError ? 'reserve-date-error' : undefined}
-            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
+            className="date-input w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-gold transition-colors"
           />
         </label>
       </div>
@@ -494,8 +529,8 @@ export default function ReserveForm({ variant = 'standard' }: { variant?: 'stand
             ? 'Pick a date first'
             : !slot
               ? 'Pick a time'
-              : isSenior
-                ? 'Book my visit with $300 off'
+              : offer
+                ? OFFER_SUBMIT_LABEL[offer]
                 : isVirtual
                   ? 'Book my video call'
                   : 'Reserve my visit'}

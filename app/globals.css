@@ -645,3 +645,24 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Date inputs: iPhone Safari draws an empty date field shorter than the
+   text inputs, centers its value and lets it push past its column. Keep it
+   the same height as the other fields, left aligned and inside its box. */
+@layer components {
+  .date-input {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 3.25rem;
+    background-color: #fff;
+    color: inherit;
+    text-align: left;
+  }
+  .date-input::-webkit-date-and-time-value {
+    text-align: left;
+    min-height: 1.5em;
+  }
+}

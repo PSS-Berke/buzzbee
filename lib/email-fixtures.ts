@@ -21,3 +21,9 @@ export const SAMPLE_SENIOR_RESERVATION: ReservationPayload = {
   notes: 'Bringing my daughter.',
   source: 'senior-booking',
 };
+
+/** A booking from /sale-booking, for previewing the Sale Booking emails. */
+export const SAMPLE_SALE_RESERVATION: ReservationPayload = {
+  ...SAMPLE_RESERVATION,
+  source: 'sale-booking',
+};

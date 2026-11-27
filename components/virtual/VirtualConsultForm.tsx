@@ -357,7 +357,7 @@ export default function VirtualConsultForm() {
           onChange={(e) => setDateInput(e.target.value)}
           aria-invalid={dateError ? true : undefined}
           aria-describedby={dateError ? 'vc-date-error' : undefined}
-          className={inputClass}
+          className={`date-input ${inputClass}`}
         />
       </div>
 

@@ -47,10 +47,75 @@ export function isSeniorSource(source: string | null | undefined): boolean {
   return source === SOURCE_SENIOR;
 }
 
-/** Offers a booking can carry onto /appointment/confirmed via `?offer=`. */
-export type BookingOffer = 'senior';
+/**
+ * The booking landing pages. Each is a paid-ad landing page with the booking
+ * form on it, showroom visits only. A booking made on one is saved with its
+ * own `source` and carries `?offer=` onto /appointment/confirmed, so every
+ * page's bookings count on their own in the admin list, the team email, GA4,
+ * Meta, Vercel Analytics and (by URL) Google Ads.
+ *
+ * - senior: /senior-booking, the senior discount ads
+ * - sale: /sale-booking, Google Ads "BUS | Search | Sale"
+ * - local: /elmhurst-booking, Google Ads "BUS | Search | Elmhurst Local"
+ * - studio-go: /studio-go-booking, Google Ads "BUS | Search | Studio Go"
+ */
+export type BookingOffer = 'senior' | 'sale' | 'local' | 'studio-go';
+
+export interface BookingOfferInfo {
+  /** Internal name, used in the team email and analytics. */
+  name: string;
+  /** Page the booking is made on. */
+  path: string;
+  /** `source` saved on the reservation. */
+  source: string;
+  /** GA4 event for a confirmed booking from this page (import into Google Ads). */
+  gaEvent: string;
+  /** Meta custom event for a confirmed booking from this page. */
+  metaEvent: string;
+}
+
+export const BOOKING_OFFERS: Record<BookingOffer, BookingOfferInfo> = {
+  senior: {
+    name: 'Senior Booking',
+    path: '/senior-booking',
+    source: SOURCE_SENIOR,
+    gaEvent: 'senior_booking',
+    metaEvent: 'SeniorBooking',
+  },
+  sale: {
+    name: 'Sale Booking',
+    path: '/sale-booking',
+    source: 'sale-booking',
+    gaEvent: 'sale_booking',
+    metaEvent: 'SaleBooking',
+  },
+  local: {
+    name: 'Elmhurst Booking',
+    path: '/elmhurst-booking',
+    source: 'elmhurst-booking',
+    gaEvent: 'elmhurst_booking',
+    metaEvent: 'ElmhurstBooking',
+  },
+  'studio-go': {
+    name: 'Studio Go Booking',
+    path: '/studio-go-booking',
+    source: 'studio-go-booking',
+    gaEvent: 'studio_go_booking',
+    metaEvent: 'StudioGoBooking',
+  },
+};
 
 /** Narrow an untrusted string (e.g. a query param) to a BookingOffer. */
 export function parseOffer(value: string | null | undefined): BookingOffer | undefined {
-  return value === 'senior' ? 'senior' : undefined;
+  return value && Object.prototype.hasOwnProperty.call(BOOKING_OFFERS, value)
+    ? (value as BookingOffer)
+    : undefined;
+}
+
+/** The booking landing page a reservation `source` came from, if any. */
+export function offerFromSource(source: string | null | undefined): BookingOffer | undefined {
+  if (!source) return undefined;
+  return (Object.keys(BOOKING_OFFERS) as BookingOffer[]).find(
+    (k) => BOOKING_OFFERS[k].source === source
+  );
 }
